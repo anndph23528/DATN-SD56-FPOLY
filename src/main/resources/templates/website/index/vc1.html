@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vouchers</title>
+</head>
+<body>
+<h1>My Vouchers</h1>
+
+<!-- Hiển thị danh sách voucher chưa lưu -->
+<ul th:if="${not #lists.isEmpty(allVouchers)}">
+    <li th:each="voucher : ${allVouchers}">
+        <p th:text="${voucher.code}"></p>
+        <!-- Thêm các trường thông tin voucher khác cần hiển thị -->
+        <form th:action="@{/product/saveVoucher/{voucherId}(voucherId=${voucher.id})}" method="get">
+            <button type="submit">Save Voucher</button>
+        </form>
+    </li>
+</ul>
+
+<!-- Hiển thị danh sách voucher đã lưu -->
+
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>sneaker_sneakerBeer</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="" name="keywords"/>
+    <meta content="" name="description"/>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon"/>
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" th:href="@{https://fonts.googleapis.com}"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}" crossorigin/>
+    <link
+            th:href="@{https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700;900&display=swap}"
+            rel="stylesheet"
+    />
+
+    <!-- Icon Font Stylesheet -->
+    <link
+            th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css}"
+            rel="stylesheet"
+    />
+    <link
+            th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css}"
+            rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+
+    <link
+            th:href="@{/dashboard/lib/animate/animate.min.css}"
+            rel="stylesheet"
+    />
+
+    <!--    <link th:href="@{/../resources/dashboard/lib/animate/animate.min.css}" rel="stylesheet" />-->
+    <link
+            th:href="@{/dashboard/lib/owlcarousel/assets/owl.carousel.min.css}"
+            rel="stylesheet"
+    />
+
+    <!--    <link th:href="@{/../resources/dashboard/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet" />-->
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/dashboard/css/boostrap.min.css}" rel="stylesheet"/>
+    <!--    <link th:href="@{/../resources/dashboard/css/boostrap.min.css}" rel="stylesheet" />-->
+
+    <!-- Template Stylesheet -->
+    <!--    <link th:href="@{/../resources/dashboard/css/style.css}" rel="stylesheet" />-->
+    <link th:href="@{/dashboard/css/style1.css}" rel="stylesheet"/>
+
+</head>
+<body>
+<!-- Spinner Start -->
+<div
+        id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
+>
+    <div
+            class="spinner-border text-primary"
+            role="status"
+            style="width: 3rem; height: 3rem"
+    ></div>
+</div>
+<!-- Spinner End -->
+
+<!-- Navbar Start -->
+<div class="container-fluid bg-white sticky-top">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-2 py-lg-0">
+            <a href="index.html" class="navbar-brand">
+                <img
+                        class="img-fluid"
+                        th:src="@{/website/img/logo1.png}"
+                        alt="Logo"
+                />
+            </a>
+            <button
+                    type="button"
+                    class="navbar-toggler ms-auto me-0"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto">
+                    <a th:href="@{/product/trang-chu}" class="nav-item nav-link"
+                    >Home</a
+                    >
+                    <a th:href="@{/product/hien-thi}" class="nav-item nav-link"
+                    >Products</a
+                    >
+                    <div class="nav-item dropdown">
+                        <a
+                                href="#"
+                                class="nav-link dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                        >Brand</a
+                        >
+                        <div class="dropdown-menu bg-light rounded-0 m-0">
+                            <a th:href="@{/product/nike}" class="dropdown-item">NIKE</a>
+                            <a th:href="@{/product/converse}" class="dropdown-item"
+                            >CONVERSE</a
+                            >
+                            <a th:href="@{/product/mlb}" class="dropdown-item">MLB</a>
+                            <a th:href="@{/product/adidas}" class="dropdown-item"
+                            >ADIDAS</a
+                            >
+                            <a th:href="@{/product/vans}" class="dropdown-item">VANS</a>
+                            <a th:href="@{/product/lv}" class="dropdown-item"
+                            >LOUIS VUITTON</a
+                            >
+                        </div>
+                    </div>
+                    <a th:href="@{/product/contact}" class="nav-item nav-link"
+                    >Contact</a
+                    >
+                </div>
+                <form action="">
+                    <div class="border-start ps-4 d-none d-lg-block">
+                        <input type="text"/>
+                        <button type="button" class="btn btn-sm p-0">
+                            <i class="fa fa-search" style="margin-left: 5px"></i>
+                        </button>
+                    </div>
+                </form>
+                <a th:href="@{/user/cart}">
+                    <button type="button" class="btn btn-sm p-0">
+                        <i class="fa fa-cart-plus" style="margin-left: 20px">
+                            <span class="badge"
+                                  th:text="${session.totalItems == null} ? '0' : ${session.totalItems}"></span>
+                            <span style="color: red" id="cartItemCount"></span
+                            ></i>
+                    </button>
+                </a>
+                <div class="dropdown">
+                    <button
+                            type="button"
+                            class="btn btn-sm p-0"
+                            id="userDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                    >
+                        <i class="bi bi-person-circle" style="margin-left: 20px"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        <!-- Thêm các lựa chọn vào dropdown -->
+                        <div class="dropdown-title" style="font-weight: bolder; margin-left: 15px"
+                             th:text="${#authentication.name}"></div>
+                        <div class="dropdown-divider"></div>
+                        <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                            <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
+                            <a th:href="@{/user/orders}" class="dropdown-item has-icon "> <i
+                                    class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
+                            <a th:href="@{/admin/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
+
+                            <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i
+                                    class="fas fa-sign-out-alt"></i> Logout</a>
+                        </th:block>
+                        <th:block th:unless="${#authorization.expression('isAuthenticated()')}">
+                            <!-- Nếu chưa đăng nhập, hiển thị lựa chọn login -->
+                            <a th:href="@{/login/custom-login}" class="dropdown-item has-icon "> <i
+                                    class="fas fa-sign-in-alt"></i> Login</a>
+                        </th:block>
+
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Page Header Start -->
+<div
+        class="container-fluid page-header py-5 wow fadeIn"
+        data-wow-delay="0.1s"
+>
+    <div class="container text-center py-5">
+        <h1 class="display-2 text-dark mb-4 animated slideInDown">Products</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <!-- <li class="breadcrumb-item"><a href="#">Pages</a></li> -->
+                <li class="breadcrumb-item text-dark" aria-current="page">
+                    Products
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Products Start -->
+<div class="container-fluid product py-5">
+    <div class="container py-5">
+        <p class="fs-5 fw-medium fst-italic text-primary">Voucher</p>
+
+        <div class="owl-carousel product-carousel wow fadeInUp" data-wow-delay="0.4s">
+            <div th:if="${not #lists.isEmpty(allVouchers)}" class="store-item position-relative text-center"
+                 th:each="voucher : ${allVouchers}"
+                 th:sortedby="${voucher.expiryDateTime}">
+                <div class="body-voucher">
+                    <div class="voucher-container">
+
+                        <div class="voucher-discount" >
+                            <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
+                                <p>
+                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> VND
+                                </p>
+                            </div>
+                            <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
+                                <p>
+                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> %
+                                </p>
+                            </div>
+                        </div>
+                        <div class="voucher-content" th:text="${voucher.description}">cho những sản phẩm của của like, adidas</div>
+                        <div class="voucher-hsd" th:text="${'HSD :'+' ' + voucher.expiryDateTime}">HSD: 23/23/2023</div>
+                        <form th:action="@{/product/saveVoucher/{voucherId}(voucherId=${voucher.id})}" method="get">
+                            <button type="submit" class="save-button">  Lưu
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <p class="fs-5 fw-medium fst-italic text-primary">Our Products</p> -->
+            <h1 class="display-6">Our Products</h1>
+
+        </div>
+
+
+
+        <!--        &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;LV &ndash;&gt;-->
+        <div
+                th:each="entry : ${productsByBrand.entrySet()}"
+                class="brand-container"
+        >
+            <p
+                    class="fs-5 fw-medium fst-italic text-primary"
+                    th:text="${entry.key}"
+            ></p>
+            <div
+                    class="owl-carousel product-carousel wow fadeInUp"
+                    data-wow-delay="0.4s"
+            >
+                <!-- <a href="" class="d-block product-item rounded"> -->
+                <div
+                        th:each="product:${entry.value}"
+                        class="store-item position-relative text-center"
+                >
+                    <img
+                        class="img-fluid"
+                        th:if="${not #lists.isEmpty(product.images)}"
+                        th:src="@{'/product/display?id=' + ${product.id} + '&imageId=' + ${product.images[0].id}}"
+                        alt=""
+                        style="width: 450px; height: 450px"
+                    />
+                    <div
+                            class="bg-white shadow-sm text-center p-4 position-relative mt-n5 mx-4"
+                    >
+                        <h4 class="text-primary" th:text="${product.name}"></h4>
+
+                        <!--                        <span class="text-body">10000</span>-->
+
+                    </div>
+                    <div class="store-overlay">
+                        <a
+                                th:href="@{'/product/detail/chi-tiet/' + ${product.id}}"
+                                class="btn btn-primary rounded-pill py-2 px-4 m-2"
+                        >More Detail <i class="fa fa-arrow-right ms-2"></i
+                        ></a>
+                        <a
+                                th:href="@{'/cart/add/' + ${product.id}}"
+                                class="btn btn-dark rounded-pill py-2 px-4 m-2"
+                                id="addToCartButton"
+                        >Add to Cart <i class="fa fa-cart-plus ms-2"></i
+                        ></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Footer Start -->
+<div
+        class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn"
+        data-wow-delay="0.1s"
+>
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-primary mb-4">Our Office</h4>
+                <p class="mb-2">
+                    <i class="fa fa-map-marker-alt text-primary me-3"></i>123 Street,
+                    New York, USA
+                </p>
+                <p class="mb-2">
+                    <i class="fa fa-phone-alt text-primary me-3"></i>+012 345 67890
+                </p>
+                <p class="mb-2">
+                    <i class="fa fa-envelope text-primary me-3"></i>info@example.com
+                </p>
+                <div class="d-flex pt-3">
+                    <a class="btn btn-square btn-primary rounded-circle me-2" href=""
+                    ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-square btn-primary rounded-circle me-2" href=""
+                    ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-square btn-primary rounded-circle me-2" href=""
+                    ><i class="fab fa-youtube"></i
+                    ></a>
+                    <a class="btn btn-square btn-primary rounded-circle me-2" href=""
+                    ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-primary mb-4">Quick Links</h4>
+                <a class="btn btn-link" href="">About Us</a>
+                <a class="btn btn-link" href="">Contact Us</a>
+                <a class="btn btn-link" href="">Our Services</a>
+                <a class="btn btn-link" href="">Terms & Condition</a>
+                <a class="btn btn-link" href="">Support</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-primary mb-4">Business Hours</h4>
+                <p class="mb-1">Monday - Friday</p>
+                <h6 class="text-light">09:00 am - 07:00 pm</h6>
+                <p class="mb-1">Saturday</p>
+                <h6 class="text-light">09:00 am - 12:00 pm</h6>
+                <p class="mb-1">Sunday</p>
+                <h6 class="text-light">Closed</h6>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-primary mb-4">Newsletter</h4>
+                <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                <div class="position-relative w-100">
+                    <input
+                            class="form-control bg-transparent w-100 py-3 ps-4 pe-5"
+                            type="text"
+                            placeholder="Your email"
+                    />
+                    <button
+                            type="button"
+                            class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2"
+                    >
+                        SignUp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- Copyright Start -->
+<div class="container-fluid copyright py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                &copy; <a class="fw-medium" href="#">Your Site Name</a>, All Right
+                Reserved.
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                Designed By
+                <a class="fw-medium" href="https://htmlcodex.com">HTML Codex</a>
+                Distributed By
+                <a class="fw-medium" href="https://themewagon.com">ThemeWagon</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Copyright End -->
+
+<!-- Back to Top -->
+<a
+        href="#"
+        class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"
+><i class="bi bi-arrow-up"></i
+></a>
+
+<!-- JavaScript Libraries -->
+
+<script
+        th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js}"
+></script>
+"
+<script
+        th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js}"
+></script>
+"
+<script th:src="@{/dashboard/lib/wow/wow.min.js}"></script>
+"
+<script th:src="@{/dashboard/lib/easing/easing.min.js}"></script>
+"
+<script th:src="@{/dashboard/lib/waypoints/waypoints.min.js}"></script>
+"
+<script th:src="@{/dashboard/lib/owlcarousel/owl.carousel.min.js}"></script>
+"
+
+<!-- Template Javascript -->
+<script th:src="@{/dashboard/js/main.js}"></script>
+"
+
+<!-- JavaScript Libraries -->
+<!--        <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js}"></script>-->
+<!--        <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js}"></script>-->
+<!--        <script th:src="@{/website/lib/wow/wow.min.js}"></script>-->
+<!--        <script th:src="@{/website/lib/easing/easing.min.js}"></script>-->
+<!--        <script th:src="@{/website/lib/waypoints/waypoints.min.js}"></script>-->
+<!--        <script th:src="@{/website/lib/owlcarousel/owl.carousel.min.js}"></script>-->
+
+<!--        &lt;!&ndash; Template Javascript &ndash;&gt;-->
+<!--        <script th:src="@{/website/js/main.js}"></script>-->
+<script>
+    var cartItemCount = 0;
+
+    // Lấy tham chiếu đến nút "Thêm vào giỏ hàng"
+    var addToCartButton = document.getElementById("addToCartButton");
+
+    // Gắn sự kiện click cho nút "Thêm vào giỏ hàng"
+    addToCartButton.addEventListener("click", function () {
+        // Thực hiện logic thêm sản phẩm vào giỏ hàng ở đây
+
+        // Tăng số lượng sản phẩm trong giỏ hàng lên 1 (hoặc số lượng sản phẩm được thêm vào giỏ hàng)
+        cartItemCount++;
+
+        // Cập nhật số lượng sản phẩm trên giao diện người dùng
+        // Đặt giá trị vào phần tử có id là cartItemCount
+        document.getElementById("cartItemCount").innerText = cartItemCount;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var userDropdown = document.getElementById("userDropdown");
+        var accountOption = document.getElementById("accountOption");
+        var loginOption = document.getElementById("loginOption");
+
+        userDropdown.addEventListener("click", function (event) {
+            event.stopPropagation();
+            var dropdownMenu = document.querySelector(".dropdown-menu");
+            dropdownMenu.classList.toggle("show");
+        });
+
+        accountOption.addEventListener("click", function () {
+            console.log("Your Account selected");
+            // Thực hiện các hành động khi "Your Account" được chọn
+        });
+
+        loginOption.addEventListener("click", function () {
+            console.log("Login selected");
+            // Thực hiện các hành động khi "Login" được chọn
+        });
+
+        document.addEventListener("click", function (event) {
+            var dropdownMenu = document.querySelector(".dropdown-menu");
+            if (dropdownMenu.classList.contains("show")) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
+    });
+</script>
+<script th:inline="javascript">
+    function saveVoucher(voucherId) {
+        var accountId =  /* Lấy accountId của người dùng từ nơi nào đó */;
+        var url = '/api/voucher/save';
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: { 'accountId': accountId, 'voucherId': voucherId },
+            success: function (response) {
+                alert('Voucher saved successfully');
+                // Cập nhật giao diện nếu cần thiết
+            },
+            error: function (error) {
+                alert('Failed to save voucher: ' + error.responseText);
+            }
+        });
+    }
+
+
+    // Hàm để đọc giá trị từ cookie dựa trên tên
+    function getCookieValue(cookieName) {
+        const name = cookieName + '=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const cookieArray = decodedCookie.split(';');
+
+        for (let i = 0; i < cookieArray.length; i++) {
+            let cookie = cookieArray[i].trim();
+            if (cookie.indexOf(name) === 0) {
+                return cookie.substring(name.length, cookie.length);
+            }
+        }
+
+        return null;
+    }
+
+    // Lấy giá trị accountId từ cookie có tên 'accountId'
+    var accountId = getCookieValue('accountId');
+
+    // Kiểm tra xem giá trị đã được lấy thành công hay chưa
+    if (accountId) {
+        console.log('AccountId:', accountId);
+    } else {
+        console.log('Không thể lấy được giá trị accountId từ cookie.');
+    }
+
+</script>
+</body>
+</html>

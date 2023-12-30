@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+
+<!-- auth-register.html  21 Nov 2019 04:05:01 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Sneaker_SneakerBeer</title>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" th:href="@{/dashboard/css/app.min.css}">
+    <link rel="stylesheet" th:href="@{/dashboard/bundles/bootstrap-social/bootstrap-social.css}">
+    <!-- Template CSS -->
+    <link rel="stylesheet" th:href="@{/dashboard/css/style.css}">
+    <link rel="stylesheet" th:href="@{/dashboard/css/components.css}">
+    <!-- Custom style CSS -->
+    <link rel="stylesheet" th:href="@{/dashboard/css/custom.css}">
+    <link rel='shortcut icon' type='image/x-icon' th:href='@{/dashboard/img/favicon.ico}'/>
+</head>
+
+<body>
+<div class="loader"></div>
+<div id="app">
+    <section class="section">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h4>Register</h4>
+                        </div>
+                        <div class="card-body">
+<!--                            <form th:action="@{/login/add}" method="post" th:object="${account}"-->
+<!--                                onsubmit ="return  confirm('Bạn có thêm không?')">-->
+<!--                                </form>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="form-group col-6">-->
+<!--                                        <label >User Name</label>-->
+<!--                                        <input type="text" class="form-control" placeholder="Nhập họ và tên"-->
+<!--                                               th:field="${account.name}">-->
+<!--&lt;!&ndash;                                        <span th:if="${#fields.hasErrors('account.name')}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              style="color: red; font-size: 13px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              th:errors="*{account.name}"></span>&ndash;&gt;-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group col-6">-->
+<!--                                        <label>Birth Date</label>-->
+<!--                                        <input type="date" class="form-control" placeholder="Nhập ngày sinh"-->
+<!--                                               th:field="${account.birthdate}" th:value="${account.birthdate}">-->
+<!--&lt;!&ndash;                                        <span th:if="${#fields.hasErrors('account.birthdate')}" style="color: red; font-size: 13px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              th:errors="*{account.birthdate}"></span>&ndash;&gt;-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label >Email</label>-->
+<!--                                    <input type="email" class="form-control" placeholder="Nhập email"-->
+<!--                                           th:field="${account.email}">-->
+<!--&lt;!&ndash;                                    <span th:if="${#fields.hasErrors('account.email')}" style="color: red; font-size: 13px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                          th:errors="*{account.email}"></span>&ndash;&gt;-->
+<!--                                    <div class="invalid-feedback">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="form-group col-6">-->
+<!--                                        <label  class="d-block">Password</label>-->
+<!--                                        <input type="password" class="form-control" placeholder="Nhập mật khẩu"-->
+<!--                                               th:field="${account.password}">-->
+<!--&lt;!&ndash;                                        <span th:if="${#fields.hasErrors('account.password')}" style="color: red; font-size: 13px"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              th:errors="*{account.password}"></span>&ndash;&gt;-->
+<!--                                        <div id="pwindicator" class="pwindicator">-->
+<!--                                            <div class="bar"></div>-->
+<!--                                            <div class="label"></div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--&lt;!&ndash;                                    <div class="form-group col-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <label for="password2" class="d-block">Password Confirmation</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <input id="password2" type="password" class="form-control"&ndash;&gt;-->
+<!--&lt;!&ndash;                                               name="password-confirm">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--                                </div>-->
+<!--&lt;!&ndash;                                <div class="form-group">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="custom-control custom-checkbox">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <input type="checkbox" name="agree" class="custom-control-input" id="agree">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <label class="custom-control-label" for="agree">I agree with the terms and&ndash;&gt;-->
+<!--&lt;!&ndash;                                            conditions</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                                <div class="form-group">-->
+<!--                                    <a th:href="@{/login/add}"> <button type="submit" class="btn btn-primary btn-lg btn-block">-->
+<!--                                        Register-->
+<!--                                    </button></a>-->
+
+<!--                                </div>-->
+<!--                            </form>-->
+                            <form th:action="@{/login/add}" method="post" th:object="${account}"
+                                  onsubmit="return  confirm('Bạn có thêm không?')">
+                                <div th:if="${errorMessage}" class="alert alert-danger">
+                                    <p th:text="${errorMessage}"></p>
+                                </div>
+                                <div th:if="${Message}" class="alert alert-success">
+                                    <p th:text="${Message}"></p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>Họ và tên</label>
+                                        <div class="input-group colorpickerinput">
+                                            <input type="text" class="form-control" placeholder="Nhập họ và tên"
+                                                   th:field="*{name}">
+                                            <span th:if="${#fields.hasErrors('name')}"
+                                                  style="color: red; font-size: 13px"
+                                                  th:errors="*{name}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" placeholder="Nhập email"
+                                               th:field="*{email}">
+                                        <span th:if="${#fields.hasErrors('email')}" style="color: red; font-size: 13px"
+                                              th:errors="*{email}"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mật khẩu</label>
+                                        <input type="password" class="form-control" placeholder="Nhập mật khẩu"
+                                               th:field="*{password}">
+                                        <span th:if="${#fields.hasErrors('password')}" style="color: red; font-size: 13px"
+                                              th:errors="*{password}"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số điện thoại</label>
+                                        <input type="number" class="form-control" placeholder="Nhập số điện thoại"
+                                               th:field="*{phone}">
+                                        <span th:if="${#fields.hasErrors('phone')}" style="color: red; font-size: 13px"
+                                              th:errors="*{phone}"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ngày sinh</label>
+                                        <input type="date" class="form-control" placeholder="Nhập ngày sinh"
+                                               th:field="*{birthdate}" >
+                                        <span th:if="${#fields.hasErrors('birthdate')}" style="color: red; font-size: 13px"
+                                              th:errors="*{birthdate}"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="d-block">Giới tính</label>
+                                        <div class="form-check">
+                                            <input type="radio" name="exampleRadios" th:field="*{gender}" value="1"  checked="checked">
+                                            <label class="form-check-label">
+                                                Nữ
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" name="exampleRadios" th:field="*{gender}" value="0">
+                                            <label class="form-check-label">
+                                                Nam
+                                            </label>
+                                        </div>
+                                    </div>
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Chức vụ</label>-->
+<!--                                        <div class="input-group">-->
+<!--                                            <select class="form-control" th:field="*{role_id}">-->
+<!--                                                <option th:each="role:${rolelist}" th:value="${role.id}"-->
+<!--                                                        th:text="${role.name}"></option>-->
+<!--                                            </select>-->
+<!--                                            <div  class="input-group-append">-->
+<!--                                                <button class="btn btn-primary" type="button" onclick="popupChucVu()">-->
+<!--                                                    +-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="d-block">Trạng thái</label>-->
+<!--                                        <div class="form-check">-->
+<!--                                            <input type="radio" name="statuss" th:field="*{statuss}" value="1" th:checked="${statuss == '1'}">-->
+<!--                                            <label class="form-check-label">-->
+<!--                                                Hoạt động-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+<!--                                        <div class="form-check">-->
+<!--                                            <input type="radio" name="statuss" th:field="*{statuss}" value="0"  >-->
+<!--                                            <label class="form-check-label">-->
+<!--                                                Không hoạt động-->
+<!--                                            </label>-->
+<!--                                        </div>-->
+
+                                    </div>
+                                    <div class="form-group">
+                                        <a th:href="@{/login/add}">
+                                            <button class="btn btn-primary mr-1" type="submit">Thêm</button>
+                                        </a>
+                                    </div>
+                            </form>
+
+                        </div>
+                        </div>
+                        <div class="mb-4 text-muted text-center">
+                            Already Registered? <a th:href="@{/login/custom-login}">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- General JS Scripts -->
+<script th:src="@{/dashboard/js/app.min.js}"></script>
+<!-- JS Libraies -->
+<!-- Page Specific JS File -->
+<!-- Template JS File -->
+<script th:src="@{/dashboard/js/scripts.js}"></script>
+<!-- Custom JS File -->
+<script th:src="@{/dashboard/js/custom.js}"></script>
+</body>
+
+<!-- auth-register.html  21 Nov 2019 04:05:02 GMT -->
+</html>
