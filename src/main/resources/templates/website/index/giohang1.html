@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SneakerBeer</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="apple-touch-icon" th:href="@{img/apple-icon.png}"/>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{img/favicon.ico}"/>
+
+    <link rel="stylesheet" th:href="@{/website/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/website/css/templatemo.css}"/>
+    <link rel="stylesheet" th:href="@{/website/css/custom.css}"/>
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" th:href="@{https://fonts.googleapis.com}"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}" crossorigin/>
+    <link
+        th:href="@{https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700;900&display=swap}"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!--    https://cdn.jsdelivr.net/npm/bootstrap-icons@1.20.0/font/bootstrap-icons.css-->
+
+    <!-- Icon Font Stylesheet -->
+    <link
+        th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css}"
+        rel="stylesheet"
+    />
+    <link
+        th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.20.0/font/bootstrap-icons.css}"
+        rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/website/lib/animate/animate.min.css}" rel="stylesheet"/>
+    <link th:href="@{/website/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet"/>
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <!-- <linkth:href="@{/website/css/bootstrap.min.css" rel="stylesheet" /> -->
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/website/css/style.css}" rel="stylesheet"/>
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link
+        rel="stylesheet"
+        th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap}"
+    />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/website/css/fontawesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css}">
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <!-- Slick -->
+    <link rel="stylesheet" type="text/css" th:href="@{/website/css/slick.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/website/css/slick-theme.css}"/>
+    <!--
+
+TemplateMo 559 Zay Shop
+
+https://templatemo.com/tm-559-zay-shop
+
+-->
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /*.form-group {*/
+        /*    width: 300px; !* Độ rộng của form-group *!*/
+        /*}*/
+
+        #selectedVoucherCode {
+            height: 300%; /* Độ rộng của select */
+        }
+
+        .GLQcyH {
+            border: 1px solid #e3e3e3;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            padding: 16px;
+        }
+
+        .cW1Zd4 {
+            margin-top: 8px;
+        }
+
+        .waBqqB {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .odP50 + {
+            font-weight: bold;
+        }
+
+        .J3cnC0 {
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        ._30cEVT {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .xDA4sT {
+            background-color: #ee4d2d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .ETpXw8 {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        .o9Vr4R {
+            margin-right: 8px;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .col-md-6 {
+            flex: 0 0 50%;
+        }
+
+        input.form-control {
+            width: 100%;
+        }
+
+        .GLQcyH {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 210%; /* Điều chỉnh chiều rộng của ô địa chỉ */
+
+        }
+
+        .waBqqB {
+            flex: 1;
+        }
+
+        input[type="text"] {
+            margin-right: 10px;
+        }
+
+        input[type="radio"] {
+            margin-left: 10px;
+        }
+
+        /* Thêm style mới để điều chỉnh ô input và địa chỉ */
+        .waBqqB .EXsnBg {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ô input radio và địa chỉ cùng một dòng */
+        .waBqqB .EXsnBg .J3cnC0 {
+            margin-bottom: 4px;
+        }
+
+        /* Chuyển nút Cập nhật sang bên phải */
+        .waBqqB .lDkkQU {
+            margin-left: auto;
+        }
+
+        /* Chỉnh layout của nút Xác nhận và Huỷ */
+        .ETpXw8 button {
+            flex-grow: 0; /* Tắt tính năng mở rộng */
+            width: 48%; /* Đặt chiều rộng của nút */
+        }
+
+        /* Chỉnh layout modal */
+        .modal-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .waBqqB {
+            width: 100%; /* Điều chỉnh chiều rộng của ô địa chỉ */
+            margin-right: 30px; /* Tạo khoảng cách với nút cập nhật */
+        }
+
+        .waBqqB .YzoGWD {
+            display: flex;
+            flex-direction: row; /* Hiển thị theo chiều ngang */
+            align-items: center; /* Canh chỉnh các phần tử theo chiều dọc */
+            justify-content: space-between; /* Canh chỉnh các phần tử theo chiều ngang */
+        }
+
+        .waBqqB .lDkkQU {
+            margin-top: 8px; /* Khoảng cách giữa ô địa chỉ và nút cập nhật */
+        }
+    </style>
+    <!-- ... (Các khai báo khác như trong mã HTML trước) ... -->
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Giỏ hàng</h1>
+    <div>
+        <div th:if="${mess}" class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 5px">
+            <span th:text="${mess}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form id="orderForm" th:action="@{/user/add-order}" method="post">
+            <!-- Nút thêm sản phẩm mới -->
+            <div>
+                <a th:href="@{/product/hien-thi}">
+                    <button id="myButton" type="button" class="btn btn-success remove" title="thêm sản phẩm mới">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </a>
+            </div>
+
+            <!-- Form nhập địa chỉ mới -->
+            <!-- Trong file giohang1.html hoặc trang thanh toán tương ứng -->
+            <div class="form-group">
+                <label for="selectedAddress">Địa Chỉ Nhận Hàng</label>
+                <input type="text" class="form-control" id="selectedAddress" name="selectedAddress" readonly
+
+                       th:value="${defaultAddress.streetName + ' ' + defaultAddress.district + ' ' + defaultAddress.province+ ' '+  ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+  (defaultAddress.defaultAddress ? 'Mặc Định':'')}"
+
+                       th:if="${defaultAddress != null}"/>
+
+                <!--                <span th:if="${defaultAddress != null and defaultAddress.defaultAddress}">(Mặc định)</span>-->
+            </div>
+            <button id="changeAddressBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#changeAddressModal">
+                Thay Đổi Địa Chỉ Nhận Hàng
+            </button>
+
+            <!-- Modal chọn địa chỉ -->
+            <div class="modal fade" id="changeAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+
+                    <div class="modal-content" style="width: 400%">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Chọn Địa Chỉ Nhận Hàng</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+
+                        <div class="container">
+                            <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show"
+                                 role="alert">
+                                <span th:text="${error}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="row" th:each="address : ${addressList}">
+                                <div class="col-md-6">
+                                    <div class="GLQcyH Z+faEd">
+                                        <div class="waBqqB YzoGWD">
+                                            <input type="radio" name="selectedAddressRadio"
+                                                   th:value="${address.id}"
+                                                   th:attr="data-streetName=${address.streetName}, data-district=${address.district}, data-province=${address.province}, data-defaultAddress=${address.defaultAddress }"
+                                                   onclick="updateSelectedAddress(this)">
+                                            <!-- Địa chỉ hiện tại -->
+                                            <div role="heading" class="waBqqB YzoGWD">
+                                                <div id="address-card_6390e80e-6c9e-4c54-9d54-6d09ed6f6ba8_header"
+                                                     class="odP50+ On6XjY">
+                                            <span class="zPR3Hm xrc+fE">
+                                                <div class="Xml7Ip" style="" th:text="${address.streetName}">
+                                                    Nguyễn Đức An
+                                                </div>
+                                            </span>
+                                                    <div class="Q-T2Hu"></div>
+                                                    <div role="row" class="jx3Tnl _6a1yZV J3cnC0"
+                                                         th:text="${address.district}">
+                                                        (+84) 795389855
+                                                    </div>
+                                                    <!-- Địa chỉ chi tiết -->
+                                                    <div id="address-card_6390e80e-6c9e-4c54-9d54-6d09ed6f6ba8_content"
+                                                         role="heading"
+                                                         class="waBqqB YzoGWD">
+                                                        <div class="odP50+ On6XjY">
+                                                            <div class="EXsnBg">
+                                                                <div role="row" class="J3cnC0" style="">
+                                                                    Bếp Mẹ Bống, Số 21, Ngách 45 Ngõ 58 Trần Bình
+                                                                </div>
+                                                                <div role="row" class="J3cnC0" style="">
+                                                                    Phường Mai Dịch, Quận Cầu Giấy, Hà Nội
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ZEgvpu -mNtyE"></div>
+                                                    </div>
+
+                                                    <!-- Chữ mặc định -->
+                                                    <div id="address-card_6390e80e-6c9e-4c54-9d54-6d09ed6f6ba8_badge"
+                                                         role="row" class="_30cEVT J3cnC0" style="color: #ee4d2d;">
+                                                <span th:if="${address.defaultAddress}" role="mark"
+                                                      class="pk1xg8 KSMOtB Gc2Ohe">Mặc định</span>
+                                                    </div>
+                                                </div>
+                                                <div class="-mNtyE">
+                                                    <button class="lDkkQU">Cập nhật</button>
+                                                </div>
+                                            </div>
+                                            <!-- Ô input radio -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Danh sách địa chỉ và nút thêm địa chỉ mới ở đây -->
+
+                            <div class="ETpXw8 mt-3">
+                                <button id="addAddressBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#addAddressModal">
+                                    Thêm Địa Chỉ Mới
+                                </button>
+                                <button class="fmOXa8 _2NE9-S sTwDJM" id="confirmChangeBtn" type="button"
+                                        data-bs-dismiss="modal">Xác nhận
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <!-- Nút xác nhận thay đổi địa chỉ -->
+                            <!--                            <button id="confirmChangeBtn" type="button" class="btn btn-success" data-bs-dismiss="modal" >-->
+                            <!--                                Xác Nhận Thay Đổi-->
+                            <!--                            </button>-->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Nút thêm địa chỉ mới -->
+
+
+            <!-- Form để đặt làm địa chỉ mặc định -->
+            <!-- Form để đặt làm địa chỉ mặc định -->
+
+
+            <!-- Giỏ hàng -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <!-- ... (Phần code hiện tại của bạn cho giỏ hàng) ... -->
+
+                    <!-- Thông tin thanh toán -->
+                    <h4 class="font-weight-semi-bold mt-4">Thông tin thanh toán</h4>
+
+                    <!-- Chọn phương thức thanh toán -->
+                    <div class="form-group">
+                        <label for="paymentMethod">Phương thức thanh toán</label>
+                        <select class="form-control" id="paymentMethod" name="paymentMethod">
+                            <option value="cashOnDelivery">Thanh toán khi nhận hàng</option>
+                            <option value="vnpay">VNPAY</option>
+                            <!-- ... (Thêm các phương thức thanh toán khác) ... -->
+                        </select>
+                    </div>
+
+                    <!-- Nhập mã giảm giá -->
+                    <!-- Thêm các thẻ HTML tương ứng vào trang của bạn -->
+                    <!-- Thông báo áp dụng mã thành công -->
+                    <!-- Hiển thị danh sách voucher đã lưu -->
+                    <!-- Thông báo áp dụng mã thành công hoặc thất bại -->
+                    <!-- Hiển thị thông điệp thành công hoặc thất bại -->
+                    <div th:if="${ss != null}" class="alert alert-info" role="alert">
+                        <span th:text="${ss}"></span>
+                    </div>
+
+
+                    <!-- Nhập mã giảm giá -->
+                    <div class="form-group">
+                        <label for="selectedVoucherCode">Chọn hoặc Nhập mã giảm giá</label>
+                        <select class="form-control" id="selectedVoucherCode" name="selectedVoucherCode"
+                                onchange="toggleManualInput()">
+                            <option value="">-- Chọn voucher --</option>
+                            <th:block th:each="voucherUsage : ${voucherUsages}">
+                                <option style="color: red" th:value="${voucherUsage.voucher.code}"
+                                        th:text="${voucherUsage.voucher.code} + ' || '+' Giảm :' + (${voucherUsage.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE ? #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + '%' : #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + ' VND'}) +' || ' + 'HSD:' +${#temporals.format(voucherUsage.voucher.expiryDateTime, 'dd/MM/yyyy HH:mm')} "></option>
+
+                            </th:block>
+                        </select>
+                        <input type="text" class="form-control mt-2" id="promoCode" name="promoCode"
+                               placeholder="Nhập mã giảm giá" style="display: none">
+                    </div>
+
+                    <!-- Nút áp dụng mã giảm giá -->
+                    <button class="btn btn-primary mt-2" id="applyVoucherBtn" type="button" onclick="applyVoucher()">Áp
+                        dụng mã giảm giá
+                    </button>
+
+                    <!-- Voucher Popup -->
+                    <!-- Voucher Popup -->
+                    <!--                    <div id="voucher-overlay"></div>-->
+                    <!--                    <div id="voucher-popup">-->
+                    <!--                        <h2 id="popup-voucher-code"></h2>-->
+                    <!--                        <p id="popup-voucher-info"></p>-->
+                    <!--                        <button onclick="hidePopup()">Đóng</button>-->
+                    <!--                    </div>-->
+
+
+                    <!-- Thông tin sản phẩm -->
+                    <h4 class="font-weight-semi-bold mt-4">Thông tin sản phẩm</h4>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Hình ảnh</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn giá</th>
+                            <th scope="col">Thành tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sl :${cart.getCartItems()}">
+                            <td>
+                                <img
+                                    th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
+                                    th:src="@{'/user/display?id=' + ${sl.productDetails.productId.id} + '&imageId=' + ${sl.productDetails.productId.images[0].id}}"
+                                    alt="Sản phẩm" style="max-width: 50px; max-height: 50px"/>
+                            </td>
+                            <td th:text="${sl.productDetails.productId.name}"></td>
+                            <td th:text="${sl.quantity}"></td>
+                            <td th:text="${sl.productDetails.sellPrice}"></td>
+                            <td th:text="${sl.price * sl.quantity}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Tổng số tiền -->
+                    <div class="text-end">
+                        Tổng số tiền ban đầu : <span id="totalPrice" th:text="${cart.totalPrice} + 'Đ'"
+                                                     style="color: red;"></span> <br>
+                        <!--                        Tổng số tiền cuối cùng: <p style="color: red;" id="totalPrice1"></p>-->
+
+                    </div>
+                    <!-- Nút đặt hàng -->
+                    <div class="d-grid gap-2 col-2 mx-auto mt-3">
+                        <button id="placeOrderBtn" class="btn btn-primary" type="submit">Đặt Hàng</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Form nhập địa chỉ mới -->
+        <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addAddressModalLabel">Thêm Địa Chỉ Mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form -->
+                        <form th:action="@{/user/add1}" method="post" th:object="${newAddress}">
+                            <input type="hidden" th:field="*{id}"/>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="streetName" class="form-label">Tên Đường</label>
+                                    <input type="text" class="form-control" id="streetName" placeholder="Nhập Tên Đường"
+                                           th:field="*{streetName}">
+                                    <span th:if="${#fields.hasErrors('streetName')}" style="color: red; font-size: 13px"
+                                          th:errors="*{streetName}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="district" class="form-label">Tên Huyện</label>
+                                    <input type="text" class="form-control" id="district" placeholder="Nhập Tên Huyện"
+                                           th:field="*{district}">
+                                    <span th:if="${#fields.hasErrors('district')}" style="color: red; font-size: 13px"
+                                          th:errors="*{district}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="province" class="form-label">Tên Tỉnh</label>
+                                    <input type="text" class="form-control" id="province" placeholder="Nhập Tên Tỉnh"
+                                           th:field="*{province}">
+                                    <span th:if="${#fields.hasErrors('province')}" style="color: red; font-size: 13px"
+                                          th:errors="*{province}"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="zipcode" class="form-label">Số Điện Thoại</label>
+                                    <input type="number" class="form-control" id="zipcode"
+                                           placeholder="Nhập Số Điện Thoại" th:field="*{zipcode}">
+                                    <span th:if="${#fields.hasErrors('zipcode')}" style="color: red; font-size: 13px"
+                                          th:errors="*{zipcode}"></span>
+                                </div>
+
+                                <!-- Checkbox để chọn làm địa chỉ mặc định -->
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="setDefaultAddress"
+                                           name="setDefaultAddress" th:field="*{defaultAddress}"/>
+                                    <label class="form-check-label" for="setDefaultAddress">Đặt làm Địa Chỉ Mặc
+                                        Định</label>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button id="addAddressBtn1" class="btn btn-primary" type="submit"
+                                            data-href='/user/checkout'>Thêm
+                                    </button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js}"></script>
+
+
+<!-- Liên kết với tệp JavaScript của Bootstrap (tuỳ chọn) -->
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js}"></script>
+<!-- Liên kết với tệp bi-icons của Bootstrap (để sử dụng bi bi-trash) -->
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.20.0/font/bootstrap-icons.css}"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Bootstrap Bundle with Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Thêm đoạn mã script vào trang HTML của bạn -->
+
+
+<script>
+    function reloadPage() {
+        location.reload(true);
+    }
+</script>
+<script>
+    function toggleManualInput() {
+        var selectedVoucherCode = document.getElementById("selectedVoucherCode");
+        var promoCodeInput = document.getElementById("promoCode");
+
+        if (selectedVoucherCode.value === "") {
+            promoCodeInput.style.display = "block";
+        } else {
+            promoCodeInput.style.display = "none";
+        }
+    }
+
+    function showPopup(element) {
+        console.log("Show popup is called.");
+
+        var selectedVoucherCode = element.value;
+        var discount = element.getAttribute("data-discount");
+        var expiryDate = element.getAttribute("data-expiry");
+
+        var popupVoucherCode = document.getElementById("popup-voucher-code");
+        var popupVoucherInfo = document.getElementById("popup-voucher-info");
+
+        popupVoucherCode.innerText = "Mã giảm giá: " + selectedVoucherCode;
+        popupVoucherInfo.innerText = "Giảm giá: " + discount + "%\nHạn sử dụng: " + expiryDate;
+
+        // Hiển thị popup
+        var voucherOverlay = document.getElementById("voucher-overlay");
+        var voucherPopup = document.getElementById("voucher-popup");
+
+        voucherOverlay.style.display = "block";
+        voucherPopup.style.display = "block";
+    }
+
+
+    function hidePopup() {
+        var voucherPopup = document.getElementById("voucher-popup");
+        voucherPopup.style.display = "none";
+    }
+
+</script>
+<script>
+    function applyVoucher() {
+        var selectedVoucherCode = document.getElementById("selectedVoucherCode").value;
+
+        // Kiểm tra xem mã giảm giá đã được chọn chưa
+        if (!selectedVoucherCode) {
+            // Sử dụng SweetAlert để hiển thị thông báo lỗi khi không chọn mã giảm giá
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng chọn mã giảm giá trước khi áp dụng.',
+            });
+            return;
+        }
+
+        // Gửi yêu cầu AJAX đến server để áp dụng voucher
+        fetch("/user/apply-voucher?selectedVoucherCode=" + selectedVoucherCode, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Cập nhật giao diện người dùng dựa trên phản hồi từ server
+                updateUI(data);
+            })
+            .catch(error => {
+                // Sử dụng SweetAlert để hiển thị thông báo lỗi khi có lỗi xảy ra
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Có lỗi xảy ra khi áp dụng mã giảm giá.',
+                });
+                console.error("Error applying voucher:", error);
+            });
+    }
+
+    function updateUI(data) {
+        // Kiểm tra xem có giá mới được trả về từ server không
+        if (data && data.newTotal) {
+            // Kiểm tra thời hạn của voucher
+            if (data.expiryDateTime) {
+                // Convert thời hạn từ chuỗi sang đối tượng Date
+                var expiryDateTime = new Date(data.expiryDateTime);
+
+                // Kiểm tra xem thời hạn đã hết hay chưa
+                var isVoucherExpired = expiryDateTime < new Date();
+
+                if (isVoucherExpired) {
+                    // Sử dụng SweetAlert để hiển thị thông báo voucher đã hết hạn
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Mã giảm giá đã hết hạn',
+                        text: 'Vui lòng chọn mã giảm giá khác.',
+                    });
+                    return;
+                }
+            }
+            var formattedTotals = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
+
+            // Sử dụng SweetAlert để hiển thị thông báo thành công
+            Swal.fire({
+                icon: 'success',
+                title: 'Áp dụng thành công',
+                text: 'Giá mới: ' + formattedTotals +''+ 'VND',
+            }).then((result) => {
+                // Kiểm tra xem người dùng đã nhấn OK hay không
+                if (result.isConfirmed) {
+                    // Cập nhật giao diện người dùng với giá mới
+// Cập nhật giao diện người dùng với giá mới, định dạng với 2 chữ số thập phân
+                    var formattedTotal = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
+
+                    document.getElementById("totalPrice").innerText = formattedTotal + ''+'VND';
+
+                }
+            });
+        } else {
+            // Sử dụng SweetAlert để hiển thị thông báo thất bại
+            Swal.fire({
+                icon: 'error',
+                title: 'Áp dụng thất bại',
+                text: 'Có lỗi xảy ra khi áp dụng mã giảm giá.',
+            });
+            console.error("Invalid server response:", data);
+        }
+    }
+
+
+</script>
+
+
+<script>
+    // Hàm xử lý sự kiện khi người dùng thay đổi giá trị trong select
+    function handleVoucherSelectionChange() {
+        var selectedVoucher = document.getElementById("selectedVoucher").value;
+
+        // Nếu người dùng chọn "Nhập mã voucher", hiển thị input
+        if (selectedVoucher === "manual") {
+            document.getElementById("promoCode").style.display = "block";
+        } else {
+            document.getElementById("promoCode").style.display = "none";
+        }
+    }
+</script>
+
+
+<!--<script>-->
+<!--    document.getElementById("applyVoucherBtn").addEventListener("click", function () {-->
+<!--        var voucherCode = document.getElementById("promoCode").value;-->
+
+<!--        fetch('/user/apply-voucher?promoCode=' + voucherCode, {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--            },-->
+<!--            body: JSON.stringify({-->
+<!--                voucherCode: voucherCode,-->
+<!--            }),-->
+<!--        })-->
+<!--            .then(response => response.text())-->
+<!--            .then(data => {-->
+<!--                // Kiểm tra nếu có thông báo thành công-->
+<!--                if (data.includes("Áp dụng mã giảm giá thành công")) {-->
+<!--                    // Hiển thị thông báo thành công-->
+<!--                    document.getElementById("voucherAppliedMessage").innerText = data;-->
+<!--                    document.getElementById("voucherAppliedMessage").style.display = "block";-->
+
+<!--                    // Cập nhật giá mới-->
+<!--                    document.getElementById("totalPrice").value = data.totalPrice; // Cần kiểm tra giá trị được trả về từ server-->
+<!--                } else {-->
+<!--                    // Hiển thị thông báo lỗi-->
+<!--                    document.getElementById("voucherErrorMessage").innerText = data;-->
+<!--                    document.getElementById("voucherErrorMessage").style.display = "block";-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('Error:', error);-->
+<!--            });-->
+<!--    });-->
+<!--</script>-->
+
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        // Xử lý sự kiện khi chọn địa chỉ từ danh sách
+        $('#selectedAddress').change(function () {
+            var selectedAddressId = $(this).val();
+            var defaultAddressCheckbox = $('#setDefaultAddress');
+
+            // Kiểm tra nếu địa chỉ được chọn là mặc định
+            if (selectedAddressId && selectedAddressId !== '') {
+                // Ẩn checkbox chọn địa chỉ mặc định
+                defaultAddressCheckbox.hide();
+            } else {
+                // Hiển thị checkbox chọn địa chỉ mặc định
+                defaultAddressCheckbox.show();
+            }
+        });
+    });
+</script>
+
+<!--<script>-->
+<!--    function submitForm111() {-->
+<!--        var selectedPaymentMethod = document.getElementById("applyVoucherBtn").value;-->
+
+<!-- -->
+
+<!--          -->
+
+<!--        } else {-->
+<!--            // Nếu không phải VNPAY, submit form bình thường-->
+<!--            document.getElementById("orderForm").submit();-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('#confirmChangeBtn').click(function () {
+            var selectedAddressId = $('input[name="selectedAddressRadio"]:checked').val();
+            var selectedRadio = $('input[name="selectedAddressRadio"]:checked');
+
+            if (selectedRadio.length > 0) {
+                // Lấy thông tin địa chỉ từ thuộc tính data-*
+                var streetName = selectedRadio.attr('data-streetName');
+                var district = selectedRadio.attr('data-district');
+                var province = selectedRadio.attr('data-province');
+                var isDefaultAddress = selectedRadio.attr('data-defaultAddress') === 'true';
+
+                // Cập nhật giá trị của input text
+                $('#selectedAddress').val(isDefaultAddress ? 'mặc định' : streetName + ' ' + district + ' ' + province);
+
+                // Hiển thị hoặc ẩn mặc định tùy thuộc vào giá trị của isDefaultAddress
+                if (isDefaultAddress) {
+                    // Hiển thị mặc định
+                    $('#defaultAddressMessage').show();
+                } else {
+                    // Ẩn mặc định
+                    $('#defaultAddressMessage').hide();
+                }
+
+                // Đóng modal
+                // ...
+
+            } else {
+                alert('Vui lòng chọn một địa chỉ.');
+            }
+        });
+    });
+
+
+</script>
+
+
+<script>
+    document.getElementById('changeAddressBtn').addEventListener('click', function () {
+        // Ẩn thông tin địa chỉ hiện tại
+        document.getElementById('currentAddressInfo').style.display = 'none';
+        // Hiển thị bảng chọn địa chỉ
+        document.getElementById('addressSelectionTable').style.display = 'block';
+    });
+
+    document.getElementById('confirmChangeBtn').addEventListener('click', function () {
+        // Xử lý khi người dùng xác nhận thay đổi địa chỉ
+        // (Có thể sử dụng JavaScript để lấy giá trị địa chỉ được chọn và thực hiện các hành động cần thiết)
+    });
+</script>
+<script>
+    document.getElementById('changeAddressBtn').addEventListener('click', function () {
+        // Ẩn thông tin địa chỉ hiện tại
+        document.getElementById('currentAddressInfo').style.display = 'none';
+        // Hiển thị bảng chọn địa chỉ
+        document.getElementById('addressSelectionTable').style.display = 'block';
+    });
+
+    document.getElementById('confirmChangeBtn').addEventListener('click', function () {
+        // Xử lý khi người dùng xác nhận thay đổi địa chỉ
+        // (Có thể sử dụng JavaScript để lấy giá trị địa chỉ được chọn và thực hiện các hành động cần thiết)
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var addAddressBtn = document.getElementById("addAddressBtn");
+        var addAddressModal = new bootstrap.Modal(document.getElementById("addAddressModal"));
+
+        addAddressBtn.addEventListener("click", function () {
+            addAddressModal.show();
+        });
+    });
+</script>
+<script>
+    function openAddAddressModal() {
+        var myModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+        myModal.show();
+    }
+</script>
+
+<!-- JavaScript -->
+<script th:inline="javascript">
+    // Thêm mã JavaScript sau đây vào template của bạn
+    $(document).ready(function () {
+        $("#addAddressBtn1").click(function () {
+            // Thực hiện AJAX để gửi dữ liệu địa chỉ mới lên server
+            $.ajax({
+                type: "POST",
+                url: "/user/add1",
+                data: $("#addAddressForm").serialize(),
+                success: function (data) {
+                    // Sau khi thêm thành công, chuyển hướng đến trang checkout
+                    location.reload();
+                    window.location.href = "/user/checkout";
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+<!--<script th:inline="javascript">-->
+<!--    /* Xử lý sự kiện khi nhấn nút áp dụng voucher */-->
+<!--    $(document).ready(function () {-->
+<!--        $('#applyVoucherBtn').on('click', function () {-->
+<!--            var promoCode = $('#promoCode').val();-->
+<!--            // Gửi mã giảm giá lên server để kiểm tra và lấy tổng số tiền mới-->
+<!--            $.ajax({-->
+<!--                type: 'GET',-->
+<!--                url: '/user/apply-promo-code?promoCode=' + promoCode,-->
+<!--                success: function (data) {-->
+<!--                    if (data.success) {-->
+<!--                        // Cập nhật tổng số tiền trên giao diện-->
+<!--                        $('#totalPrice1').text(data.newTotal);-->
+<!--                        alert('Đã áp dụng mã giảm giá thành công!');-->
+<!--                    } else {-->
+<!--                        alert(data.error);-->
+<!--                    }-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    console.error('Lỗi khi áp dụng mã giảm giá');-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<script>
+    function submitForm() {
+        // Gửi yêu cầu khi người dùng chọn địa chỉ
+        document.getElementById("setDefaultAddressForm").submit();
+    }
+</script>
+<script>
+    function submitForm() {
+        // Lấy dữ liệu từ biểu mẫu
+        var formData = $('#addAddressForm').serialize();
+
+        // Gửi dữ liệu thông qua Ajax
+        $.ajax({
+            type: 'POST',
+            url: '/user/add1',
+            data: formData,
+            success: function (response) {
+                // Xử lý kết quả trả về từ controller
+                if (response === 'success') {
+                    // Đóng modal nếu thêm thành công
+                    $('#addAddressModal').modal('hide');
+                } else {
+                    // Hiển thị lỗi nếu có
+                    alert('Có lỗi xảy ra');
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    }
+</script>
+<!--<script>-->
+<!--    document.getElementById("applyVoucherBtn").addEventListener("click", function() {-->
+<!--        // Xử lý sự kiện khi nút "Áp dụng" được click-->
+<!--        var promoCode = document.getElementById("promoCode").value;-->
+<!--        // Thực hiện gửi yêu cầu AJAX để kiểm tra và áp dụng mã giảm giá-->
+<!--        // Có thể sử dụng fetch hoặc XMLHttpRequest ở đây-->
+<!--        // Sau khi nhận được phản hồi từ server, cập nhật giá tiền nếu mã giảm giá hợp lệ-->
+<!--        // Hiển thị thông báo nếu có lỗi-->
+<!--    });-->
+
+<!--    document.getElementById("placeOrderBtn").addEventListener("click", function() {-->
+<!--        // Xử lý sự kiện khi nút "Đặt Hàng" được click-->
+<!--        // Thực hiện các thao tác liên quan đến việc đặt hàng, chuyển hướng, vv.-->
+<!--    });-->
+<!--</script>-->
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        // Lấy nút "Thêm Địa Chỉ Mới"-->
+<!--        var addAddressBtn = document.getElementById('addAddressBtn');-->
+<!--        var applyVoucherBtn = document.getElementById('applyVoucherBtn');-->
+
+<!--        // Lấy nút "Đặt Hàng"-->
+<!--        var placeOrderBtn = document.getElementById('placeOrderBtn');-->
+
+<!--        // Thêm sự kiện click cho nút "Thêm Địa Chỉ Mới"-->
+<!--        addAddressBtn.addEventListener('click', function () {-->
+<!--            // Thực hiện các hành động tương ứng với việc nhấn nút "Thêm Địa Chỉ Mới"-->
+<!--            console.log('Click Thêm Địa Chỉ Mới');-->
+<!--        });-->
+<!--        applyVoucherBtn.addEventListener('click', function () {-->
+<!--            // Thực hiện các hành động tương ứng với việc nhấn nút "Thêm Địa Chỉ Mới"-->
+<!--            console.log('Click c');-->
+<!--        });-->
+
+<!--        // Thêm sự kiện click cho nút "Đặt Hàng"-->
+<!--        placeOrderBtn.addEventListener('click', function () {-->
+<!--            // Thực hiện các hành động tương ứng với việc nhấn nút "Đặt Hàng"-->
+<!--            console.log('Click Đặt Hàng');-->
+
+<!--            // Nếu bạn muốn submit form, bạn có thể sử dụng:-->
+<!--            // document.getElementById('yourFormId').submit();-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--<script th:inline="javascript">-->
+<!--    /* Xử lý sự kiện khi nhập mã giảm giá */-->
+<!--    $(document).ready(function () {-->
+<!--        $('#promoCode').on('input', function () {-->
+<!--            var promoCode = $(this).val();-->
+<!--            // Gửi mã giảm giá lên server để kiểm tra và lấy tổng số tiền mới-->
+<!--            $.ajax({-->
+<!--                type: 'GET',-->
+<!--                url: '/user/check-promo-code?promoCode=' + promoCode,-->
+<!--                success: function (data) {-->
+<!--                    // Cập nhật tổng số tiền trên giao diện-->
+<!--                    $('#totalPrice1').text(data.newTotal);-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    console.error('Lỗi khi kiểm tra mã giảm giá');-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+</body>
+</html>

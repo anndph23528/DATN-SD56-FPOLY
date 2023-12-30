@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Ảnh</th>
+        <th scope="col">Tên sản phẩm</th>
+        <th scope="col">Màu sắc</th>
+<!--        <th scope="col">Số lượng</th>-->
+<!--        <th scope="col">Giá</th>-->
+<!--        <th scope="col">Thành tiền</th>-->
+<!--        <th scope="col"></th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Dòng sản phẩm trong giỏ hàng -->
+    <tr id="cartItems" th:each="sl:${cartItem}">
+        <td>
+            <img
+                th:src="@{'/cart/display?id=' + ${sl.id}}"
+                alt="Sản phẩm 1"
+                style="max-width: 80px; max-height: 80px"
+            />
+        </td>
+        <td th:text="${sl.id}"></td>
+        <td th:text="${sl.productDetails.productId.name}"></td>
+        <td th:text="${sl.productDetails.colorId.name}"></td>
+        <td th:text="${sl.productDetails.sizeId.name}"></td>
+<!--        <td th:text="${sl.productDetails.productId.brandId.name}"></td>-->
+<!--        <td th:text="${sl.getColorId()}"></td>-->
+<!--        <td th:text="${sl.getSizeId()}"></td>-->
+        <td  >
+            <input
+                type="number"
+                class="form-control quantity"
+                th:value="${sl.quantity}"
+                min="0"
+
+            />
+        </td>
+<!--        <td class="price" th:text="${sl.sellPrice}"></td>-->
+<!--        <td class="subtotal">200,000</td>-->
+        <td>
+            <button type="button" class="btn btn-danger remove">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    </tr>
+    </table>
+</body>
+</html>

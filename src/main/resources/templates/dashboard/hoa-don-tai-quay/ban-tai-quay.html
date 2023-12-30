@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Tạo Hóa Đơn</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        .tab {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<h1>Tạo mới Hóa Đơn</h1>
+<button onclick="addProduct()">Thêm Sản Phẩm</button>
+
+<div id="invoiceTabs">
+    <div class="tab">
+        <table>
+            <thead>
+            <tr>
+                <th>Mã SP</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Giá</th>
+            </tr>
+            </thead>
+            <tbody id="productList">
+            <!-- Danh sách sản phẩm sẽ hiển thị ở đây -->
+            </tbody>
+        </table>
+        <p>Tổng tiền: <input type="text" id="totalAmount" disabled></p>
+    </div>
+</div>
+<button onclick="addInvoice()">Thêm Hóa Đơn</button>
+
+<div>
+    <h2>Thông Tin Tài Khoản</h2>
+    <label for="customerName">Tên Khách Hàng:</label>
+    <input type="text" id="customerName"><br><br>
+    <label for="customerEmail">Email:</label>
+    <input type="email" id="customerEmail">
+</div>
+
+<script>
+    let invoiceCounter = 0;
+
+    function addProduct() {
+        const productRow = `
+                <tr>
+                    <td>SP${productCounter}</td>
+                    <td>Sản Phẩm ${productCounter}</td>
+                    <td><input type="number" id="productPrice${productCounter}" onchange="calculateTotal()"></td>
+                </tr>
+            `;
+        document.getElementById('productList').insertAdjacentHTML('beforeend', productRow);
+    }
+
+    function calculateTotal() {
+        let total = 0;
+        const productPrices = document.querySelectorAll('input[id^="productPrice"]');
+        productPrices.forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('totalAmount').value = total;
+    }
+
+    function addInvoice() {
+        if (invoiceCounter < 5) {
+            invoiceCounter++;
+            const invoiceTab = document.createElement('div');
+            invoiceTab.classList.add('tab');
+            invoiceTab.innerHTML = `
+                    <h2>Hóa Đơn #${invoiceCounter}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã SP</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList${invoiceCounter}">
+                            <!-- Danh sách sản phẩm sẽ hiển thị ở đây -->
+                        </tbody>
+                    </table>
+                    <p>Tổng tiền: <input type="text" id="totalAmount${invoiceCounter}" disabled></p>
+                `;
+            document.getElementById('invoiceTabs').appendChild(invoiceTab);
+        }
+    }
+</script>
+</body>
+</html>

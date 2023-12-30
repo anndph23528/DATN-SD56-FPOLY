@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vouchers</title>
+</head>
+<body>
+<h1>My Vouchers</h1>
+
+<!-- Hiển thị danh sách voucher chưa lưu -->
+
+
+<!-- Hiển thị danh sách voucher đã lưu -->
+<ul th:if="${not #lists.isEmpty(voucherUsages)}">
+    <li th:each="voucherUsage : ${voucherUsages}">
+        <p th:text="${voucherUsage.voucher.code}"></p>
+        <!-- Thêm các trường thông tin voucher khác cần hiển thị -->
+        <p th:if="${voucherUsage.isUsed}" style="color: red;">Used</p>
+        <p th:unless="${voucherUsage.isUsed}" style="color: green;">Not Used</p>
+    </li>
+</ul>
+</body>
+</html>

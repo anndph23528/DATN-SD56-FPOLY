@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+
+<!-- index.html  21 Nov 2019 03:44:50 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title> SneakBeer - Account </title>
+    <!-- General CSS Files -->
+    <link th:href="@{/dashboard/css/app.min.css}" rel="stylesheet">
+    <!-- Template CSS -->
+    <link th:href="@{/dashboard/css/style.css}" rel="stylesheet">
+    <link th:href="@{/dashboard/css/components.css}" rel="stylesheet">
+    <!-- Custom style CSS -->
+    <link th:href="@{/dashboard/css/custom.css}">
+    <link rel='shortcut icon' type='image/x-icon' th:href="@{/dashboard/img/favicon.ico}"/>
+</head>
+
+<body>
+<div class="loader"></div>
+
+
+<div id="app">
+    <div class="main-wrapper main-wrapper-1">
+        <div class="navbar-bg"></div>
+        <nav class="navbar navbar-expand-lg main-navbar sticky">
+            <div class="form-inline mr-auto">
+                <ul class="navbar-nav mr-3">
+                    <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg
+									collapse-btn"> <i data-feather="align-justify"></i></a></li>
+                    <li><a href="#" class="nav-link nav-link-lg fullscreen-btn">
+                        <i data-feather="maximize"></i>
+                    </a></li>
+                    <li>
+                        <form class="form-inline mr-auto">
+                            <div class="search-element">
+                                <input class="form-control" type="search" placeholder="Search" aria-label="Search"
+                                       data-width="200">
+                                <button class="btn" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <ul class="navbar-nav navbar-right">
+                <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                                                             class="nav-link nav-link-lg message-toggle"><i
+                    data-feather="mail"></i>
+                    <span class="badge headerBadge1">
+                            6 </span> </a>
+                    <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
+                        <div class="dropdown-header">
+                            Messages
+                            <div class="float-right">
+                                <a href="#">Mark All As Read</a>
+                            </div>
+                        </div>
+                        <div class="dropdown-list-content dropdown-list-message">
+                            <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar
+            											text-white"> <img alt="image"
+                                                                          th:src="@{/dashboard/img/users/user-1.png}"
+                                                                          class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">John
+                                  Deo</span>
+                                <span class="time messege-text">Please check your mail !!</span>
+                                <span class="time">2 Min Ago</span>
+                              </span>
+                            </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar text-white">
+                                <img alt="image" th:src="@{/dashboard/img/users/user-2.png}"
+                                     class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">Sarah
+                                  Smith</span> <span class="time messege-text">Request for leave
+                                  application</span>
+                                <span class="time">5 Min Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar text-white">
+                                <img alt="image" th:src="@{/dashboard/img/users/user-5.png}"
+                                     class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">Jacob
+                                  Ryan</span> <span class="time messege-text">Your payment invoice is
+                                  generated.</span> <span class="time">12 Min Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar text-white">
+                                <img alt="image" th:src="@{/dashboard/img/users/user-4.png}"
+                                     class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">Lina
+                                  Smith</span> <span class="time messege-text">hii John, I have upload
+                                  doc
+                                  related to task.</span> <span class="time">30
+                                  Min Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar text-white">
+                                <img alt="image" th:src="@{/dashboard/img/users/user-3.png}"
+                                     class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">Jalpa
+                                  Joshi</span> <span class="time messege-text">Please do as specify.
+                                  Let me
+                                  know if you have any query.</span> <span class="time">1
+                                  Days Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-avatar text-white">
+                                <img alt="image" th:src="@{/dashboard/img/users/user-2.png}"
+                                     class="rounded-circle">
+                              </span> <span class="dropdown-item-desc"> <span class="message-user">Sarah
+                                  Smith</span> <span class="time messege-text">Client Requirements</span>
+                                <span class="time">2 Days Ago</span>
+                              </span>
+                        </a>
+                        </div>
+                        <div class="dropdown-footer text-center">
+                            <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                                                             class="nav-link notification-toggle nav-link-lg"><i
+                    data-feather="bell" class="bell"></i>
+                </a>
+                    <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
+                        <div class="dropdown-header">
+                            Notifications
+                            <div class="float-right">
+                                <a href="#">Mark All As Read</a>
+                            </div>
+                        </div>
+                        <div class="dropdown-list-content dropdown-list-icons">
+                            <a href="#" class="dropdown-item dropdown-item-unread"> <span
+                                class="dropdown-item-icon bg-primary text-white"> <i class="fas
+            												fa-code"></i>
+                              </span> <span class="dropdown-item-desc"> Template update is
+                                available now! <span class="time">2 Min
+                                  Ago</span>
+                              </span>
+                            </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-info text-white"> <i
+                            class="far
+            												fa-user"></i>
+                              </span> <span class="dropdown-item-desc"> <b>You</b> and <b>Dedik
+                                  Sugiharto</b> are now friends <span class="time">10 Hours
+                                  Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-success text-white"> <i
+                            class="fas
+            												fa-check"></i>
+                              </span> <span class="dropdown-item-desc"> <b>Kusnaedi</b> has
+                                moved task <b>Fix bug header</b> to <b>Done</b> <span class="time">12
+                                  Hours
+                                  Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span
+                            class="dropdown-item-icon bg-danger text-white"> <i
+                            class="fas fa-exclamation-triangle"></i>
+                              </span> <span class="dropdown-item-desc"> Low disk space. Let's
+                                clean it! <span class="time">17 Hours Ago</span>
+                              </span>
+                        </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-info text-white"> <i
+                            class="fas
+            												fa-bell"></i>
+                              </span> <span class="dropdown-item-desc"> Welcome to Otika
+                                template! <span class="time">Yesterday</span>
+                              </span>
+                        </a>
+                        </div>
+                        <div class="dropdown-footer text-center">
+                            <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="#" data-toggle="dropdown"
+                                        class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image"
+                                                                                                         th:src="@{/website/img/logo1.png}"
+                                                                                                         class="user-img-radious-style">
+                    <span class="d-sm-none d-lg-inline-block"></span></a>
+                    <div class="dropdown-menu dropdown-menu-right pullDown">
+                        <div class="dropdown-title" th:text=" ${#authentication.name}"></div>
+
+                        <!--                        <a href="profile.html" class="dropdown-item has-icon"> <i class="far-->
+                        <!--            										fa-user"></i> Profile-->
+                        <!--                        </a> <a href="timeline.html" class="dropdown-item has-icon"> <i class="fas fa-bolt"></i>-->
+                        <!--                        Activities-->
+                        <!--                    </a> <a href="#" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>-->
+                        <!--                        Settings-->
+                        <!--                    </a>-->
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i
+                            class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-sidebar sidebar-style-2">
+            <aside id="sidebar-wrapper">
+                <div class="sidebar-brand">
+                    <a th:href="@{/product/hien-thi}">
+                        <img alt="image" th:src="@{/website/img/logo1.png}"
+                             class="header-logo"/> <span
+                        class="logo-name">SneakerBeer</span>
+                    </a>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="dropdown active">
+                        <a th:href="@{/admin/thong-ke/hien-thi}" class="nav-link"><i data-feather="monitor"></i><span>Tổng quan</span></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" th:href="@{/admin/san-pham-test/create}">Sản phẩm</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/mau-sac/hien-thi}">Màu sắc</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/de-giay/hien-thi}">Đế giày</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/thuong-hieu/hien-thi}">Thương hiệu</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/chat-lieu/hien-thi}">Chất liệu</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/kich-co/hien-thi}">Kích Cỡ</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/loai-giay/hien-thi}">Loại giày</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/chi-tiet-san-pham/hien-thi}">Chi tiết sản phẩm</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="layout"></i><span>Hoá đơn</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="image"></i><span>Account</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" th:href="@{/admin/account/hien-thi}">Account</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="map"></i><span>Tài khoản</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/admin/roles/hien-thi}">Chức vụ</a></li>
+                            <li><a th:href="@{/admin/nhan-vien/hien-thi}">Nhân viên</a></li>
+                            <li><a th:href="@{/admin/khach-hang/hien-thi}">Khách hàng</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="map"></i><span>Voucher</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/admin/voucher/hien-thi}">Danh sách</a></li>
+                            <li><a th:href="@{/admin/voucher/lich-su-dung-voucher}">Lịch Sử Dùng Voucher</a></li>
+                            <li><a th:href="@{/admin/voucher/view-add}">Thêm mới</a></li>
+                            <!--                            <li><a th:href="@{/admin/khach-hang/hien-thi}">Khách hàng</a></li>-->
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                            data-feather="map"></i><span>Thống Kê</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/admin/thong-ke/hien-thi}">Thống Kê</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <section class="section">
+                <div class="section-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- --ô thong ke end -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Lịch sử dùng Voucher</h4>
+                                </div>
+                                <!-- -----o thong ke start -->
+                                <form action="/admin/voucher/voucher-history" method="get">
+                                    <label for="startDate">Ngày bắt đầu:</label>
+                                    <input type="date" id="startDate" name="startDate">
+
+                                    <label for="endDate">Ngày kết thúc:</label>
+                                    <input type="date" id="endDate" name="endDate">
+
+<!--                                    <label for="searchInput">Tìm kiếm:</label>-->
+                                    <input type="hidden" id="searchInput" name="searchInput">
+
+                                    <button type="submit">Lọc</button>
+                                </form>
+
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped table-hove"
+                                            id="tableExport"
+                                            style="width: 100%"
+                                        >
+                                            <thead>
+                                            <tr>
+                                                <th>MaVoucher</th>
+                                                <th>Khách Hàng</th>
+                                                <th>Thời sử dụng</th>
+                                                <th>Giá trị giảm</th>
+                                                <th>Kiểu giảm</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="ht : ${history}">
+                                                <td th:text="${ht.voucher.code}"></td>
+                                                <td th:text="${ht.account.name}"></td>
+                                                <td th:text="${#temporals.format(ht.usedDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                                <td th:text="${#numbers.formatDecimal(ht.voucher.discount, 0, 'COMMA', 0, 'POINT')}"></td>
+                                                <td th:if="${ht.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
+                                                    %
+                                                </td>
+                                                <td th:if="${ht.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
+                                                    VND
+                                                </td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+<!--                                <nav aria-label="Page navigation example">-->
+<!--                                    <ul class="pagination">-->
+<!--                                        <li class="page-item">-->
+<!--                                            <a-->
+<!--                                                class="page-link"-->
+<!--                                                th:if="${history.hasPrevious()}"-->
+<!--                                                th:href="@{/admin/voucher/lich-su-dung-voucher(page=${history.number -1})}"-->
+<!--                                            >-->
+<!--                                                <span aria-hidden="true">&laquo;</span>-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                        <li-->
+<!--                                            class="page-item"-->
+<!--                                            th:each="pageNumber : ${#numbers.sequence(0, history.totalPages-1)}"-->
+<!--                                        >-->
+<!--                                            <a-->
+<!--                                                class="page-link"-->
+<!--                                                th:href="@{/admin/voucher/lich-su-dung-voucher(page=${pageNumber})}"-->
+<!--                                                th:text="${pageNumber+1}"-->
+<!--                                            ></a>-->
+<!--                                        </li>-->
+
+<!--                                        <li class="page-item">-->
+<!--                                            <a-->
+<!--                                                class="page-link"-->
+<!--                                                th:if="${history.hasNext()}"-->
+<!--                                                th:href="@{/admin/voucher/lich-su-dung-voucher(page=${history.number + 1})}"-->
+<!--                                            >-->
+<!--                                                <span aria-hidden="true">&raquo;</span></a-->
+<!--                                            >-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </nav>-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="settingSidebar">
+                <a href="javascript:void(0)" class="settingPanelToggle">
+                    <i class="fa fa-spin fa-cog"></i>
+                </a>
+                <div class="settingSidebar-body ps-container ps-theme-default">
+                    <div class="fade show active">
+                        <div class="setting-panel-header">Setting Panel</div>
+                        <div class="p-15 border-bottom">
+                            <h6 class="font-medium m-b-10">Select Layout</h6>
+                            <div class="selectgroup layout-color w-50">
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="radio"
+                                        name="value"
+                                        value="1"
+                                        class="selectgroup-input-radio select-layout"
+                                        checked
+                                    />
+                                    <span class="selectgroup-button">Light</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="radio"
+                                        name="value"
+                                        value="2"
+                                        class="selectgroup-input-radio select-layout"
+                                    />
+                                    <span class="selectgroup-button">Dark</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="p-15 border-bottom">
+                            <h6 class="font-medium m-b-10">Sidebar Color</h6>
+                            <div class="selectgroup selectgroup-pills sidebar-color">
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="radio"
+                                        name="icon-input"
+                                        value="1"
+                                        class="selectgroup-input select-sidebar"
+                                    />
+                                    <span
+                                        class="selectgroup-button selectgroup-button-icon"
+                                        data-toggle="tooltip"
+                                        data-original-title="Light Sidebar"
+                                    ><i class="fas fa-sun"></i
+                                    ></span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="radio"
+                                        name="icon-input"
+                                        value="2"
+                                        class="selectgroup-input select-sidebar"
+                                        checked
+                                    />
+                                    <span
+                                        class="selectgroup-button selectgroup-button-icon"
+                                        data-toggle="tooltip"
+                                        data-original-title="Dark Sidebar"
+                                    ><i class="fas fa-moon"></i
+                                    ></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="p-15 border-bottom">
+                            <h6 class="font-medium m-b-10">Color Theme</h6>
+                            <div class="theme-setting-options">
+                                <ul class="choose-theme list-unstyled mb-0">
+                                    <li title="white" class="active">
+                                        <div class="white"></div>
+                                    </li>
+                                    <li title="cyan">
+                                        <div class="cyan"></div>
+                                    </li>
+                                    <li title="black">
+                                        <div class="black"></div>
+                                    </li>
+                                    <li title="purple">
+                                        <div class="purple"></div>
+                                    </li>
+                                    <li title="orange">
+                                        <div class="orange"></div>
+                                    </li>
+                                    <li title="green">
+                                        <div class="green"></div>
+                                    </li>
+                                    <li title="red">
+                                        <div class="red"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-15 border-bottom">
+                            <div class="theme-setting-options">
+                                <label class="m-b-0">
+                                    <input
+                                        type="checkbox"
+                                        name="custom-switch-checkbox"
+                                        class="custom-switch-input"
+                                        id="mini_sidebar_setting"
+                                    />
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="control-label p-l-10">Mini Sidebar</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="p-15 border-bottom">
+                            <div class="theme-setting-options">
+                                <label class="m-b-0">
+                                    <input
+                                        type="checkbox"
+                                        name="custom-switch-checkbox"
+                                        class="custom-switch-input"
+                                        id="sticky_header_setting"
+                                    />
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="control-label p-l-10">Sticky Header</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-4 p-3 align-center rt-sidebar-last-ele">
+                            <a
+                                href=""
+                                class="btn btn-icon icon-left btn-primary btn-restore-theme"
+                            >
+                                <i class="fas fa-undo"></i> Restore Default
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- General JS Scripts -->
+<script th:src="@{/dashboard/js/app.min.js}"></script>
+<!-- JS Libraies -->
+<!-- Page Specific JS File -->
+<script th:src="@{/dashboard/bundles/datatables/datatables.min.js}"></script>
+<!--<script th:src="@{/dashboard/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js}"></script>-->
+<script th:src="@{/dashboard/bundles/datatables/export-tables/dataTables.buttons.min.js}"></script>
+<script th:src="@{/dashboard/bundles/datatables/export-tables/buttons.flash.min.js}"></script>
+<script th:src="@{/dashboard/bundles/datatables/export-tables/jszip.min.js}"></script>
+<script th:src="@{/dashboard/bundles/datatables/export-tables/pdfmake.min.js}"></script>
+<script th:src="@{/dashboard/bundles/datatables/export-tables/vfs_fonts.js}"></script>
+<script th:src="@{/dashboard/bundles/datatables/export-tables/buttons.print.min.js}"></script>
+<script th:src="@{/dashboard/js/page/datatables.js}"></script>
+
+<!-- JS Libraies -->
+<!--<script th:src="@{/dashboard/bundles/apexcharts/apexcharts.min.js}"></script>-->
+<!--&lt;!&ndash; Page Specific JS File &ndash;&gt;-->
+<!--<script th:src="@{/dashboard/js/page/index.js}"></script>-->
+<!-- Template JS File -->
+<script th:src="@{/dashboard/js/scripts.js}"></script>
+<!-- Custom JS File -->
+<script th:src="@{/dashboard/js/custom.js}"></script>
+</body>
+
+<!-- export-table.html  21 Nov 2019 03:56:01 GMT -->
+</html>

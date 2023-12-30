@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin giao dịch</title>
+</head>
+<body>
+<h2>Thông tin giao dịch</h2>
+
+<p>Mã phản hồi từ VNP: <span th:text="${vnp_OrderInfo}"></span></p>
+<p>Số giao dịch VNP: <span th:text="${vnp_TransactionNo}"></span></p>
+<p>Mã giao dịch của bạn: <span th:text="${vnp_TxnRef}"></span></p>
+<p>Mã giao dịch của bạn: <span th:text="${vnp_BankCode}"></span></p>
+<p>Mã giao dịch của bạn: <span th:text="${vnp_Amount}"></span></p>
+<!-- Thêm các thông tin khác cần thiết -->
+
+<!-- Các thông tin khác -->
+
+</body>
+</html>
