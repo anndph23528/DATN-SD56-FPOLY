@@ -24,7 +24,7 @@
             th:href="@{https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700;900&display=swap}"
             rel="stylesheet"
         />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
     <!-- Icon Font Stylesheet -->
     <!-- Icon Font Stylesheet -->
     <link
@@ -295,13 +295,14 @@
 
                     </div>
                 </div>
+
                 <!-- col end -->
                 <div class="col-lg-7 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <div th:if="${errorMessage}" class="alert alert-danger">
-                                <p th:text="${errorMessage}"></p>
-                        </div>
+                            <!-- Thêm vào đâu đó trong trang HTML của bạn để hiển thị thông báo -->
+
+
                             <h1 class="h2" th:text="${product.name}"></h1>
                             <p class="h3 py-2">
                                 <span id="product-price">1000đ</span>
@@ -342,10 +343,10 @@
                             </ul>
                             <input
                                     type="hidden"
-                                    name="product-title"
+
                                     value="Activewear"
                                     th:value="${product.id}"
-                                    th:name="productId"
+                                    name="productId"
                                     id="product"
                             />
                             <ul class="list-inline">
@@ -384,7 +385,7 @@
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
-                                <input type="text" class="form-control bg-secondary text-center" value="1"
+                                <input type="text"  id="quantity" class="form-control bg-secondary text-center" value="1"
                                        name="quantity"
                                        readonly>
                                 <div class="input-group-btn">
@@ -587,6 +588,8 @@
 
     // Tạo biến để lưu giá sản phẩm
 </script>
+<!-- Sử dụng SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script th:inline="javascript">
     var cartItemCount = 0;
@@ -658,9 +661,11 @@
     });
 
 
-
+    //
     // $(document).ready(function () {
-    //     $(".addToCartBtn").click(function () {
+    //     $(".addToCartBtn").click(function (event) {
+    //         event.preventDefault(); // Ngăn chặn sự kiện mặc định của nút submit
+    //
     //         var productId = $(this).data("productId");
     //         var color = $(this).data("color");
     //         var size = $(this).data("size");
@@ -677,33 +682,36 @@
     //                 size: size,
     //             },
     //             success: function (response) {
-    //                 if(response.quantity <=0 ){
-    //                     alert("hết hàng vui lòng chọn sản phẩm khác")
-    //                 }else {
-    //                     // Xử lý phản hồi từ server (nếu cần)
-    //                     // Cập nhật danh sách sản phẩm trong giỏ hàng
-    //                     $("#cartItems").html(response);
-    //                     // console.log(cartItemCount);
-    //                     event.preventDefault();
-    //                     var totalItems = calculateTotalItems(response);
+    //                 if (response.quantity <= 0) {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Hết hàng',
+    //                         text: 'Vui lòng chọn số lượng hợp lệ.'
+    //                     });
+    //                 } else {
+    //                     // Hiển thị SweetAlert khi thêm vào giỏ hàng thành công
+    //                     Swal.fire({
+    //                         icon: 'success',
+    //                         title: 'Đã thêm vào giỏ hàng',
+    //                         text: 'Bạn có thể kiểm tra giỏ hàng của mình!'
+    //                     });
     //
-    //                     // Cập nhật số sản phẩm trên biểu tượng giỏ hàng
+    //                     // Cập nhật danh sách sản phẩm trong giỏ hàng (nếu cần)
+    //                     $("#cartItems").html(response);
+    //
+    //                     // Cập nhật số sản phẩm trên biểu tượng giỏ hàng (nếu cần)
+    //                     var totalItems = calculateTotalItems(response);
     //                     updateCartIcon(totalItems);
     //                 }
     //             },
-    //
     //             error: function (error) {
     //                 console.log(error);
     //             },
     //         });
-    //
-    //         // cartItemCount++;
-    //         //
-    //         // // Cập nhật số lượng sản phẩm trên giao diện người dùng
-    //         // // Đặt giá trị vào phần tử có id là cartItemCount
-    //         // document.getElementById("cartItemCount").innerText = cartItemCount;
     //     });
     // });
+
+
 
     function calculateTotalItems(response) {
         // Thực hiện tính tổng số sản phẩm trong giỏ hàng từ dữ liệu phản hồi
@@ -752,6 +760,122 @@
         });
     });
 </script>
+<!-- Thêm đoạn mã JavaScript cho SweetAlert2 -->
+<!-- Thêm đoạn mã JavaScript cho SweetAlert2 -->
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    $(document).ready(function () {-->
+<!--        $("#addToCartButton").click(function () {-->
+<!--            var productId = $("#productId").val();-->
+<!--            var sizeId = $("input[name='size']:checked").val();-->
+<!--            var colorId = $("input[name='color']:checked").val();-->
+<!--            var quantity = $("#quantity").val();-->
+
+<!--            if (!sizeId || !colorId) {-->
+<!--                Swal.fire({-->
+<!--                    icon: 'error',-->
+<!--                    title: 'Vui lòng chọn size và màu!',-->
+<!--                    showConfirmButton: false,-->
+<!--                    timer: 1500-->
+<!--                });-->
+<!--                return;-->
+<!--            }-->
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '/add-to-cart',-->
+<!--                data: {-->
+<!--                    productId: productId,-->
+<!--                    size: sizeId,-->
+<!--                    color: colorId,-->
+<!--                    quantity: quantity-->
+<!--                },-->
+<!--                success: function (data) {-->
+<!--                    Swal.fire({-->
+<!--                        icon: 'success',-->
+<!--                        title: data,-->
+<!--                        showConfirmButton: false,-->
+<!--                        timer: 1500-->
+<!--                    });-->
+<!--                    location.reload(); // Làm mới trang sau khi hiển thị thông báo thành công-->
+<!--                },-->
+<!--                error: function (error) {-->
+<!--                    console.log(error);-->
+<!--                    Swal.fire({-->
+<!--                        icon: 'error',-->
+<!--                        title: 'Có lỗi xảy ra!',-->
+<!--                        showConfirmButton: false,-->
+<!--                        timer: 1500-->
+<!--                    });-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--    /*]]>*/-->
+<!--</script>-->
+
+<!-- Thêm đoạn mã JavaScript -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        $("#addToCartButton").click(function (e) {
+            e.preventDefault();
+
+            var productId = $('input[name="productId"]').val();
+            var sizeId = $("input[name='size']:checked").val();
+            var colorId = $("input[name='color']:checked").val();
+            var quantity = $("#quantity").val();
+
+            if (!sizeId || !colorId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Vui lòng chọn size và màu!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/user/add-to-cart',
+                data: {
+                    productId: productId,
+                    size: sizeId,
+                    color: colorId,
+                    quantity: quantity
+                },
+                success: function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: data,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        // Chuyển hướng đến trang chi tiết sản phẩm sau khi đóng thông báo
+                        window.location.href = '/product/detail/chi-tiet/' + productId;
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        });
+    });
+    /*]]>*/
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
+
 <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js}"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>

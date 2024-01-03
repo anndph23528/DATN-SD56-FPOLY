@@ -313,7 +313,13 @@
                                         <option th:value="${T(com.example.datnsd56.entity.DiscountType).AMOUNT}">Amount</option>
                                     </select>
                                 </div>
-
+                                <div class="form-group">
+                                    <label>Số Lượng</label>
+                                    <input type="number" class="form-control" placeholder="Nhập số lượng "
+                                           th:field="*{quantity}" required>
+                                    <span th:if="${#fields.hasErrors('quantity')}" style="color: red; font-size: 13px"
+                                          th:errors="*{quantity}"></span>
+                                </div>
                                 <div class="form-group">
                                     <a th:href="@{/admin/voucher/update}">
                                         <button class="btn btn-primary mr-1" type="submit">sửa</button>

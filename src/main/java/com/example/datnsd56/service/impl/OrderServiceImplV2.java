@@ -122,18 +122,35 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         BigDecimal total = cart.getTotalPrice();
 
         // Kiểm tra xem voucher có tồn tại và có hợp lệ hay không
-        Optional<Voucher> voucher = voucherService.findByCode(selectedVoucherCode);
+        Optional<Voucher> voucherOptional = voucherService.findByCode(selectedVoucherCode);
 
-        if (voucher.isPresent() && voucher.get().isActive() && voucher.get().getExpiryDateTime() != null &&
-            LocalDateTime.now().isBefore(voucher.get().getExpiryDateTime())) {
+        if (voucherOptional.isPresent()) {
+            Voucher voucher = voucherOptional.get();
 
-            // Kiểm tra xem voucher đã được sử dụng bởi tài khoản nào đó hay chưa
-            boolean isVoucherUsed = voucherUsageService.isVoucherUsed(username, selectedVoucherCode);
+            // Kiểm tra xem voucher có đang hiệu lực hay không
+            if (voucher.isActive() && voucher.getExpiryDateTime() != null &&
+                LocalDateTime.now().isBefore(voucher.getExpiryDateTime())) {
 
-            if (!isVoucherUsed) {
-                // Áp dụng giảm giá của voucher vào tổng tiền
-                BigDecimal discountAmount = calculateDiscountValue(voucher.get(), total);
-                total = total.subtract(discountAmount);
+                // Kiểm tra xem voucher có số lượng còn hay không
+                if (voucher.getQuantity() > 0) {
+
+                    // Kiểm tra xem voucher đã được sử dụng bởi tài khoản nào đó hay chưa
+                    boolean isVoucherUsed = voucherUsageService.isVoucherUsed(username, selectedVoucherCode);
+
+                    if (!isVoucherUsed) {
+                        // Áp dụng giảm giá của voucher vào tổng tiền
+                        BigDecimal discountAmount = calculateDiscountValue(voucher, total);
+
+                        // Đảm bảo giảm giá không vượt quá tổng tiền
+                        total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
+
+                        // Giảm số lượng voucher sau khi áp dụng
+//                        reduceVoucherQuantity(voucher);
+                    }
+                } else {
+                    // Xử lý khi hết số lượng voucher
+                    // ...
+                }
             }
         }
 
@@ -163,27 +180,61 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         // Áp dụng voucher nếu có
         applyVoucher(order, voucherCode, selectedVoucherCode);
 
-        // Lưu đơn hàng vào cơ sở dữ liệu
-        try {
-            order = ordersRepository.save(order);
+        return order;
+    }
 
-            // Lưu lịch sử sử dụng voucher và đánh dấu khi đặt hàng
-//            saveVoucherUsageHistoryOnOrder(order, order.getVoucher());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Orders createOrder(Cart cart, String address) {
+        // Tạo mới đối tượng Orders và thiết lập thông tin cần thiết
+        Orders order = new Orders();
+        order.setAddress(address);
+        order.setPhone(cart.getAccountId().getPhone());
+        order.setEmail(cart.getAccountId().getEmail());
+        order.setFullname(cart.getAccountId().getName());
+        order.setShippingFee(BigDecimal.ZERO);
+        order.setTotal(cart.getTotalPrice().setScale(2, RoundingMode.HALF_UP));
+        order.setOrderStatus(10);
+        order.setCreateDate(LocalDate.now());
+        order.setUpdateDate(LocalDate.now());
+        order.setAccountId(cart.getAccountId());
 
         return order;
     }
-    private void saveVoucherUsageHistoryOnOrder(Orders order, Voucher voucher) {
-        VoucherUsageHistory voucherUsageHistory = new VoucherUsageHistory();
-        voucherUsageHistory.setAccount(order.getAccountId());
-        voucherUsageHistory.setVoucher(voucher);
-        voucherUsageHistory.setUsedDate(LocalDateTime.now());
-        voucherUsageHistoryRepository.save(voucherUsageHistory);
+
+    public void processOrderDetails(Cart cart, Orders order) {
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        Set<CartItem> cartItems = cart.getCartItems();
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderDetails = new OrderItem();
+            orderDetails.setOrders(order);
+            orderDetails.setProductDetails(cartItem.getProductDetails());
+            orderDetails.setQuantity(cartItem.getQuantity());
+            orderDetails.setPrice(cartItem.getProductDetails().getSellPrice());
+            orderDetails.setStatus(1);
+
+            // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
+            orderItemRepository.save(orderDetails);
+
+            // Giảm số lượng sản phẩm trong kho
+            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
+        }
     }
-    // ...
+    // Trong OrderServiceImplV2
+    public void saveOrderAfterVnpaySuccess(Orders order, Cart cart) {
+        // Lưu đơn hàng và chi tiết đơn hàng vào cơ sở dữ liệu sau khi thanh toán VNPAY thành công
+        order = ordersRepository.save(order);
+        processOrderDetails(cart, order);
+
+        // Các bước xử lý khác sau khi thanh toán VNPAY thành công (nếu có)
+    }
+    public void saveOrderAfterSuccess(Orders order, Cart cart) {
+        // Lưu đơn hàng vào cơ sở dữ liệu
+        order = ordersRepository.save(order);
+
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        processOrderDetails(cart, order);
+
+        // Các bước xử lý khác sau khi thanh toán thành công (nếu có)
+    }
 
     @Transactional
     @Override
@@ -197,9 +248,11 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 Voucher voucher = voucherOptional.get();
                 boolean canUseVoucher = canUseVoucher(order.getAccountId(), voucher);
 
-                if (canUseVoucher) {
+                if (canUseVoucher && voucher.getQuantity() > 0) {
                     // Áp dụng voucher từ mã
                     applyVoucherByCode(order, voucher);
+                }else {
+                    return ;
                 }
             }
         } else if (selectedVoucherCode != null && !selectedVoucherCode.isEmpty()) {
@@ -208,7 +261,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 Voucher selectedVoucher = selectedVoucherOptional.get();
                 boolean canUseVouchers = canUseVoucher(order.getAccountId(), selectedVoucher);
 
-                if (canUseVouchers) {
+                if (canUseVouchers && selectedVoucher.getQuantity() >0) {
                     // Áp dụng voucher từ danh sách
                     applyVoucherFromList(order, selectedVoucher);
                 }
@@ -222,6 +275,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         BigDecimal discountValue = calculateDiscountValue(voucher, order.getTotal());
         BigDecimal discountedTotal = order.getTotal().subtract(discountValue);
         order.setTotal(discountedTotal);
+// Giảm số lượng voucher sau khi áp dụng
+        reduceVoucherQuantity(voucher);
 
         // Đánh dấu voucher là đã sử dụng
         markVoucherAsUsed(order.getAccountId(), voucher);
@@ -233,11 +288,18 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         BigDecimal discountValue = calculateDiscountValue(voucher, order.getTotal());
         BigDecimal discountedTotal = order.getTotal().subtract(discountValue);
         order.setTotal(discountedTotal);
+// Giảm số lượng voucher sau khi áp dụng
+        reduceVoucherQuantity(voucher);
 
         // Đánh dấu voucher là đã sử dụng
         markVoucherAsUsed(order.getAccountId(), voucher);
         saveVoucherUsageHistorys(order.getAccountId(), voucher);
         order.setVoucher(voucher);
+    }
+    private void reduceVoucherQuantity(Voucher voucher) {
+        int remainingQuantity = voucher.getQuantity() - 1;
+        voucher.setQuantity(remainingQuantity);
+        voucherService.saveVoucher(voucher);
     }
 
     // ...
@@ -276,7 +338,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
         List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVoucher(account, voucher);
         for (VoucherUsage usage : voucherUsages) {
-            if (!usage.getIsUsed() && !isVoucherExpired(voucher)) {
+            if (!usage.getIsUsed() && !isVoucherExpired(voucher) && voucher.getQuantity() >0 ) {
                 return true; // Tài khoản có thể sử dụng voucher này
             }
         }
@@ -324,53 +386,6 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
 
 
-    @Transactional
-@Override
- public    Orders createOrder(Cart cart, String address) {
-        // Tạo mới đối tượng Orders và thiết lập thông tin cần thiết
-        Orders bill = new Orders();
-        bill.setAddress(address);
-        bill.setPhone(cart.getAccountId().getPhone());
-        bill.setEmail(cart.getAccountId().getEmail());
-        bill.setFullname(cart.getAccountId().getName());
-        bill.setShippingFee(BigDecimal.ZERO);
-
-        bill.setTotal(cart.getTotalPrice().setScale(2, RoundingMode.HALF_UP));
-
-        bill.setOrderStatus(10);
-        bill.setCreateDate(LocalDate.now());
-        bill.setUpdateDate(LocalDate.now());
-        bill.setAccountId(cart.getAccountId());
-
-        // Lưu đơn hàng vào cơ sở dữ liệu
-        try {
-            return ordersRepository.save(bill);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    @Transactional
-    @Override
-
-    public void processOrderDetails(Cart cart, Orders order) {
-        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
-        Set<CartItem> cartItems = cart.getCartItems();
-        for (CartItem cartItem : cartItems) {
-            OrderItem orderDetails = new OrderItem();
-            orderDetails.setOrders(order);
-            orderDetails.setProductDetails(cartItem.getProductDetails());
-            orderDetails.setQuantity(cartItem.getQuantity());
-            orderDetails.setPrice(cartItem.getProductDetails().getSellPrice());
-            orderDetails.setStatus(1);
-
-            // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
-            orderItemRepository.save(orderDetails);
-
-            // Giảm số lượng sản phẩm trong kho
-            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
-        }
-    }
 
 
 

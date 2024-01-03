@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @SessionAttributes("appliedVoucherCode")
 @Controller
 @RequestMapping("/user")
@@ -49,20 +50,20 @@ public class UserBillController {
     private AddressService addressService;
     @Autowired
     private AddressRepository addressRepository;
-@Autowired
-private VoucherUsageRepository voucherUsageRepository;
+    @Autowired
+    private VoucherUsageRepository voucherUsageRepository;
     @Autowired
     private CartService cartServicel;
     @Autowired
     private TransactionService transactionService;
     @Autowired
     private PaymentServiceImpl paymentService;
-@Autowired
-private VoucherService voucherService;
-@Autowired
-private VoucherUsageService voucherUsageService;
-@Autowired
-private OrderSeriveV2 orderServiceImplV2;
+    @Autowired
+    private VoucherService voucherService;
+    @Autowired
+    private VoucherUsageService voucherUsageService;
+    @Autowired
+    private OrderSeriveV2 orderServiceImplV2;
     //    @Autowired
 //    private VnpayUtils vnpayUtils;
 
@@ -113,6 +114,7 @@ private OrderSeriveV2 orderServiceImplV2;
         }
         return "redirect:/login";
     }
+
     @PostMapping("/add-order")
     public String placeOrder(@RequestParam(name = "selectedAddressRadio", required = false) Integer selectedAddressId,
                              @RequestParam(name = "paymentMethod") String paymentMethod,
@@ -151,19 +153,12 @@ private OrderSeriveV2 orderServiceImplV2;
                 // Thực hiện đặt hàng
                 BigDecimal appliedVoucherTotal = (BigDecimal) session.getAttribute("appliedVoucherTotal");
 
-                // Thực hiện đặt hàng
-                Orders order = orderServiceImplV2.placeOrder(cart, String.valueOf(address), voucherCode, selectedVoucherCode);
+                if ("vnpay".equals(paymentMethod)) {
+                    // Tạo và lưu thông tin thanh toán vào bảng Transactions
+                    Orders order = orderServiceImplV2.placeOrder(cart, String.valueOf(address), voucherCode, selectedVoucherCode);
 
-                // Kiểm tra xem đã áp dụng voucher chưa và lưu giá mới vào hóa đơn
-                if (appliedVoucherTotal != null && order != null) {
-                    order.setTotal(appliedVoucherTotal);
-                    ordersService.add(order);
-                }
-                if (order != null) {
-                    // Kiểm tra xem phương thức thanh toán là VNPAY hay không
-
-                    if ("vnpay".equals(paymentMethod)) {
-                        // Tạo và lưu thông tin thanh toán vào bảng Transactions
+                    // Lưu đơn hàng vào cơ sở dữ liệu
+                    if (order != null) {
                         Transactions transaction = new Transactions();
                         transaction.setAmount(order.getTotal());
                         transaction.setCreateDate(LocalDate.now());
@@ -183,8 +178,23 @@ private OrderSeriveV2 orderServiceImplV2;
                         // Tạo URL thanh toán VNPAY và chuyển hướng đến trang thanh toán
                         String vnpPaymentUrl = paymentService.createVnpPaymentUrl(order.getTotal(), order.getId(), savedTransaction.getId());
                         return "redirect:" + vnpPaymentUrl;
+                    } else {
+                        attributes.addFlashAttribute("error", "Đặt hàng không thành công. Vui lòng thử lại sau!");
+                        return "redirect:/user/checkout";
                     }
+                }
 
+                // Thực hiện đặt hàng
+                Orders order = orderServiceImplV2.placeOrder(cart, String.valueOf(address), voucherCode, selectedVoucherCode);
+
+                // Kiểm tra xem đã áp dụng voucher chưa và lưu giá mới vào hóa đơn
+                if (appliedVoucherTotal != null && order != null) {
+                    order.setTotal(appliedVoucherTotal);
+                    ordersService.add(order);
+                }
+
+                if (order != null) {
+                    // Kiểm tra xem phương thức thanh toán là cashOnDelivery hay không
                     if ("cashOnDelivery".equals(paymentMethod)) {
                         // Tạo và lưu thông tin thanh toán vào bảng Transactions
                         Transactions transaction = new Transactions();
@@ -237,7 +247,7 @@ private OrderSeriveV2 orderServiceImplV2;
 
             if (cart != null) {
                 // Tính toán giá tạm thời khi áp dụng voucher
-                BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode,principal.getName());
+                BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
 
                 if (newTotal != null) {
                     // Lưu giá mới vào session để sử dụng khi đặt hàng
@@ -298,6 +308,7 @@ private OrderSeriveV2 orderServiceImplV2;
 
         return "website/index/danhsachdonhang";
     }
+
     @GetMapping("/order-detail/{id}")
     public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal) {
         if (principal == null) {
@@ -307,9 +318,6 @@ private OrderSeriveV2 orderServiceImplV2;
         model.addAttribute("order", bill);
         return "website/index/danhsachdonhangdetail";
     }
-
-
-
 
 
     @GetMapping("/transaction-success/{orderId}")
@@ -382,7 +390,7 @@ private OrderSeriveV2 orderServiceImplV2;
     @GetMapping("/vnpay-ipn")
     public String vnpayIPN(@RequestParam("vnp_ResponseCode") String responseCode,
                            HttpServletRequest request,
-                           Model model,
+                           Model model, Principal principal,
                            HttpSession session) {
         // Xử lý phản hồi từ VNP và hiển thị thông tin giao dịch
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
@@ -394,49 +402,53 @@ private OrderSeriveV2 orderServiceImplV2;
             // Lấy giao dịch tạm thời từ cơ sở dữ liệu
             Optional<Transactions> transactionOptional = transactionService.getTransactionsById(transactionId);
 
-            if (transactionOptional.isPresent()) {
-                Transactions pendingTransaction = transactionOptional.get();
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+                Cart cart = account.getCart();
+                if (transactionOptional.isPresent()) {
+                    Transactions pendingTransaction = transactionOptional.get();
 
-                if ("00".equals(responseCode)) {
-                    // Cập nhật thông tin giao dịch và đổi trạng thái thành "success"
-                    pendingTransaction.setOrderInfo(vnp_TxnRef);
-                    pendingTransaction.setStatus("success");
+                    if ("00".equals(responseCode)) {
+                        // Cập nhật thông tin giao dịch và đổi trạng thái thành "success"
+                        pendingTransaction.setOrderInfo(vnp_TxnRef);
+                        pendingTransaction.setStatus("success");
+                        transactionService.saveTransaction(pendingTransaction);
+                        cartServicel.deleteCartById(cart.getId());
+
+                        // ... (Thêm các thuộc tính khác cần thiết)
+
+                    } else {
+                        // Xử lý khi thanh toán không thành công
+                        pendingTransaction.setOrderInfo(vnp_TxnRef);
+                        pendingTransaction.setStatus("fail");
+                        transactionService.saveTransaction(pendingTransaction);
+
+                        return "website/index/payment-failure";
+
+                        // ... (Thêm các thuộc tính khác cần thiết)
+                    }
+
+                    // Lưu thông tin giao dịch vào cơ sở dữ liệu
                     transactionService.saveTransaction(pendingTransaction);
 
-                    // ... (Thêm các thuộc tính khác cần thiết)
+                    // Xóa ID của giao dịch khỏi session
+                    session.removeAttribute("pendingTransactionId");
 
-                } else {
-                    // Xử lý khi thanh toán không thành công
-                    pendingTransaction.setOrderInfo(vnp_TxnRef);
-                    pendingTransaction.setStatus("fail");
-                    transactionService.saveTransaction(pendingTransaction);
-
-                    return "website/index/payment-failure";
-
-                    // ... (Thêm các thuộc tính khác cần thiết)
+                    // Gọi view để hiển thị thông tin giao dịch
+                    return "website/index/f";
                 }
-
-                // Lưu thông tin giao dịch vào cơ sở dữ liệu
-                transactionService.saveTransaction(pendingTransaction);
-
-                // Xóa ID của giao dịch khỏi session
-                session.removeAttribute("pendingTransactionId");
-
-                // Gọi view để hiển thị thông tin giao dịch
-                return "website/index/f";
             }
+
+            // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
+            return "website/index/payment-failure";
         }
-
-        // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
-        return "website/index/payment-failure";
-    }
         // Hiển thị thông tin giao dịch trên trang
-//        return null;
-
-
+        return null;
+    }
 
     @GetMapping("/cancel-order/{id}")
-    public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes,Principal principal) {
+    public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
         if (principal == null) {
             return "redirect:/login";
         }

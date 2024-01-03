@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 //@EnableWebSecurity
 @EnableScheduling
+//@EnableWebMvc
+
 public class DatnSd56Application {
 
     public static void main(String[] args) {

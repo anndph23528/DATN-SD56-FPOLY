@@ -7,11 +7,13 @@ import com.example.datnsd56.service.ImageService;
 import com.example.datnsd56.service.ProductDetailsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -65,38 +67,35 @@ public class UseCartController {
     }
 
     @PostMapping("/add-to-cart")
-//    @ResponseBody
-    public String addToCart(
+    @ResponseBody
+    public ResponseEntity<String> addToCart(
         @RequestParam("productId") Integer productId,
         @RequestParam("size") Integer sizeId,
         @RequestParam("color") Integer colorId,
         @RequestParam("quantity") Integer quantity,
         Principal principal,
-        RedirectAttributes redirectAttributes,
         HttpSession session) {
+
+        if (sizeId == null || colorId == null) {
+            return new ResponseEntity<>("Vui lòng chọn size và màu!", HttpStatus.BAD_REQUEST);
+        }
+
         ProductDetails productDetail = productDetailsService.getCart(productId, colorId, sizeId);
         System.out.println(productDetail);
 
         if (principal == null) {
-
-
-                SessionCart oldSessionCart = (SessionCart) session.getAttribute("sessionCart");
-                SessionCart sessionCart = cartService.addToCartSession(oldSessionCart, productDetail, quantity);
-                session.setAttribute("sessionCart", sessionCart);
-                session.setAttribute("totalItems", sessionCart.getTotalItems());
-                redirectAttributes.addFlashAttribute("mess", "Thêm giỏ hàng thành công!");
-            } else {
-                String name = principal.getName();
-                Cart cart = cartService.addToCart(productDetail, quantity, name);
-                session.setAttribute("totalItems", cart.getTotalItems());
-                redirectAttributes.addFlashAttribute("mess", "Thêm giỏ hàng thành công!");
-            }
-
-            String redirectUrl = String.format("redirect:/product/detail/chi-tiet/" + productId);
-            return redirectUrl;
+            SessionCart oldSessionCart = (SessionCart) session.getAttribute("sessionCart");
+            SessionCart sessionCart = cartService.addToCartSession(oldSessionCart, productDetail, quantity);
+            session.setAttribute("sessionCart", sessionCart);
+            session.setAttribute("totalItems", sessionCart.getTotalItems());
+        } else {
+            String name = principal.getName();
+            Cart cart = cartService.addToCart(productDetail, quantity, name);
+            session.setAttribute("totalItems", cart.getTotalItems());
         }
 
-
+        return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
+    }
     @GetMapping("/display")
 //    @PreAuthorize("hasAuthority('user') || hasAuthority('admin')")
 

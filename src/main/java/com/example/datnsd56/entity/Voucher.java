@@ -1,10 +1,7 @@
 package com.example.datnsd56.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.core.annotation.Order;
 
@@ -39,8 +36,12 @@ public class Voucher {
     private LocalDateTime startDate;
     @Column(name = "ExpiryDate")
     private LocalDateTime expiryDateTime;
+//    @Max(value = 100,message = "tôi đa 100")
     @Column(name = "Discount")
     private BigDecimal discount;
+//    @NotNull(message = "no de trong")
+    @Column(name = "quantity")
+    private Integer quantity; // Số lượng voucher có sẵn
     @Column(name = "Active")
     private boolean active;
     @Column(name = "isVisible")

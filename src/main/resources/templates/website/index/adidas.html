@@ -187,9 +187,10 @@
                 <div  class="store-item position-relative text-center">
                     <img
                         class="img-fluid"
-                        th:src="@{${'/product/nike/display?id=' + product.id}}"
+                        th:if="${not #lists.isEmpty(product.images)}"
+                        th:src="@{'/product/nike/display?id=' + ${product.id} + '&imageId=' + ${product.images[0].id}}"
                         alt=""
-                        style="width: 250px ; height: 200px"
+                        style="width: 450px; height: 450px"
                     />
                     <div class="p-4">
                         <!-- <div class="text-center mb-3">
