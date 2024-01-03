@@ -386,7 +386,7 @@ https://templatemo.com/tm-559-zay-shop
                             <option value="">-- Chọn voucher --</option>
                             <th:block th:each="voucherUsage : ${voucherUsages}">
                                 <option style="color: red" th:value="${voucherUsage.voucher.code}"
-                                        th:text="${voucherUsage.voucher.code} + ' || '+' Giảm :' + (${voucherUsage.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE ? #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + '%' : #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + ' VND'}) +' || ' + 'HSD:' +${#temporals.format(voucherUsage.voucher.expiryDateTime, 'dd/MM/yyyy HH:mm')} "></option>
+                                        th:text="${voucherUsage.voucher.code} + ' || '+' Giảm :' + (${voucherUsage.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE ? #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + '%' : #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + ' VND'}) +' || ' + 'HSD:' +${#temporals.format(voucherUsage.voucher.expiryDateTime, 'dd/MM/yyyy HH:mm')} + ''+  'Số lượng:' + ${voucherUsage.voucher.quantity} "></option>
 
                             </th:block>
                         </select>

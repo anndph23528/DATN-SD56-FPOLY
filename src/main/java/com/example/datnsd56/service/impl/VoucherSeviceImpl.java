@@ -53,6 +53,7 @@ public class VoucherSeviceImpl implements VoucherService  {
             existingVoucher.setExpiryDateTime(voucher.getExpiryDateTime());
             existingVoucher.setDiscount(voucher.getDiscount());
             existingVoucher.setDiscountType(voucher.getDiscountType());
+            existingVoucher.setQuantity(voucher.getQuantity());
 
             voucherRepository.save(existingVoucher);
         }

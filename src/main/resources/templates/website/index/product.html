@@ -221,6 +221,7 @@
                         </div>
                         <div class="voucher-content" th:text="${voucher.description}">cho những sản phẩm của của like, adidas</div>
                         <div class="voucher-hsd" th:text="${'HSD :'+' ' + voucher.expiryDateTime}">HSD: 23/23/2023</div>
+                        <div class="voucher-hsd" th:text="${'Số Lượng  :'+' ' + voucher.quantity}">HSD: 23/23/2023</div>
                         <form th:action="@{/product/saveVoucher/{voucherId}(voucherId=${voucher.id})}" method="get">
                             <button type="submit" class="save-button">  Lưu
                             </button>

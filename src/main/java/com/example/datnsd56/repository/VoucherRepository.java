@@ -18,6 +18,6 @@ import java.util.Optional;
 public interface VoucherRepository extends JpaRepository<Voucher,Integer> {
     List<Voucher> findByExpiryDateTimeBeforeAndActiveIsTrue(LocalDateTime dateTime);
     Optional<Voucher> findByCode(String code);
-@Query(value = "SELECT * FROM Voucher  WHERE Active = 1",nativeQuery = true)
+@Query(value = "SELECT * FROM Voucher  WHERE Active = 1 and quantity > 0",nativeQuery = true)
     List<Voucher> getAllls();
 }
