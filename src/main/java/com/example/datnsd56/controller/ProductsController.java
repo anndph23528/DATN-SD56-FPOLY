@@ -36,6 +36,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/san-pham-test")
+@PreAuthorize("hasAuthority('admin')")
 public class ProductsController {
     @Qualifier("productsServiceImpl")
     @Autowired
