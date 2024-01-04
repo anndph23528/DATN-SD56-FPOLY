@@ -42,6 +42,43 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
         Pageable pageable = PageRequest.of(pageNo, 5);
         return productDetailsRepository.findAll(pageable);
     }
+    @Override
+    // Trong ProductService hoặc ProductRepository
+    public boolean isQuantityAvailable(Integer productId, Integer sizeId, Integer colorId, Integer requestedQuantity) {
+        // Lấy thông tin chi tiết sản phẩm
+        ProductDetails productDetail = getCart(productId, colorId, sizeId);
+
+        // Kiểm tra sản phẩm có tồn tại không
+        if (productDetail == null) {
+            return false; // Sản phẩm không tồn tại
+        }
+
+        // Kiểm tra số lượng còn lại
+        int availableQuantity = productDetail.getQuantity();
+        return availableQuantity >= requestedQuantity;
+    }
+    public int checkQuantity(Integer productId,  Integer colorId,Integer sizeId) {
+        // Thực hiện logic kiểm tra số lượng và trả về số lượng còn lại
+        // Trong trường hợp này, giả sử bạn có một phương thức tương ứng trong repository
+        // để lấy thông tin sản phẩm và kiểm tra số lượng
+        ProductDetails productDetails = productDetailsRepository.getCart(productId, colorId,sizeId);
+
+        if (productDetails != null) {
+            int availableQuantity = productDetails.getQuantity();
+            // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
+            return availableQuantity > 0 ? availableQuantity : 0;
+        } else {
+            // Trả về -1 hoặc giá trị nào đó để biểu thị rằng sản phẩm không tồn tại
+            return -1;
+        }
+    }
+    @Override
+    public int getProductQuantity(int productId) {
+
+            Optional<ProductDetails> productDetails = productDetailsRepository.findById(productId);
+            return (productDetails != null) ? productDetails.get().getQuantity() : 0;
+
+    }
 
     @Override
     public List<ProductDetails> getAllCTSP() {

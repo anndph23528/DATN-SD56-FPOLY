@@ -79,9 +79,17 @@ public class UseCartController {
         if (sizeId == null || colorId == null) {
             return new ResponseEntity<>("Vui lòng chọn size và màu!", HttpStatus.BAD_REQUEST);
         }
+        boolean isQuantityAvailable = productDetailsService.isQuantityAvailable(productId, sizeId, colorId, quantity);
+
+        if (!isQuantityAvailable) {
+            return new ResponseEntity<>("Sản phẩm không có đủ số lượng!", HttpStatus.BAD_REQUEST);
+        }
 
         ProductDetails productDetail = productDetailsService.getCart(productId, colorId, sizeId);
-        System.out.println(productDetail);
+
+        if (productDetail == null) {
+            return new ResponseEntity<>("Sản phẩm không tồn tại!", HttpStatus.BAD_REQUEST);
+        }
 
         if (principal == null) {
             SessionCart oldSessionCart = (SessionCart) session.getAttribute("sessionCart");
@@ -95,6 +103,33 @@ public class UseCartController {
         }
 
         return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/update-cart-quantity")
+    @ResponseBody
+    public ResponseEntity<String> updateCartQuantity(
+        @RequestParam("productId") Integer productId,
+        @RequestParam("newQuantity") Integer newQuantity,
+        HttpSession session) {
+
+        // Kiểm tra newQuantity nếu bạn muốn
+
+        // Lấy giỏ hàng từ session
+        SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
+        if (sessionCart == null) {
+            // Xử lý khi giỏ hàng không tồn tại
+            return new ResponseEntity<>("Giỏ hàng không tồn tại!", HttpStatus.BAD_REQUEST);
+        }
+
+        // Thực hiện cập nhật số lượng trong giỏ hàng
+        sessionCart.updateQuantity(productId, newQuantity);
+
+        // Cập nhật sessionCart
+        session.setAttribute("sessionCart", sessionCart);
+
+        // Trả về phản hồi thành công
+        return ResponseEntity.ok("Cập nhật số lượng thành công!");
     }
     @GetMapping("/display")
 //    @PreAuthorize("hasAuthority('user') || hasAuthority('admin')")
