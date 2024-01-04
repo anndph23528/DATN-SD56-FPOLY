@@ -1,10 +1,9 @@
 package com.example.datnsd56.controller;
 
 import com.example.datnsd56.dto.ProductPriceAndQuantityDTO;
-import com.example.datnsd56.entity.Image;
-import com.example.datnsd56.entity.ProductDetails;
-import com.example.datnsd56.entity.Products;
+import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 //import java.math.Double;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -29,9 +29,11 @@ public class DetailProductController {
     @Autowired
     private ProductsService productsService;
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private ImageService imageService;
     @GetMapping("/chi-tiet/{id}")
-    public String detail(@PathVariable("id") Integer id, Model model){
+    public String detail(@PathVariable("id") Integer id,Principal principal, HttpSession session, Model model){
       Products list=  productDetailsService.getOneProdcut(id);
 //         Tính toán giá sản phẩm dựa trên màu sắc và kích cỡ được chọn
         model.addAttribute("listSize",sizeService.getColorId(id));
@@ -43,11 +45,32 @@ public class DetailProductController {
         model.addAttribute("quantitys",productDetailsService.getById(id));
 //        model.addAttribute("sells",productDetailsService.findProductDetailsByColorIdAndSizeIdAndAndProductId(colorid,sizeId,id));
 //        model.addAttribute("sell",productDetailsService.findProductDetailsBySellPrice(id));
+
+        int totalQuantity = 0;
+
+        if (principal == null) {
+            SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
+            if (sessionCart != null) {
+                totalQuantity = sessionCart.getTotalItems();
+            }
+        } else {
+            String name = principal.getName();
+            Optional<Account> account = accountService.finByName(name);
+            if (account.isPresent()) {
+                Cart cart = account.get().getCart();
+                if (cart != null) {
+                    totalQuantity = cart.getTotalItems();
+                }
+            }
+        }
+        model.addAttribute("totalItems",totalQuantity);
         model.addAttribute("views",list);
         return "website/index/detail";
 
 
     }
+
+
     @GetMapping("/getProductPrice")
     public ResponseEntity<ProductPriceAndQuantityDTO> getPrice(@RequestParam("productId") Integer id,
                                                                @RequestParam("size") Integer size,

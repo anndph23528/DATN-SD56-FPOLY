@@ -66,6 +66,10 @@
             type="text/css"
             th:href="@{/website/css/slick-theme.css}"
     />
+    <style>
+        /* Đặt kiểu cho biểu tượng giỏ hàng */
+
+    </style>
 </head>
 
 <body>
@@ -134,10 +138,12 @@
                 <a th:href="@{/cart/view-cart}">
                     <button type="button" class="btn btn-sm p-0">
                         <!-- Trong HTML -->
-                        <div id="cartIcon">
+                        <!-- Trong file HTML của bạn, chẳng hạn là giohang.html -->
+                        <div id="cartIcon" th:if="${totalItems > 0}">
                             <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
-                            <span id="cartItemCount">0</span>
+                            <span id="cartItemCount" style="color: " th:text="${totalItems}">0</span>
                         </div>
+
 
                     </button>
                 </a>
@@ -824,7 +830,7 @@
 
                         updateQuantityDisplay();
                         // updateCartItemCount();
-
+                        updateCartItemCount();
 
                         // Cập nhật số lượng còn lại trong giỏ hàng
                         var remainingQuantity = parseInt(data);
@@ -861,7 +867,23 @@
                 }
             });
         }
+
+        function updateCartItemCount() {
+            $.ajax({
+                type: 'GET',
+                url: '/product/get-cart-quantity',
+                success: function (totalItems) {
+                    // Cập nhật số lượng trong biểu tượng giỏ hàng
+                    $("#cartItemCount").text(totalItems);
+                },
+                error: function () {
+                    console.log("Lỗi khi gọi API để lấy số lượng giỏ hàng");
+                }
+            });
+        }
     });
+
+
     /*]]>*/
     /*]]>*/
 

@@ -180,4 +180,28 @@ public class UseCartController {
         }
         return "redirect:/user/cart";
     }
+    @GetMapping("/product/get-cart-quantity")
+//    @ResponseBody
+    public String getCartQuantity(Principal principal, HttpSession session,Model model) {
+        int totalQuantity = 0;
+
+        if (principal == null) {
+            SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
+            if (sessionCart != null) {
+                totalQuantity = sessionCart.getTotalItems();
+            }
+        } else {
+            String name = principal.getName();
+            Optional<Account> account = accountService.finByName(name);
+            if (account.isPresent()) {
+                Cart cart = account.get().getCart();
+                if (cart != null) {
+                    totalQuantity = cart.getTotalItems();
+                }
+            }
+        }
+model.addAttribute("totalItems",totalQuantity);
+        return "website/index/detail";
+    }
+
 }
