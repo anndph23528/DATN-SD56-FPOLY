@@ -84,14 +84,21 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/dashboard/css/**", "/dashboard/js/**", "/dashboard/img/**","/dashboard/bundles/**","/dashboard/fonts/**","/dashboard/lib/**","/dashboard/scss/**").permitAll()
             .requestMatchers("/website/css/**", "/website/js/**", "/website/img/**", "/website/lib/**", "/website/scss/**","templates/website/index/**","templates/dashboard/**","/website/**").permitAll()
             .requestMatchers("/hello").permitAll()
-            .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-            .requestMatchers("/pay/**").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/contact").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/vans").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/lv").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/converse").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/adidas").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/mlb").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/product/nike").permitAll()// với endpoint /hello thì sẽ được cho qua
+//            .requestMatchers("/pay/**").permitAll()// với endpoint /hello thì sẽ được cho qua
             .requestMatchers("/vnpay-ipn/**").permitAll()// với endpoint /hello thì sẽ được cho qua
 //        .requestMatchers("/display/**").permitAll()
 //            .requestMatchers("/cart/**").permitAll()// với endpoint /hello thì sẽ được cho qua
              .requestMatchers("/error/**").permitAll()// với endpoint /hello thì sẽ được cho qua
             .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-            .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qua
+           // .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qua
            // .requestMatchers("/admin/san-pham-test/**").permitAll()// với endpoint /hello thì sẽ được cho qua
 
             .and()
@@ -99,14 +106,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/customer/**").authenticated()
             .requestMatchers("/cart/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
-          //  .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
-            .requestMatchers("/rest/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
+           .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
+            .requestMatchers("/rest/**").authenticated()
+            .requestMatchers("/product/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 
             .and().formLogin()// trả về page login nếu chưa authenticate
 
-           .defaultSuccessUrl("/product/hien-thi")
-
-
+           .defaultSuccessUrl("/product/trang-chu")
             .loginPage("/login/custom-login").permitAll().successHandler(new CustomAuthenticationSuccessHandler())//.failureHandler(new SimpleUrlAuthenticationFailureHandler())
             .and()
             .logout()

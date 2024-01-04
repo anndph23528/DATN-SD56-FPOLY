@@ -23,6 +23,7 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/thuong-hieu")
+@PreAuthorize("hasAuthority('admin')")
 public class BrandController {
     @Qualifier("brandServiceImpl")
     @Autowired

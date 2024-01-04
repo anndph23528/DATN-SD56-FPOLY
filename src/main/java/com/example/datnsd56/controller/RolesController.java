@@ -20,6 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/roles")
+@PreAuthorize("hasAuthority('admin')")
 public class RolesController {
     @Autowired
     private RolesService rolesService;

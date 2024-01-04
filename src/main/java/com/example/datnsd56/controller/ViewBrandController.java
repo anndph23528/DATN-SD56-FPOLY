@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/product/")
 public class ViewBrandController {
     @Autowired
     private ProductsService productsService;
