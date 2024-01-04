@@ -82,7 +82,7 @@ public class CategoryController {
             return "redirect:/admin/loai-giay/hien-thi";
 
         }
-        String code = "CL" + new Random().nextInt(100000);
+        String code = "Category" + new Random().nextInt(100000);
         category.setCode(code);
         category.setStatus(true);
         service.add(category);
