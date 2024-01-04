@@ -18,8 +18,10 @@ import java.util.UUID;
 
 public interface ProductDetailsService {
     Page<ProductDetails> getAll(Integer pageNo);
+    int getProductQuantity(int productId);
 
     List<ProductDetails> getAllCTSP();
+   boolean isQuantityAvailable(Integer productId, Integer sizeId, Integer colorId, Integer requestedQuantity) ;
 
     Page<ProductDetails> search(  Double sellPrice);
 

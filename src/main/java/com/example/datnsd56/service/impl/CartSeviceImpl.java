@@ -39,6 +39,17 @@ public class CartSeviceImpl implements CartService {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         }
     }
+    public int calculateTotalItems(SessionCart sessionCart) {
+        int totalItems = 0;
+
+        if (sessionCart != null && sessionCart.getCartItems() != null) {
+            for (SessionCartItem cartItem : sessionCart.getCartItems()) {
+                totalItems += cartItem.getQuantity();
+            }
+        }
+
+        return totalItems;
+    }
 
     @Override
     public void remove(Integer id) {
@@ -48,6 +59,28 @@ public class CartSeviceImpl implements CartService {
     @Override
     public void clear() {
         maps.clear();
+    }
+
+    @Override
+    public int getCartTotalItems(String username) {
+        // Lấy thông tin giỏ hàng của người dùng dựa trên tên đăng nhập
+        Optional<Account> accountOptional = accountService.finByName(username);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            Cart cart = account.getCart();
+            // Kiểm tra xem giỏ hàng có tồn tại hay không
+            if (cart != null) {
+                // Tính toán tổng số lượng sản phẩm trong giỏ hàng
+                return cart.getCartItems().stream()
+                    .mapToInt(CartItem::getQuantity)
+                    .sum();
+            } else {
+                // Nếu giỏ hàng không tồn tại, trả về 0
+                return 0;
+            }
+        }
+        return -1;
     }
 
     @Override

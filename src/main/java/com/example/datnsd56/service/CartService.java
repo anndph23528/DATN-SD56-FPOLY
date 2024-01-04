@@ -15,6 +15,7 @@ public interface CartService {
     void remove(Integer id);
 
     void clear();
+    int getCartTotalItems(String username);
 
     int getCount();
 
