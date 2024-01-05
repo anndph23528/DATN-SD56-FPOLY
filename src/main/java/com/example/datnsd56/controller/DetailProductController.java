@@ -45,25 +45,28 @@ public class DetailProductController {
         model.addAttribute("quantitys",productDetailsService.getById(id));
 //        model.addAttribute("sells",productDetailsService.findProductDetailsByColorIdAndSizeIdAndAndProductId(colorid,sizeId,id));
 //        model.addAttribute("sell",productDetailsService.findProductDetailsBySellPrice(id));
-
-        int totalQuantity = 0;
+        int totalCartItems = 0;
 
         if (principal == null) {
+            // Nếu người dùng chưa đăng nhập, kiểm tra giỏ hàng trong session
             SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
             if (sessionCart != null) {
-                totalQuantity = sessionCart.getTotalItems();
+                totalCartItems = sessionCart.getCartItems().size();
             }
         } else {
+            // Nếu người dùng đã đăng nhập, kiểm tra giỏ hàng của tài khoản
             String name = principal.getName();
             Optional<Account> account = accountService.finByName(name);
             if (account.isPresent()) {
                 Cart cart = account.get().getCart();
                 if (cart != null) {
-                    totalQuantity = cart.getTotalItems();
+                    totalCartItems = cart.getCartItems().size();
                 }
             }
         }
-        model.addAttribute("totalItems",totalQuantity);
+
+        model.addAttribute("totalItems", totalCartItems);
+
         model.addAttribute("views",list);
         return "website/index/detail";
 

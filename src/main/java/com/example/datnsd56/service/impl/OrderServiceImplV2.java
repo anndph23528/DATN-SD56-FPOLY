@@ -165,6 +165,20 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
 
 
+    public Orders placeOrderss(Cart cart, String address, String voucherCode, String selectedVoucherCode) {
+        Orders order = createOrder(cart, address);
+        if (order == null) {
+            return null;
+        }
+
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        processOrderDetailss(cart, order);
+
+        // Áp dụng voucher nếu có
+        applyVoucher(order, voucherCode, selectedVoucherCode);
+
+        return order;
+    }
 
     @Transactional
     @Override
@@ -199,6 +213,20 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return order;
     }
+    public void updateOrderStatusToCancelled(Orders order) {
+        // Kiểm tra xem đơn hàng có tồn tại không
+        if (order != null) {
+            // Gán trạng thái là "Đã Hủy"
+            order.setOrderStatus(0);
+
+            // Cập nhật ngày cập nhật (nếu bạn muốn lưu lại thời điểm hủy)
+            order.setUpdateDate(LocalDate.now());
+
+            // Lưu đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+            ordersRepository.save(order);
+        }
+    }
+
 
     public void processOrderDetails(Cart cart, Orders order) {
         // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
@@ -213,6 +241,25 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
             // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
             orderItemRepository.save(orderDetails);
+
+            // Giảm số lượng sản phẩm trong kho
+            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
+        }
+    }
+
+    public void processOrderDetailss(Cart cart, Orders order) {
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        Set<CartItem> cartItems = cart.getCartItems();
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderDetails = new OrderItem();
+            orderDetails.setOrders(order);
+            orderDetails.setProductDetails(cartItem.getProductDetails());
+            orderDetails.setQuantity(cartItem.getQuantity());
+            orderDetails.setPrice(cartItem.getProductDetails().getSellPrice());
+            orderDetails.setStatus(1);
+
+            // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
+//            orderItemRepository.save(orderDetails);
 
             // Giảm số lượng sản phẩm trong kho
             reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());

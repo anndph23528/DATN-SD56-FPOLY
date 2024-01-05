@@ -5,6 +5,7 @@ import com.example.datnsd56.service.AccountService;
 import com.example.datnsd56.service.CartService;
 import com.example.datnsd56.service.ImageService;
 import com.example.datnsd56.service.ProductDetailsService;
+import com.example.datnsd56.service.impl.CartSeviceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ public class UseCartController {
     private CartService cartService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CartSeviceImpl cartSeviceImpl;
     @Autowired
     private ImageService imageService;
 
@@ -142,13 +145,19 @@ public class UseCartController {
 
     }
 
-    @RequestMapping(value = "/user/update-cart", method = RequestMethod.POST, params = "action=update")
-//    @PostMapping("/update-cart/{id}")
+//    @RequestMapping(value = "/user/update-cart", method = RequestMethod.POST, params = "action=update")
+    @PostMapping("/update-cart")
     public String updateCart(@RequestParam("id") Integer id,
                              @RequestParam("quantity") Integer quantity,
                              Principal principal,
-                             HttpSession session) {
+                             HttpSession session,Model model) {
         ProductDetails productDetail = productDetailsService.getById(id);
+        // Kiểm tra xem số lượng nhập vào có lớn hơn số lượng tồn kho không
+        if (quantity > productDetail.getQuantity() || quantity <= 0) {
+            // Nếu số lượng vượt quá số lượng tồn kho, hiển thị SweetAlert và không thực hiện cập nhật giỏ hàng
+            model.addAttribute("quantityExceed", true);
+            return "redirect:/user/cart";
+        }
         if (principal == null) {
             SessionCart oldSessionCart = (SessionCart) session.getAttribute("sessionCart");
             SessionCart sessionCart = cartService.updateCartSession(oldSessionCart, productDetail, quantity);
@@ -203,5 +212,17 @@ public class UseCartController {
 model.addAttribute("totalItems",totalQuantity);
         return "website/index/detail";
     }
+    @GetMapping("/clear")
+    public String clearCart(Model model, Principal principal) {
+        String name = principal.getName();
+        Optional<Account> account = accountService.finByName(name);
+        if (account.isPresent()) {
+            Cart cart = account.get().getCart();
+            // Gọi phương thức clearCart từ CartService để xóa toàn bộ giỏ hàng
+            cartService.deleteCartById(cart.getId());
 
+            // Chuyển hướng đến trang giỏ hàng sau khi xóa
+        }
+        return "redirect:/user/cart";
+    }
 }

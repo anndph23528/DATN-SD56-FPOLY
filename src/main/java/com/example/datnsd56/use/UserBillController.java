@@ -3,6 +3,7 @@ package com.example.datnsd56.use;
 
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.repository.AddressRepository;
+import com.example.datnsd56.repository.OrdersRepository;
 import com.example.datnsd56.repository.VoucherUsageRepository;
 import com.example.datnsd56.service.*;
 
@@ -64,6 +65,10 @@ public class UserBillController {
     private VoucherUsageService voucherUsageService;
     @Autowired
     private OrderSeriveV2 orderServiceImplV2;
+    @Autowired
+    private OrderServiceImplV2 odserv2;
+    @Autowired
+    private OrdersRepository ordersRepository;
     //    @Autowired
 //    private VnpayUtils vnpayUtils;
 
@@ -406,6 +411,8 @@ public class UserBillController {
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
                 Cart cart = account.getCart();
+
+                // Kiểm tra xem người dùng đã chọn địa chỉ từ danh sách hay không
                 if (transactionOptional.isPresent()) {
                     Transactions pendingTransaction = transactionOptional.get();
 
@@ -414,6 +421,8 @@ public class UserBillController {
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("success");
                         transactionService.saveTransaction(pendingTransaction);
+
+
                         cartServicel.deleteCartById(cart.getId());
 
                         // ... (Thêm các thuộc tính khác cần thiết)
@@ -422,31 +431,42 @@ public class UserBillController {
                         // Xử lý khi thanh toán không thành công
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("fail");
+                        Optional<Orders> orderOptional = ordersRepository.findById(transactionOptional.get().getOrderId().getId());
+
+                        if (orderOptional.isPresent()) {
+                            Orders orderToUpdate = orderOptional.get();
+
+                            // Cập nhật trạng thái của hóa đơn thành 0
+                            orderToUpdate.setOrderStatus(0);
+
+                            // Lưu lại đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+                            ordersRepository.save(orderToUpdate);
+                            transactionService.saveTransaction(pendingTransaction);
+
+                            return "website/index/payment-failure";
+
+                            // ... (Thêm các thuộc tính khác cần thiết)
+                        }
+
+                        // Lưu thông tin giao dịch vào cơ sở dữ liệu
                         transactionService.saveTransaction(pendingTransaction);
 
-                        return "website/index/payment-failure";
+                        // Xóa ID của giao dịch khỏi session
+                        session.removeAttribute("pendingTransactionId");
 
-                        // ... (Thêm các thuộc tính khác cần thiết)
+                        // Gọi view để hiển thị thông tin giao dịch
+                        return "website/index/f";
                     }
-
-                    // Lưu thông tin giao dịch vào cơ sở dữ liệu
-                    transactionService.saveTransaction(pendingTransaction);
-
-                    // Xóa ID của giao dịch khỏi session
-                    session.removeAttribute("pendingTransactionId");
-
-                    // Gọi view để hiển thị thông tin giao dịch
-                    return "website/index/f";
                 }
-            }
 
-            // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
-            return "website/index/payment-failure";
+                // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
+                return "website/index/payment-failure";
+            }
+            // Hiển thị thông tin giao dịch trên trang
+            return null;
         }
-        // Hiển thị thông tin giao dịch trên trang
         return null;
     }
-
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
         if (principal == null) {

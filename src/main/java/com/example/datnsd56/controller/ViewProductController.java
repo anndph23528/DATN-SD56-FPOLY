@@ -3,6 +3,7 @@ package com.example.datnsd56.controller;
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.*;
 import com.example.datnsd56.service.impl.VoucherSeviceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,14 +37,35 @@ public class ViewProductController {
     private VoucherUsageService voucherUsageService;
     @Autowired
     private AccountService accountService;
-    @Autowired
+//    @Autowired
 //    private VoucherSeviceImpl voucherService;
     @GetMapping("/trang-chu")
-    public String hienthi(){
+    public String hienthi(Model model, Principal principal, HttpSession session){
+        int totalCartItems = 0;
+
+        if (principal == null) {
+            // Nếu người dùng chưa đăng nhập, kiểm tra giỏ hàng trong session
+            SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
+            if (sessionCart != null) {
+                totalCartItems = sessionCart.getCartItems().size();
+            }
+        } else {
+            // Nếu người dùng đã đăng nhập, kiểm tra giỏ hàng của tài khoản
+            String name = principal.getName();
+            Optional<Account> account = accountService.finByName(name);
+            if (account.isPresent()) {
+                Cart cart = account.get().getCart();
+                if (cart != null) {
+                    totalCartItems = cart.getCartItems().size();
+                }
+            }
+        }
+
+        model.addAttribute("totalItems", totalCartItems);
         return "/website/index/index";
     }
     @GetMapping("/hien-thi")
-    public String productView(Model model, Principal principal) {
+    public String productView(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
 //        List<ProductDetails> list = productDetailsService.getAllCTSP();
         List<Products> lists = productsService.getAllPros();
@@ -76,7 +98,27 @@ public class ViewProductController {
         if (productsByBrand == null) {
             productsByBrand = new HashMap<>();
         }
+        int totalCartItems = 0;
 
+        if (principal == null) {
+            // Nếu người dùng chưa đăng nhập, kiểm tra giỏ hàng trong session
+            SessionCart sessionCart = (SessionCart) session.getAttribute("sessionCart");
+            if (sessionCart != null) {
+                totalCartItems = sessionCart.getCartItems().size();
+            }
+        } else {
+            // Nếu người dùng đã đăng nhập, kiểm tra giỏ hàng của tài khoản
+            String name = principal.getName();
+            Optional<Account> accounts = accountService.finByName(name);
+            if (accounts.isPresent()) {
+                Cart cart = account.get().getCart();
+                if (cart != null) {
+                    totalCartItems = cart.getCartItems().size();
+                }
+            }
+        }
+
+        model.addAttribute("totalItems", totalCartItems);
         model.addAttribute("productsByBrand", productsByBrand);
 
 

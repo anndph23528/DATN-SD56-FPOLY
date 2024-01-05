@@ -63,7 +63,13 @@ public class Cart {
         this.updateDate = LocalDate.now();
         this.status = "0";
     }
-
+    public int getTotalProducts() {
+        int total = 0;
+        for (CartItem item : cartItems) {
+            total += item.getQuantity();
+        }
+        return total;
+    }
 
 
 }
