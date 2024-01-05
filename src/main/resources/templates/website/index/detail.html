@@ -164,6 +164,9 @@
                         <!-- Thêm các lựa chọn vào dropdown -->
                         <div class="dropdown-title" style="font-weight: bolder; margin-left: 15px" th:text="${#authentication.name}"></div>
                         <div class="dropdown-divider"></div>
+                        <!-- Trong mã HTML -->
+<!--                        <input type="hidden" id="userId" th:value="${#authorization.expression('isAuthenticated()')}" />-->
+
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                             <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
                             <a th:href="@{/cart/dsdonhang}" class="dropdown-item has-icon "> <i class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
@@ -711,15 +714,11 @@
 
 <!-- Thêm đoạn mã JavaScript -->
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    /*<![CDATA[*/
-    /*<![CDATA[*/
     $(document).ready(function () {
         var cartQuantity = 1; // Giá trị mặc định là 1
 
         function updateQuantityDisplay() {
             $("#quantity").val(cartQuantity);
-            // Cập nhật số lượng trong icon giỏ hàng và tổng số lượng sản phẩm trong giỏ hàng
         }
 
         function incrementQuantity() {
@@ -734,78 +733,98 @@
             }
         }
 
-        // Sự kiện click trên nút cộng
         $(".btn-plus").click(function () {
             incrementQuantity();
         });
 
-        // Sự kiện click trên nút trừ
         $(".btn-minus").click(function () {
             decrementQuantity();
         });
 
-        // Cập nhật hiển thị ban đầu
         updateQuantityDisplay();
 
         $("#addToCartButton").click(function (e) {
             e.preventDefault();
-
-            // Lấy giá trị số lượng
-            var quantity = parseInt($("#quantity").val());
-
-            // Kiểm tra số lượng
-            if (quantity <= 0 || quantity >= 50 || isNaN(quantity)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Số lượng không hợp lệ!',
-                    text: 'Vui lòng chọn số lượng lớn hơn 0 và nhỏ hơn 50.',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                return;
-            }
-
-            // Lấy các giá trị khác từ form
-            var productId = $("input[name='productId']").val();
-            var sizeId = $("input[name='size']:checked").val();
-            var colorId = $("input[name='color']:checked").val();
-
-            if (!productId || !sizeId || !colorId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Vui lòng chọn size và màu!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                return;
-            }
-
-            // Gửi yêu cầu AJAX để kiểm tra số lượng còn lại
             $.ajax({
                 type: 'GET',
-                url: '/product/detail/check-quantity',
-                data: {
-                    productId: productId,
-                    size: sizeId,
-                    color: colorId
-                },
-                success: function (remainingQuantity) {
-                    if (remainingQuantity < quantity) {
+                url: '/product/check-login-status',
+                success: function (data) {
+                    var isLoggedIn = data.loggedIn;
+                    console.log(data); // In giá trị data vào console để kiểm tra
+                    if (!isLoggedIn) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Sản phẩm không có đủ số lượng!',
+                            title: 'Bạn cần đăng nhập trước khi thêm vào giỏ hàng',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function () {
+                            window.location.href = '/login/custom-login';
+                        });
+                        return;
+                    }
+
+                    var quantity = parseInt($("#quantity").val());
+
+                    if (quantity <= 0 || quantity >= 50 || isNaN(quantity)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Số lượng không hợp lệ!',
+                            text: 'Vui lòng chọn số lượng lớn hơn 0 và nhỏ hơn 50.',
                             showConfirmButton: false,
                             timer: 1500
                         });
-                    } else {
-                        // Gọi phương thức thêm vào giỏ hàng khi số lượng hợp lệ
-                        addToCart(productId, sizeId, colorId, quantity);
+                        return;
                     }
+
+                    var productId = $("input[name='productId']").val();
+                    var sizeId = $("input[name='size']:checked").val();
+                    var colorId = $("input[name='color']:checked").val();
+
+                    if (!productId || !sizeId || !colorId) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Vui lòng chọn size và màu!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/product/detail/check-quantity',
+                        data: {
+                            productId: productId,
+                            size: sizeId,
+                            color: colorId
+                        },
+                        success: function (remainingQuantity) {
+                            if (remainingQuantity < quantity) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Sản phẩm không có đủ số lượng!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            } else {
+                                addToCart(productId, sizeId, colorId, quantity);
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra khi kiểm tra số lượng!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
                 },
                 error: function () {
+                    // Xử lý lỗi
                     Swal.fire({
                         icon: 'error',
-                        title: 'Có lỗi xảy ra khi kiểm tra số lượng!',
+                        title: 'Có lỗi xảy ra khi kiểm tra trạng thái đăng nhập!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -813,7 +832,6 @@
             });
         });
 
-        // Phương thức thêm vào giỏ hàng
         function addToCart(productId, sizeId, colorId, quantity) {
             $.ajax({
                 type: 'POST',
@@ -826,15 +844,9 @@
                 },
                 success: function (data, textStatus, xhr) {
                     if (xhr.status === 200) {
-                        // Cập nhật số lượng trong giỏ hàng và số lượng bên ngoài
                         cartQuantity = parseInt(quantity);
-
                         updateQuantityDisplay();
-                        // updateCartItemCount();
-    updateCartItemCount();
 
-
-                        // Cập nhật số lượng còn lại trong giỏ hàng
                         var remainingQuantity = parseInt(data);
                         console.log("Số lượng còn lại trong giỏ hàng: " + remainingQuantity);
 
@@ -844,7 +856,6 @@
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function () {
-                            // Chuyển hướng đến trang chi tiết sản phẩm sau khi đóng thông báo
                             window.location.href = '/product/detail/chi-tiet/' + productId;
                         });
                     }
@@ -869,32 +880,7 @@
                 }
             });
         }
-
-
-        function updateCartItemCount() {
-            $.ajax({
-                type: 'GET',
-                url: '/product/get-cart-quantity',
-                success: function (totalItems) {
-                    // Cập nhật số lượng trong biểu tượng giỏ hàng
-                    $("#cartItemCount").text(totalItems);
-                },
-                error: function () {
-                    console.log("Lỗi khi gọi API để lấy số lượng giỏ hàng");
-                }
-            });
-        }
-
     });
-
-
-    /*]]>*/
-    /*]]>*/
-
-    /*]]>*/
-    /*]]>*/
-
-    /*]]>*/
 </script>
 
 
