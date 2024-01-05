@@ -1,16 +1,19 @@
 package com.example.datnsd56.rest;
 
+import com.example.datnsd56.entity.Cart;
+import com.example.datnsd56.entity.ProductDetails;
 import com.example.datnsd56.entity.SessionCart;
+import com.example.datnsd56.service.CartService;
 import com.example.datnsd56.service.impl.CartSeviceImpl;
 import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 public class ProductRestController {
@@ -18,6 +21,8 @@ public class ProductRestController {
 private ProductDetailsServiceImpl productDetailsService;
 @Autowired
 private CartSeviceImpl cartSevice;
+    @Autowired
+    private CartService cartServices;
     @GetMapping("/product/detail/check-quantity")
     @ResponseBody
     public ResponseEntity<Integer> checkQuantity(
@@ -43,6 +48,44 @@ private CartSeviceImpl cartSevice;
             return new ResponseEntity<>(0, HttpStatus.OK);
         }
     }
+    @PostMapping("/product/update-cart")
+    public ResponseEntity<String> updateCart(@RequestParam("productId") Integer productId,
+                                             @RequestParam("quantity") Integer quantity,
+                                             Principal principal,
+                                             HttpSession session) {
+        try {
+            // Lấy thông tin sản phẩm từ cơ sở dữ liệu
+            Optional<ProductDetails> productDetailsOptional = productDetailsService.findById(productId);
 
+            if (productDetailsOptional.isEmpty()) {
+                return ResponseEntity.status(404).body("Không tìm thấy sản phẩm");
+            }
+
+            ProductDetails productDetails = productDetailsOptional.get();
+
+            // Kiểm tra xem số lượng nhập vào có lớn hơn số lượng tồn kho không
+            if (quantity > productDetails.getQuantity() || quantity <=0) {
+                return ResponseEntity.status(400).body("Số lượng nhập vào vượt quá số lượng tồn kho");
+            }
+
+            // Kiểm tra và cập nhật số lượng trong giỏ hàng
+            if (principal == null) {
+                SessionCart oldSessionCart = (SessionCart) session.getAttribute("sessionCart");
+                SessionCart sessionCart = cartServices.updateCartSession(oldSessionCart, productDetails, quantity);
+                session.setAttribute("sessionCart", sessionCart);
+                session.setAttribute("totalItems", sessionCart.getTotalItems());
+            } else {
+                String name = principal.getName();
+                Cart cart = cartServices.updateCart(productDetails, quantity, name);
+                session.setAttribute("totalItems", cart.getTotalItems());
+            }
+
+            // Trả về phản hồi JSON thành công
+            return ResponseEntity.ok().body("Cập nhật số lượng thành công");
+        } catch (Exception e) {
+            // Trả về phản hồi JSON thất bại
+            return ResponseEntity.status(500).body("Cập nhật số lượng thất bại");
+        }
+    }
 
 }

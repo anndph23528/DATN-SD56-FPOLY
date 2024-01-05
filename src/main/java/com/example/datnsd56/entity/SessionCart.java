@@ -18,6 +18,7 @@ public class SessionCart {
     private BigDecimal totalPrice;
 
     private Integer totalItems;
+    private Integer id;
 
     private LocalDate createDate;
 
@@ -43,5 +44,13 @@ public class SessionCart {
                 cartItems.remove(productId);
             }
         }
+    }
+
+    public int getTotalProducts() {
+        int total = 0;
+        for (SessionCartItem item : cartItems) {
+            total += item.getQuantity();
+        }
+        return total;
     }
 }

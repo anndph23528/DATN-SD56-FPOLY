@@ -110,7 +110,10 @@
                 </form>
                 <a th:href="@{/cart/view-cart}">
                     <button type="button" class="btn btn-sm p-0">
-                        <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
+                        <div id="cartIcon" th:if="${totalItems > 0}">
+                            <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
+                            <span id="cartItemCount" style="color:red " th:text="${totalItems}">0</span>
+                        </div>
                     </button>
                 </a>
                 <div class="dropdown">
