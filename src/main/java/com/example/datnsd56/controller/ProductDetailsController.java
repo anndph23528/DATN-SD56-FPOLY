@@ -31,6 +31,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/chi-tiet-san-pham/")
+@PreAuthorize("hasAuthority('admin')")
 public class ProductDetailsController {
     @Autowired
     private ProductDetailsService productDetailsService;
