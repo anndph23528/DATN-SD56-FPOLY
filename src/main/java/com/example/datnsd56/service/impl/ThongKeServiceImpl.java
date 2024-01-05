@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -37,4 +38,35 @@ public class ThongKeServiceImpl implements ThongKeService {
     public List<OrderItem> getAlldanggiao() {
         return repository.getAllByStatusdanggiao();
     }
+
+    @Override
+    public List<OrderItem> getAllTop5() {
+        return repository.getAllTop5();
+    }
+
+    @Override
+    public BigDecimal getToTal1() {
+        return repository.getTotalProducts();
+    }
+
+    @Override
+    public BigDecimal getToTalManey1() {
+        return repository.getTotalManey();
+    }
+
+    @Override
+    public BigDecimal getToTalHuy() {
+        return repository.getTotalHuy();
+    }
+
+    @Override
+    public BigDecimal getToTalAll() {
+        return repository.getTotalAll();
+    }
+
+    @Override
+    public BigDecimal getToTalAllManey() {
+        return repository.getTotalAllManey();
+    }
+
 }
