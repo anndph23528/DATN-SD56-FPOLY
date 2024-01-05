@@ -276,59 +276,93 @@
                                 <div class="card-header">
                                     <h4>Thống Kê</h4>
                                 </div>
-                                <!-- -----o thong ke start -->
-                                <!--                                <div class="container-fluid pt-4 px-4">-->
-                                <!--                                    <div class="row g-4">-->
-                                <!--                                        <div class="col-sm-6 col-xl-3">-->
-                                <!--                                            <div-->
-                                <!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
-                                <!--                                            >-->
-                                <!--                                                <i class="fa fa-chart-line fa-3x text-primary"></i>-->
-                                <!--                                                <div class="ms-3">-->
-                                <!--                                                    <p class="mb-2">Doanh Thu Ngày</p>-->
-                                <!--                                                    <h6 class="mb-0">$1234</h6>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                        <div class="col-sm-6 col-xl-3">-->
-                                <!--                                            <div-->
-                                <!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
-                                <!--                                            >-->
-                                <!--                                                <i class="fa fa-chart-bar fa-3x text-primary"></i>-->
-                                <!--                                                <div class="ms-3">-->
-                                <!--                                                    <p class="mb-2">Đơn Hủy</p>-->
-                                <!--                                                    <h6 class="mb-0">$1234</h6>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                        <div class="col-sm-6 col-xl-3">-->
-                                <!--                                            <div-->
-                                <!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
-                                <!--                                            >-->
-                                <!--                                                <i class="fa fa-chart-area fa-3x text-primary"></i>-->
-                                <!--                                                <div class="ms-3">-->
-                                <!--                                                    <p class="mb-2">số đơn hàng</p>-->
-                                <!--                                                    <h6 class="mb-0">$1234</h6>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                        <div class="col-sm-6 col-xl-3">-->
-                                <!--                                            <div-->
-                                <!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
-                                <!--                                            >-->
-                                <!--                                                <i class="fa fa-chart-pie fa-3x text-primary"></i>-->
-                                <!--                                                <div class="ms-3">-->
-                                <!--                                                    <p class="mb-2">Tổng Doanh Thu</p>-->
-                                <!--                                                    <h6 class="mb-0">$1234</h6>-->
-                                <!--                                                </div>-->
-                                <!--                                            </div>-->
-                                <!--                                        </div>-->
-                                <!--                                    </div>-->
-                                <!--                                </div>-->
-                                <!-- Add filter buttons -->
+                                <!--                                 -&#45;&#45;&#45;&#45;o thong ke start -->
+                                <div class="container-fluid pt-4 px-4">
+                                    <div class="row g-4">
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Đơn hàng Trong Ngày</p>
+                                                    <h6 class="mb-0" th:text="${total1}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Doanh Thu Trong  Ngày </p>
+                                                    <h6 class="mb-0" th:text="${totalManey1}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Tổng Đơn Hủy </p>
+                                                    <h6 class="mb-0" th:text="${totalHuy}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Tổng số đơn hàng</p>
+                                                    <h6 class="mb-0" th:text="${totalAll}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+
+<!--                                        <div class="col-sm-6 col-xl-3">-->
+<!--                                            <div-->
+<!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
+<!--                                            >-->
+<!--                                                <i class="fa fa-chart-pie fa-3x text-primary"></i>-->
+<!--                                                <div class="ms-3">-->
+<!--                                                    <p class="mb-2">Tổng Doanh Thu</p>-->
+<!--                                                    <h6 class="mb-0" th:text="${totalAllManey}"></h6>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                    </div>
+                                </div>
+<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+                                <div class="container-fluid pt-4 px-4">
+                                    <div class="row g-4">
+
+
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Tổng Doanh Thu</p>
+                                                    <h6 class="mb-0" th:text="${totalAllManey}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--                                 Add filter buttons -->
                                 <div class="filter-buttons" style="text-align: right">
                                     <button class="btn btn-info">
                                         <a href="/admin/thong-ke/hien-thi">All</a></button>
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi/top5">TOP5</a></button>
                                     <button class="btn btn-info">
                                         <a href="/admin/thong-ke/hien-thi/dang-giao">ĐangGiao</a></button>
                                     <button class="btn btn-info">
