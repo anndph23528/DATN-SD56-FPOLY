@@ -69,17 +69,17 @@ public class ViewProductController {
 //List<Products>lists=productsService.getAllPro();
 //        List<ProductDetails> list = productDetailsService.getAllCTSP();
         List<Products> lists = productsService.getAllPros();
-        Optional<Account> account = accountService.finByName(principal.getName());
+//        Optional<Account> account = accountService.finByName(principal.getName());
 
 
         // Lấy danh sách tất cả voucher
         List<Voucher> allVouchers = voucherSeviceImpl.getAllls();
 
         // Lấy danh sách voucher đã lưu cho tài khoản
-        List<VoucherUsage> voucherUsages = voucherUsageService.findVoucherUsagesByAccount(account.get().getId());
+//        List<VoucherUsage> voucherUsages = voucherUsageService.findVoucherUsagesByAccount(account.get().getId());
 
         // Loại bỏ những voucher đã lưu khỏi danh sách tất cả voucher
-        allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
+//        allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
 
         model.addAttribute("allVouchers", allVouchers);
         // Sắp xếp sản phẩm theo brand
@@ -111,7 +111,7 @@ public class ViewProductController {
             String name = principal.getName();
             Optional<Account> accounts = accountService.finByName(name);
             if (accounts.isPresent()) {
-                Cart cart = account.get().getCart();
+                Cart cart = accounts.get().getCart();
                 if (cart != null) {
                     totalCartItems = cart.getCartItems().size();
                 }

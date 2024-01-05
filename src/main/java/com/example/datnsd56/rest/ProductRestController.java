@@ -10,9 +10,13 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -87,5 +91,14 @@ private CartSeviceImpl cartSevice;
             return ResponseEntity.status(500).body("Cập nhật số lượng thất bại");
         }
     }
+    @GetMapping("/product/check-login-status")
+    @ResponseBody
+    public Map<String, Boolean> checkLoginStatus(Principal principal) {
+        boolean isLoggedIn = principal != null;
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("loggedIn", isLoggedIn);
+        return response;
+    }
+
 
 }

@@ -82,6 +82,7 @@ public class UseCartController {
         if (sizeId == null || colorId == null) {
             return new ResponseEntity<>("Vui lòng chọn size và màu!", HttpStatus.BAD_REQUEST);
         }
+
         boolean isQuantityAvailable = productDetailsService.isQuantityAvailable(productId, sizeId, colorId, quantity);
 
         if (!isQuantityAvailable) {
@@ -99,6 +100,8 @@ public class UseCartController {
             SessionCart sessionCart = cartService.addToCartSession(oldSessionCart, productDetail, quantity);
             session.setAttribute("sessionCart", sessionCart);
             session.setAttribute("totalItems", sessionCart.getTotalItems());
+
+//            return new ResponseEntity<>("redirect:/login/custom-login", HttpStatus.FOUND);
         } else {
             String name = principal.getName();
             Cart cart = cartService.addToCart(productDetail, quantity, name);
@@ -107,6 +110,7 @@ public class UseCartController {
 
         return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
     }
+
 
 
     @PostMapping("/update-cart-quantity")
