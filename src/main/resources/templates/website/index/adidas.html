@@ -134,7 +134,7 @@
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                             <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
                             <a th:href="@{/cart/dsdonhang}" class="dropdown-item has-icon "> <i class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
-                            <a th:href="@{/admin/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
+                            <a th:href="@{/product/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
 
                             <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i> Logout</a>
                         </th:block>

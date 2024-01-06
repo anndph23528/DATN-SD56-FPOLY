@@ -98,7 +98,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
            .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/rest/**").authenticated()
-//            .requestMatchers("/product/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
+            .requestMatchers("/product/saveVoucher/").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 
             .and().formLogin()// trả về page login nếu chưa authenticate
 

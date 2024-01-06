@@ -39,17 +39,19 @@ private VoucherSeviceImpl voucherSevice;
         // Lấy thông tin tài khoản đang đăng nhập
         Optional<Account> account = accountService.finByName(principal.getName());
 
-
+if (principal == null){
+    return "redirect:/login/custom-login";
+}
         // Lấy thông tin voucher
         Optional<Voucher> voucher = voucherSeviceImpl.findByid(voucherId);
 
         // Lưu voucher cho tài khoản
         voucherUsageService.saveVoucherForAccount(voucher.get(), account.get());
 
-        return "redirect:/product/vouchers";
+        return "redirect:/product/hien-thi";
     }
 
-    @GetMapping("/vouchers")
+    @GetMapping("/voucher/user-voucher")
     public String getVouchers(Model model, Principal principal) {
         // Lấy thông tin tài khoản đang đăng nhập
         Optional<Account> account = accountService.finByName(principal.getName());

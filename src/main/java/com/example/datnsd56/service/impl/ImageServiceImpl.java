@@ -4,6 +4,7 @@ import com.example.datnsd56.entity.Image;
 import com.example.datnsd56.entity.Products;
 import com.example.datnsd56.repository.ImageRepository;
 import com.example.datnsd56.service.ImageService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +51,18 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> getImagesForProducts(Integer id, Integer imageId) {
         return imageRepository.getImageByProductId(id,imageId);
     }
+    public void deleteImage(Integer imageId) {
+        System.out.println("Deleting image with ID: " + imageId);
 
+        try {
+
+
+            imageRepository.deletess(imageId);
+        } catch (Exception e) {
+            e.printStackTrace(); // In lỗi ra console để kiểm tra
+            throw e; // Ném lại lỗi để controller xử lý
+        }
+    }
 //    @Override
 //    public List<Image> getImagesForProducts(Integer id) {
 //        List<Image> list = imageRepository.getImageByProductId(id);
