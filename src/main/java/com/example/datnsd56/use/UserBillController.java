@@ -241,6 +241,7 @@ public class UserBillController {
     public ResponseEntity<Map<String, Object>> applyVoucher(
         @RequestParam(name = "selectedVoucherCode", required = false) String selectedVoucherCode,
         Principal principal, HttpSession session, Model model) {
+
         if (principal == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -254,7 +255,7 @@ public class UserBillController {
                 // Tính toán giá tạm thời khi áp dụng voucher
                 BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
 
-                if (newTotal != null) {
+                if (newTotal != null && newTotal.compareTo(BigDecimal.ZERO) >= 0) {
                     // Lưu giá mới vào session để sử dụng khi đặt hàng
                     session.setAttribute("appliedVoucherTotal", newTotal);
 
@@ -267,11 +268,8 @@ public class UserBillController {
                     response.put("ss", "Áp dụng mã giảm giá thành công");
                     return ResponseEntity.ok(response);
                 } else {
-                    // Thiết lập thông điệp thất bại trong Model để truyền về view
-                    model.addAttribute("ss", "Áp dụng mã giảm giá thất bại");
-
-                    // Trả về phản hồi lỗi nếu có vấn đề
-                    return ResponseEntity.badRequest().build();
+                    // Xử lý khi giảm giá không đạt đến mức tối thiểu hoặc có lỗi khác
+                    model.addAttribute("ss", "Giảm giá không đạt đến mức tối thiểu hoặc có lỗi khác");
                 }
             }
         }
@@ -279,6 +277,7 @@ public class UserBillController {
         // Trả về phản hồi lỗi nếu có vấn đề
         return ResponseEntity.badRequest().build();
     }
+
 
 
     @PostMapping("/setDefaultAddress")

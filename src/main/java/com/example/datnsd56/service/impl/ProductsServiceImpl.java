@@ -27,10 +27,7 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -201,40 +198,44 @@ public class ProductsServiceImpl implements ProductsService {
         // Lấy thông tin sản phẩm hiện tại
         Products currentProduct = productRepository.findById(products.getId()).orElse(null);
 
-        // Kiểm tra xem có sự thay đổi trong trường tên hay không
-        boolean nameChanged = !Objects.equals(currentProduct.getName(), products.getName());
+        // Nếu sản phẩm hiện tại không tồn tại, xử lý tùy thuộc vào yêu cầu của bạn
 
-        // Nếu có sự thay đổi trong trường tên
-        if (nameChanged) {
-            // Cập nhật thông tin sản phẩm (tên)
-            currentProduct.setName(products.getName());
-            currentProduct.setUpdateDate(LocalDate.now());
-
-            // Lưu thông tin sản phẩm vào cơ sở dữ liệu
-            currentProduct = productRepository.save(currentProduct);
-        }
+        // Cập nhật thông tin sản phẩm
+        currentProduct.setName(products.getName());
+        currentProduct.setStatus(products.getStatus());
+        currentProduct.setUpdateDate(LocalDate.now());
 
         // Nếu có ảnh mới được cung cấp
+        // Trong hàm updateProduct
         if (files != null && files.length > 0) {
-            // Xóa tất cả ảnh cũ nếu có sự thay đổi trong trường tên
-            if (nameChanged) {
-                currentProduct.getImages().clear();
-            }
+            // Kiểm tra xem danh sách ảnh mới có dữ liệu không
+            boolean hasValidImages = Arrays.stream(files).anyMatch(file -> file.getSize() > 0);
 
-            // Lưu ảnh mới vào danh sách
-            for (MultipartFile file : files) {
-                byte[] bytes = file.getBytes();
-                Blob blob = new SerialBlob(bytes);
-                Image newImage = new Image();
-                newImage.setProductId(currentProduct);
-                newImage.setUrl(blob);
-                currentProduct.getImages().add(newImage);
-            }
+            if (hasValidImages) {
+                // Xóa tất cả ảnh cũ của sản phẩm
+                List<Image> existingImages = currentProduct.getImages();
+                existingImages.clear();
 
-            // Lưu thông tin sản phẩm (ảnh) vào cơ sở dữ liệu
-            currentProduct = productRepository.save(currentProduct);
+                // Lưu ảnh mới vào danh sách
+                for (MultipartFile file : files) {
+                    if (file.getSize() > 0) {
+                        byte[] bytes = file.getBytes();
+                        Blob blob = new SerialBlob(bytes);
+                        Image newImage = new Image();
+                        newImage.setProductId(currentProduct);
+                        newImage.setUrl(blob);
+                        existingImages.add(newImage);
+                    }
+                }
+            }
         }
+
+
+
+        // Lưu thông tin sản phẩm vào cơ sở dữ liệu
+        productRepository.save(currentProduct);
     }
+
 
 
 

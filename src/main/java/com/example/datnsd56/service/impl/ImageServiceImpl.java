@@ -51,18 +51,25 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> getImagesForProducts(Integer id, Integer imageId) {
         return imageRepository.getImageByProductId(id,imageId);
     }
-    public void deleteImage(Integer imageId) {
-        System.out.println("Deleting image with ID: " + imageId);
 
-        try {
+        public void deleteImage(Integer imageId) {
+            // Lấy thông tin ảnh dựa trên imageId
+            Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy ảnh với ID: " + imageId));
 
+            // Lấy danh sách ảnh của sản phẩm
+            List<Image> productImages = image.getProductId().getImages();
 
-            imageRepository.deletess(imageId);
-        } catch (Exception e) {
-            e.printStackTrace(); // In lỗi ra console để kiểm tra
-            throw e; // Ném lại lỗi để controller xử lý
+            // Kiểm tra xem sản phẩm có ít nhất một ảnh còn lại không
+            if (productImages.size() > 1) {
+                // Nếu có ít nhất một ảnh còn lại, xóa ảnh hiện tại
+                imageRepository.deletess(imageId);
+            } else {
+                // Nếu chỉ còn một ảnh, không cho phép xóa và thông báo
+                throw new IllegalStateException("Không thể xóa ảnh cuối cùng của sản phẩm.");
+            }
         }
-    }
+
 //    @Override
 //    public List<Image> getImagesForProducts(Integer id) {
 //        List<Image> list = imageRepository.getImageByProductId(id);
