@@ -15,6 +15,7 @@ public interface ThongKeService {
     List<OrderItem> getAllhoanthanh();
     List<OrderItem> getAlldanggiao();
     List<OrderItem> getAllTop5();
+    List<OrderItem> getAllByTime(String tuNgay, String DenNgay);
     BigDecimal getToTal1();
     BigDecimal getToTalManey1();
     BigDecimal getToTalHuy();

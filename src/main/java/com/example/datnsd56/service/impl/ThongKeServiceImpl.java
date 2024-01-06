@@ -45,6 +45,11 @@ public class ThongKeServiceImpl implements ThongKeService {
     }
 
     @Override
+    public List<OrderItem> getAllByTime(String tuNgay, String DenNgay) {
+        return repository.getAllByTime(tuNgay,DenNgay);
+    }
+
+    @Override
     public BigDecimal getToTal1() {
         return repository.getTotalProducts();
     }

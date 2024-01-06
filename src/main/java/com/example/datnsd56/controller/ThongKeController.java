@@ -106,4 +106,23 @@ public class ThongKeController {
         return "/dashboard/thongke-hoadon/thong-ke";
     }
 
+    @GetMapping("hien-thi/thoi-gian")
+    public String viewHoaDonTime(@RequestParam("tuNgay")String tuNgay, @RequestParam("denNgay") String denNgay, Model model) {
+        BigDecimal total1 = service.getToTal1();
+        model.addAttribute("total1", total1);
+        BigDecimal totalManey1 = service.getToTalManey1();
+        model.addAttribute("totalManey1", totalManey1);
+        BigDecimal totalHuy = service.getToTalHuy();
+        model.addAttribute("totalHuy", totalHuy);
+        BigDecimal totalAll = service.getToTalAll();
+        model.addAttribute("totalAll", totalAll);
+        BigDecimal totalAllManey = service.getToTalAllManey();
+        model.addAttribute("totalAllManey", totalAllManey);
+
+        List<OrderItem> list = service.getAllByTime(tuNgay,denNgay);
+        model.addAttribute("list", list);
+        return "/dashboard/thongke-hoadon/thong-ke";
+    }
+
+
 }
