@@ -139,7 +139,9 @@ public class ProductsController {
     @GetMapping("/view-update/{id}")
     @PreAuthorize("hasAuthority('admin')")
 
-    public String viewUpdateProduct(@PathVariable("id") Integer id,@RequestParam("imageId") Integer imageId, Model model) {
+    public String viewUpdateProduct(@PathVariable("id") Integer id, @RequestParam(name = "imageId", required = false) Integer imageId, Model model) {
+        System.out.println("id: " + id);
+        System.out.println("imageId: " + imageId);
         Products products = productService.getById(id);
         model.addAttribute("product", products);
         List<Integer> selectedSizes = productService.findSelectedSizeIds(id);
@@ -147,7 +149,8 @@ public class ProductsController {
         List<Integer> selectedColors = productService.findSelectedColorIds(id);
         model.addAttribute("selectedColors", selectedColors);
         List<Image> productImages = imageService.getImagesForProducts(id,imageId);
-        model.addAttribute("productImages", productImages);
+        Products productss=new Products();
+        model.addAttribute("images",productss.getImages());
         List<Brand> brands = brand.getAllBrand();
         model.addAttribute("brand", brands);
         model.addAttribute("brands", new Brand());
@@ -178,7 +181,6 @@ public class ProductsController {
             model.addAttribute("brand", brands);
             model.addAttribute("brands", new Brand());
             model.addAttribute("images", products.getImages());
-
             List<Category> categories = category.getAllCate();
             model.addAttribute("category", categories);
             model.addAttribute("categoris", new Category());
@@ -195,7 +197,9 @@ public class ProductsController {
             model.addAttribute("listSize", sizeService.getAllSZ());
         }
 
-        productService.updateProduct(products, files);
+            productService.updateProduct(products, files);
+
+//        productService.updateProduct(products, files);
         return "redirect:/admin/chi-tiet-san-pham/hien-thi";
     }
 
@@ -206,7 +210,7 @@ public class ProductsController {
         productService.updateProductDetail(id, soLuong, donGia);
         return "redirect:/admin/san-pham-test/create";
     }
-//    @GetMapping("/search")
+//    @GetMapping("/search")images
 ////    @PreAuthorize("hasAuthority('admin')")
 //    public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
 //        model.addAttribute("product", new Products());

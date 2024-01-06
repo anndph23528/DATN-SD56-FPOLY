@@ -527,9 +527,13 @@
                                         <td>
                                             <div id="carousel-{{list.productId.id}}" class="carousel slide" data-ride="carousel">
                                                 <div class="carousel-inner">
+                                                    <a th:href="@{'/admin/san-pham-test/view-update/'+${list.productId.id}}" >
+
                                                     <div th:each="image, iterStat : ${list.productId.images}" th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                                                         <img th:src="@{'/admin/chi-tiet-san-pham/display?id=' + ${list.productId.id} + '&imageId=' + ${image.id}}" class="d-block w-70" alt="..."      style="width: 70px; height: 70px;border-radius: 10%;object-fit: cover" >
                                                     </div>
+                                                    </a>
+
                                                 </div>
                                             </div>
                                         </td>

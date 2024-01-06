@@ -5,13 +5,16 @@ import com.example.datnsd56.entity.ProductDetails;
 import com.example.datnsd56.entity.SessionCart;
 import com.example.datnsd56.service.CartService;
 import com.example.datnsd56.service.impl.CartSeviceImpl;
+import com.example.datnsd56.service.impl.ImageServiceImpl;
 import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,6 +30,8 @@ private ProductDetailsServiceImpl productDetailsService;
 private CartSeviceImpl cartSevice;
     @Autowired
     private CartService cartServices;
+    @Autowired
+    private ImageServiceImpl imageService;
     @GetMapping("/product/detail/check-quantity")
     @ResponseBody
     public ResponseEntity<Integer> checkQuantity(
@@ -92,6 +97,7 @@ private CartSeviceImpl cartSevice;
         }
     }
     @GetMapping("/product/check-login-status")
+    @Transactional
     @ResponseBody
     public Map<String, Boolean> checkLoginStatus(Principal principal) {
         boolean isLoggedIn = principal != null;
@@ -99,6 +105,16 @@ private CartSeviceImpl cartSevice;
         response.put("loggedIn", isLoggedIn);
         return response;
     }
-
+    @DeleteMapping("/product/delete-image/{imageId}")
+    public ResponseEntity<String> deleteImage(@PathVariable Integer imageId) {
+        try {
+            imageService.deleteImage(imageId);
+            return ResponseEntity.ok("{\"success\": true}");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"Ảnh không tồn tại.\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"Xóa ảnh thất bại.\"}");
+        }
+    }
 
 }

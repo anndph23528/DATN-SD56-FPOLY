@@ -305,14 +305,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Màu sắc</label>
-                                    <select class="form-control" th:field="*{colorId}">
+                                    <select disabled="disabled" class="form-control" th:field="*{colorId}">
                                         <option th:each="color:${colors}" th:value="${color.id}"
                                                 th:text="${color.name}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Size</label>
-                                    <select class="form-control" th:field="*{sizeId}">
+                                    <select disabled="disabled" class="form-control" th:field="*{sizeId}">
                                         <option th:each="size:${sizes}" th:value="${size.id}"
                                                 th:text="${size.name}"></option>
                                     </select>

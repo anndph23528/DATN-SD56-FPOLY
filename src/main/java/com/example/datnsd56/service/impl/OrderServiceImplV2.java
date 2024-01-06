@@ -141,11 +141,20 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                         // Áp dụng giảm giá của voucher vào tổng tiền
                         BigDecimal discountAmount = calculateDiscountValue(voucher, total);
 
-                        // Đảm bảo giảm giá không vượt quá tổng tiền
-                        total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
+                        // Kiểm tra xem tổng tiền sau khi áp dụng giảm giá có đạt đến mức tối thiểu cho phép không
+                        BigDecimal discountedTotal = total.subtract(discountAmount);
+                        BigDecimal minOrderAmount = voucher.getMinOrderAmount();  // Lấy mức tối thiểu từ voucher
 
-                        // Giảm số lượng voucher sau khi áp dụng
-//                        reduceVoucherQuantity(voucher);
+                        if (minOrderAmount != null && discountedTotal.compareTo(minOrderAmount) >= 0) {
+                            // Đảm bảo giảm giá không vượt quá tổng tiền
+                            total = discountedTotal;
+
+                            // Giảm số lượng voucher sau khi áp dụng
+                            // reduceVoucherQuantity(voucher);
+                        } else {
+                            // Xử lý khi tổng tiền sau giảm giá không đạt đến mức tối thiểu
+                            // ...
+                        }
                     }
                 } else {
                     // Xử lý khi hết số lượng voucher
@@ -156,6 +165,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return total;
     }
+
+
 
 
     @Override
