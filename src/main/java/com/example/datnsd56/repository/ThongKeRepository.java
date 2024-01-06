@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -109,5 +110,19 @@ BigDecimal getTotalManey();
             "WHERE\n" +
             "    order_status = '1';", nativeQuery = true)
     BigDecimal getTotalAllManey();
+    @Query(value = "SELECT \n" +
+            "     O.fullname, O.account_id, O.phone, O.address, O.sale_method, O.email, O.voucher_id, O.Shipping_fee,\n" +
+            "    O.code, O.customer_id, O.update_date, O.total, O.create_date, O.order_status,\n" +
+            "    OI.product_details_id, OI.id, OI.price, OI.quantity, OI.status, OI.rate_id, OI.order_id\n" +
+            "FROM \n" +
+            "    order_items AS OI\n" +
+            "JOIN \n" +
+            "    Orderss AS O ON O.id = OI.order_id\n" +
+            "WHERE \n" +
+            "    O.create_date BETWEEN :tuNgay AND :denNgay", nativeQuery = true)
+    List<OrderItem> getAllByTime(@Param("tuNgay") String tuNgay, @Param("denNgay") String denNgay);
+
+
+
 //-
 }

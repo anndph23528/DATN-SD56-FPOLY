@@ -286,7 +286,7 @@
                                                 <i class="fa fa-chart-line fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Đơn hàng Trong Ngày</p>
-                                                    <h6 class="mb-0" th:text="${total1}"></h6>
+                                                    <h6 class="mb-0" th:text="${total1 != null ? total1 : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -297,7 +297,7 @@
                                                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Doanh Thu Trong  Ngày </p>
-                                                    <h6 class="mb-0" th:text="${totalManey1}"></h6>
+                                                    <h6 class="mb-0"  th:text="${totalManey1 != null ? totalManey1 : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -308,7 +308,7 @@
                                                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Tổng Đơn Hủy </p>
-                                                    <h6 class="mb-0" th:text="${totalHuy}"></h6>
+                                                    <h6 class="mb-0" th:text="${totalHuy != null ? totalHuy : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -319,7 +319,7 @@
                                                 <i class="fa fa-chart-area fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Tổng số đơn hàng</p>
-                                                    <h6 class="mb-0" th:text="${totalAll}"></h6>
+                                                    <h6 class="mb-0" th:text="${totalAll != null ? totalAll : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -342,6 +342,7 @@
                                     <div class="row g-4">
 
 
+
                                         <div class="col-sm-6 col-xl-3">
                                             <div
                                                     class="bg-light rounded d-flex align-items-center justify-content-between p-4"
@@ -349,8 +350,25 @@
                                                 <i class="fa fa-chart-pie fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Tổng Doanh Thu</p>
-                                                    <h6 class="mb-0" th:text="${totalAllManey}"></h6>
+                                                    <h6 class="mb-0" th:text="${totalAllManey != null ? totalAllManey : 0}"></h6>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div class="card-header-form">
+                                                <form action="/admin/thong-ke/hien-thi/thoi-gian" method="get">
+                                                    <div class="input-group">
+                                                        <input name="tuNgay" type="text" class="form-control" placeholder="Start">
+                                                        <h6 style="margin-left: 5px; margin-right: 5px; margin-top: 10px">to</h6>
+                                                        <input name="denNgay" type="text" class="form-control" placeholder="End">
+                                                        <div lass="input-group-btn" style="margin-left: 10px; margin-right: 3px">
+                                                            <a href="/admin/thong-ke/hien-thi/thoi-gian/{tuNgay,denNgay}">
+                                                                <button type="submit" class="btn btn-primary"><i
+                                                                        class="fas fa-search"></i></button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
