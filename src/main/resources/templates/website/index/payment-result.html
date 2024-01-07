@@ -75,7 +75,7 @@
     <p>Cảm ơn <span th:text="${tr.accountId.name}"></span> đã đặt hàng!</p>
     <p>Thông tin đơn hàng:</p>
     <p>Mã đơn hàng: <span th:text="${tr.id}"></span></p>
-    <p>Tổng số tiền: <span th:text="${tr.amount} + 'Đ' "></span></p>
+    <p>Tổng số tiền: <span th:text="${#numbers.formatDecimal(tr.amount, 0, 'COMMA', 0, 'POINT')} "></span></p>
     <p>
         Hình thức thanh toán:
         <span
