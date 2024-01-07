@@ -233,7 +233,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             order.setOrderStatus(0);
 
             // Cập nhật ngày cập nhật (nếu bạn muốn lưu lại thời điểm hủy)
-            order.setUpdateDate(LocalDate.now());
+            order.setUpdateDate(LocalDateTime.now());
 
             // Lưu đối tượng Orders đã cập nhật vào cơ sở dữ liệu
             ordersRepository.save(order);

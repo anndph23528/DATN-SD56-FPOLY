@@ -40,7 +40,7 @@ public class Address {
     private String fullName;
 @Column(name = "default_address")
 private Boolean defaultAddress;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
