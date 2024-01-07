@@ -11,9 +11,59 @@
     <!-- General CSS Files -->
     <link th:href="@{/dashboard/css/app.min.css}" rel="stylesheet">
     <!-- Template CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+
     <link th:href="@{/dashboard/css/style.css}" rel="stylesheet">
     <link th:href="@{/dashboard/css/components.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+
+        .image-container {
+            display: inline-block;
+        }
+
+        .image-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        .delete-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+            visibility: hidden;
+        }
+
+        .image-item:hover .delete-icon {
+            visibility: visible;
+        }
+
+
+
+        #image-preview {
+            display: flex;
+            flex-wrap: nowrap; /* Ngăn chặn trải dài xuống hàng mới */
+            overflow-x: auto; /* Cho phép cuộn ngang nếu có nhiều ảnh */
+        }
+
+        #image-preview > div {
+            margin-right: 10px; /* Khoảng cách giữa các ảnh */
+            border: 2px solid #ddd; /* Viền xám xung quanh ảnh */
+            padding: 5px; /* Khoảng cách giữa ảnh và viền */
+            border-radius: 10px; /* Bo tròn viền */
+        }
+
+        #image-preview img {
+            width: 200px;
+            height: auto;
+            border-radius: 10%; /* Bo tròn hình ảnh */
+            object-fit: cover;
+        }
+    </style>
+
 
     <!-- Custom style CSS -->
     <link th:href="@{/dashboard/css/custom.css}">
@@ -227,8 +277,8 @@
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                                 data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
-                            <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
-                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -297,7 +347,7 @@
                                 </div>
                                 <div class="form-group">
                                     <!--                                    <label>Tên sản phẩm</label>-->
-                                    <input type="hidden" th:field="*{name}"/>
+                                    <input type="text" th:field="*{name}"/>
                                     <!--                                    <input disabled="disabled" type="text" class="form-control"-->
                                     <!--                                           placeholder="Nhập tên sản phẩm"-->
                                     <!--                                           th:field="*{name}">-->
@@ -320,12 +370,19 @@
                                         <!--                                        </div>-->
                                     </div>
                                 </div>
-                                <div id="image-preview">
-                                    <img  th:src="@{${'/admin/san-pham-test/display?id=' + id}}"
-                                         alt="Product Image"
-                                         style="width: 200px; height: auto;border-radius: 10%;object-fit: cover"
-                                    />
+                                <!-- Trang chi tiết sản phẩm -->
+                                <div id="image-preview" th:each="products: ${product}" class="image-container">
+                                    <div th:each="image : ${products.images}" class="image-item">
+                                        <img th:src="@{${'/admin/san-pham-test/display?id=' + image.productId.id + '&imageId=' + image.id}}"
+                                             class="d-block w-70"
+                                             alt="Product Image"
+                                             style="width: 200px; height: auto; border-radius: 10%; object-fit: cover"
+                                        >
+                                        <span class="delete-icon" th:attr="data-imageId=${image.id}" onclick="deleteImage(this)">x</span>
+                                    </div>
                                 </div>
+
+
 
                                 <div class="form-group">
 <!--                                    <label>Thương hiệu</label>-->
@@ -589,6 +646,51 @@
         }
     });
 </script>
+<!--<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteImage(element) {
+        var imageId = element.getAttribute('data-imageId');
+        var confirmDelete = confirm('Bạn có chắc chắn muốn xóa ảnh này không?');
+
+        if (confirmDelete) {
+            // Sử dụng AJAX để gửi yêu cầu xóa ảnh
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', '/product/delete-image/' + imageId, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        // Thông báo SweetAlert khi xóa thành công
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: 'Ảnh đã được xóa thành công.',
+                            timer:1500,
+                        }).then(() => {
+                            // Nếu người dùng ấn OK, loại bỏ phần tử chứa ảnh và nút "x" khỏi DOM
+                            element.parentNode.remove();
+                        });
+                    } else {
+                        // Thông báo SweetAlert khi xóa thất bại
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Không thể xóa ảnh. Hãy thử lại sau.',
+                        });
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+    }
+</script>
+
+
+
 </body>
 
 

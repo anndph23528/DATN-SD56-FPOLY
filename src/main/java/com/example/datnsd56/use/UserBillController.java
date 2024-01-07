@@ -3,6 +3,7 @@ package com.example.datnsd56.use;
 
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.repository.AddressRepository;
+import com.example.datnsd56.repository.OrdersRepository;
 import com.example.datnsd56.repository.VoucherUsageRepository;
 import com.example.datnsd56.service.*;
 
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,6 +68,10 @@ UserBillController {
     private VoucherUsageService voucherUsageService;
     @Autowired
     private OrderSeriveV2 orderServiceImplV2;
+    @Autowired
+    private OrderServiceImplV2 odserv2;
+    @Autowired
+    private OrdersRepository ordersRepository;
     //    @Autowired
 //    private VnpayUtils vnpayUtils;
 
@@ -238,6 +244,7 @@ UserBillController {
     public ResponseEntity<Map<String, Object>> applyVoucher(
         @RequestParam(name = "selectedVoucherCode", required = false) String selectedVoucherCode,
         Principal principal, HttpSession session, Model model) {
+
         if (principal == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -248,10 +255,10 @@ UserBillController {
             Cart cart = account.getCart();
 
             if (cart != null) {
-                // Tính toán giá tạm thời khi áp dụng voucher
-                BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
+                try {
+                    // Tính toán giá tạm thời khi áp dụng voucher
+                    BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
 
-                if (newTotal != null) {
                     // Lưu giá mới vào session để sử dụng khi đặt hàng
                     session.setAttribute("appliedVoucherTotal", newTotal);
 
@@ -263,12 +270,11 @@ UserBillController {
                     response.put("newTotal", newTotal.toString());
                     response.put("ss", "Áp dụng mã giảm giá thành công");
                     return ResponseEntity.ok(response);
-                } else {
-                    // Thiết lập thông điệp thất bại trong Model để truyền về view
-                    model.addAttribute("ss", "Áp dụng mã giảm giá thất bại");
-
-                    // Trả về phản hồi lỗi nếu có vấn đề
-                    return ResponseEntity.badRequest().build();
+                } catch (RuntimeException e) {
+                    // Xử lý ngoại lệ ném từ service
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("ss1", e.getMessage());
+                    return ResponseEntity.badRequest().body(response);
                 }
             }
         }
@@ -276,6 +282,7 @@ UserBillController {
         // Trả về phản hồi lỗi nếu có vấn đề
         return ResponseEntity.badRequest().build();
     }
+
 
 
     @PostMapping("/setDefaultAddress")
@@ -401,6 +408,60 @@ UserBillController {
 
         return modelAndView;
     }
+    @PostMapping("/update1/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public ModelAndView update(@Valid @ModelAttribute("newAddress") Address newAddress,
+                               Principal principal,
+                               BindingResult result,
+                               @PathVariable("id") Integer id,
+                               Model model,
+                               HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (result.hasErrors()) {
+            // Handle validation errors...
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+                Cart cart = account.getCart();
+                modelAndView.addObject("cart", cart);
+
+                List<Address> accountAddresses = addressService.findAccountAddresses(account.getId());
+                modelAndView.addObject("accountAddresses", accountAddresses);
+
+                modelAndView.setViewName("website/index/giohang1");
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        } else {
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+
+                // Kiểm tra xem có địa chỉ được chọn từ danh sách không
+                if (newAddress.getId() != null) {
+                    // Thực hiện đặt hàng với địa chỉ đã chọn
+                    Address selectedAddress = addressService.findAccountDefaultAddress(newAddress.getId());
+                    // Thực hiện các bước đặt hàng với địa chỉ đã chọn
+                    // ...
+
+                } else {
+                    // Nếu không có địa chỉ được chọn, sử dụng địa chỉ mới từ form
+                    Address savedAddress = addressService.addNewAddress(account, newAddress, newAddress.getDefaultAddress());
+
+                    // Thực hiện các bước đặt hàng với địa chỉ mới
+                    // ...
+
+                    session.setAttribute("successMessage", "Thêm thành công");
+                    modelAndView.setViewName("redirect:/user/checkout");
+                }
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        }
+
+        return modelAndView;
+    }
 
 
     @GetMapping("/vnpay-ipn")
@@ -422,6 +483,8 @@ UserBillController {
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
                 Cart cart = account.getCart();
+
+                // Kiểm tra xem người dùng đã chọn địa chỉ từ danh sách hay không
                 if (transactionOptional.isPresent()) {
                     Transactions pendingTransaction = transactionOptional.get();
 
@@ -430,39 +493,53 @@ UserBillController {
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("success");
                         transactionService.saveTransaction(pendingTransaction);
-                        cartServicel.deleteCartById(cart.getId());
 
+
+                        cartServicel.deleteCartById(cart.getId());
+model.addAttribute("tr",pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
+                        return "website/index/payment-result";
 
                     } else {
                         // Xử lý khi thanh toán không thành công
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("fail");
+                        Optional<Orders> orderOptional = ordersRepository.findById(transactionOptional.get().getOrderId().getId());
+
+                        if (orderOptional.isPresent()) {
+                            Orders orderToUpdate = orderOptional.get();
+
+                            // Cập nhật trạng thái của hóa đơn thành 0
+                            orderToUpdate.setOrderStatus(0);
+
+                            // Lưu lại đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+                            ordersRepository.save(orderToUpdate);
+                            transactionService.saveTransaction(pendingTransaction);
+
+                            return "redirect:/user/cart";
+
+                            // ... (Thêm các thuộc tính khác cần thiết)
+                        }
+
+                        // Lưu thông tin giao dịch vào cơ sở dữ liệu
                         transactionService.saveTransaction(pendingTransaction);
 
-                        return "website/index/payment-failure";
+                        // Xóa ID của giao dịch khỏi session
+                        session.removeAttribute("pendingTransactionId");
 
-                        // ... (Thêm các thuộc tính khác cần thiết)
+                        // Gọi view để hiển thị thông tin giao dịch
+                        return "website/index/f";
                     }
-
-                    // Lưu thông tin giao dịch vào cơ sở dữ liệu
-                    transactionService.saveTransaction(pendingTransaction);
-
-                    // Xóa ID của giao dịch khỏi session
-                    session.removeAttribute("pendingTransactionId");
-
-                    // Gọi view để hiển thị thông tin giao dịch
-                    return "website/index/f";
                 }
-            }
 
-            // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
-            return "website/index/payment-failure";
+                // Xử lý khi không tìm thấy thông tin giao dịch tạm thời hoặc gặp lỗi khác
+                return "website/index/payment-failure";
+            }
+            // Hiển thị thông tin giao dịch trên trang
+            return null;
         }
-        // Hiển thị thông tin giao dịch trên trang
         return null;
     }
-
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
         if (principal == null) {

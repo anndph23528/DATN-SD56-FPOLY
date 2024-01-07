@@ -186,7 +186,7 @@
                         </button>
                     </div>
                 </form>
-                <a th:href="@{/cart/view-cart}">
+                <a th:href="@{/user/cart}">
                     <button type="button" class="btn btn-sm p-0">
                         <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
                     </button>
@@ -264,6 +264,126 @@
                 </div>
             </div>
         </div>
+=======
+<!-- Page Header End -->
+<table id="orderTable">
+    <caption style="text-align: left; padding: 10px 20px; text-align: center">
+        <h3 style="color: #45a049">Danh sách đơn hàng</h3>
+    </caption>
+
+    <thead>
+    <tr>
+        <th scope="col">Ảnh</th>
+        <th scope="col">Tên sản phẩm</th>
+        <th scope="col">Màu sắc</th>
+        <th scope="col">Size</th>
+        <th scope="col">Brand</th>
+        <th scope="col">Giá</th>
+        <th scope="col">Số lượng</th>
+        <th scope="col">Thành tiền</th>
+    </tr>
+    </thead>
+    <tbody class="align-middle">
+    <tr th:each="sl : ${order.getOrderItems()}">
+        <input
+                type="hidden"
+                value="Activewear" th:value="${sl.productDetails.id}" th:name="id"
+                id="productId"
+                name="id"
+        />
+        <input
+            type="hidden"
+            value="Activewear" th:value="${sl.id}" th:name="orderItemId"
+            id="orderItemId"
+            name="orderItemId"
+        />
+<!--        <input type="hidden" id="orderItemId">-->
+
+        <input
+            type="hidden"
+            value="Activewear" th:value="${sl.orders.accountId.id}" th:name="accountId"
+            id="accountId"
+            name="accountId"
+        />
+        <td>
+            <img
+                    th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
+                    th:src="@{'/user/display?id=' + ${sl.productDetails.productId.id} + '&imageId=' + ${sl.productDetails.productId.images[0].id}}"
+                    alt="Sản phẩm 1"
+                    style="max-width: 80px; max-height: 80px"
+            />
+        </td>
+
+        <td th:text="${sl.productDetails.productId.name}"></td>
+        <td th:text="${sl.productDetails.colorId.name}"></td>
+        <td th:text="${sl.productDetails.sizeId.name}"></td>
+        <td th:text="${sl.productDetails.productId.brandId.name}"></td>
+        <td
+            th:text="'₫' + ${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')}"></td>
+        <td class="align-middle">
+            <div class="input-group quantity mx-auto" style="width: 100px;">
+                <input type="text" readonly class="form-control form-control-sm bg-secondary text-center" name="quantity" th:value="${sl.quantity}">
+            </div>
+        </td>
+        <td class="align-middle" th:text="${sl.price * sl.quantity}"></td>
+        <td>
+            <!-- Button to show rating form -->
+            <!-- Button to show rating form -->
+            <button type="button" onclick="showRatingForm('${sl.id}', '${sl.orders.accountId.id}', '${sl.productDetails.productId.id}')">
+                Đánh Giá Sản Phẩm
+            </button>
+
+
+            <!-- Rating form for each order item -->
+
+    </tr>
+    </tbody>
+    </thead>
+    <tbody>
+    <!-- Các dòng dữ liệu sẽ được thêm vào đây bằng JavaScript -->
+    </tbody>
+</table>
+<!-- Rating form for each order item -->
+<!--<div th:each="sl : ${order.getOrderItems()}">-->
+
+<!--<form id="ratingForm${sl.id}" style="display: none;"-->
+<!--      th:action="@{/product/orders/rate}" method="post" >-->
+<!--    <input type="hidden" name="orderItemId" th:value="${sl.id}">-->
+<!--    <input type="hidden" name="accountId" th:value="${sl.orders.accountId.id}">-->
+<!--    <input type="hidden" name="productId" th:value="${sl.productDetails.productId.id}">-->
+
+<!--    <label for="rating">Điểm Đánh Giá:</label>-->
+<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
+
+<!--    <label for="comment">Bình Luận:</label>-->
+<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
+
+<!--    <button type="submit">Gửi Đánh Giá</button>-->
+<!--</form>-->
+<!--</div>-->
+
+<!-- Thêm form đánh giá -->
+
+<!--<form id="ratingForm" style="display: none">-->
+<!--    &lt;!&ndash; Form đánh giá &ndash;&gt;-->
+<!--    <label for="rating">Điểm Đánh Giá:</label>-->
+<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
+
+<!--    <label for="comment">Bình Luận:</label>-->
+<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
+
+<!--    <button type="button" onclick="submitRating('${sl.id}', '${sl.orders.accountId.id}')">Gửi Đánh Giá</button>-->
+<!--</form>-->
+
+
+
+<div class="text-end">
+
+    Tổng số tiền
+
+    <label for="" style="color: red">
+        : <span id="" th:text="${order.total} + '' +'Đ'"></span>
+    </label>
 
         <hr class="my-4"/>
 
@@ -607,5 +727,74 @@
                 });
             });
         </script>
+    </div>
+</div>
+<!-- Copyright End -->
+
+<!-- Back to Top -->
+<a
+        href="#"
+        class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"
+><i class="bi bi-arrow-up"></i
+></a>
+
+<!-- JavaScript Libraries -->
+<script
+        th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js}"
+></script>
+<script
+        th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js}"
+></script>
+<script th:src="@{/website/lib/wow/wow.min.js}"></script>
+<script th:src="@{/website/lib/easing/easing.min.js}"></script>
+<script th:src="@{/website/lib/waypoints/waypoints.min.js}"></script>
+<script th:src="@{/website/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Template Javascript -->
+<script th:src="@{/website/js/main.js}"></script>
+
+<script>
+    function showRatingForm(orderItemId, accountId, productId) {
+        var ratingForm = document.getElementById('ratingForm' + orderItemId);
+        ratingForm.style.display = 'block';
+
+        ratingForm.querySelector('[name="orderItemId"]').value = orderItemId;
+        ratingForm.querySelector('[name="accountId"]').value = accountId;
+        ratingForm.querySelector('[name="productId"]').value = productId;
+    }
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var userDropdown = document.getElementById("userDropdown");
+        var accountOption = document.getElementById("accountOption");
+        var loginOption = document.getElementById("loginOption");
+
+        userDropdown.addEventListener("click", function (event) {
+            event.stopPropagation();
+            var dropdownMenu = document.querySelector(".dropdown-menu");
+            dropdownMenu.classList.toggle("show");
+        });
+
+        accountOption.addEventListener("click", function () {
+            console.log("Your Account selected");
+            // Thực hiện các hành động khi "Your Account" được chọn
+        });
+
+        loginOption.addEventListener("click", function () {
+            console.log("Login selected");
+            // Thực hiện các hành động khi "Login" được chọn
+        });
+
+        document.addEventListener("click", function (event) {
+            var dropdownMenu = document.querySelector(".dropdown-menu");
+            if (dropdownMenu.classList.contains("show")) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
+    });
+</script>
 </body>
 </html>

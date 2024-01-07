@@ -114,8 +114,10 @@
                 </form>
                 <a th:href="@{/user/cart}">
                     <button type="button" class="btn btn-sm p-0">
-                        <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
-                        <span class="badge" th:text="${session.totalItems == null} ? '0' : ${session.totalItems}"></span>
+                        <div id="cartIcon" th:if="${totalItems > 0}">
+                            <i class="fa fa-cart-plus" style="margin-left: 20px"></i>
+                            <span id="cartItemCount" style="color:red " th:text="${totalItems}">0</span>
+                        </div>
                     </button>
                 </a>
                 <!--   Thêm dropdown vào mã HTML -->
@@ -137,7 +139,7 @@
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                             <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
                             <a th:href="@{/user/orders}" class="dropdown-item has-icon "> <i class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
-                            <a th:href="@{/admin/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
+                            <a th:href="@{/product/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
                             <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i> Logout</a>
                         </th:block>
                         <th:block th:unless="${#authorization.expression('isAuthenticated()')}">

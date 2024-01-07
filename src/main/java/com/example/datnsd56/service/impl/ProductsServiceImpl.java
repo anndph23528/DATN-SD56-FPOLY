@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -26,9 +27,7 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -55,7 +54,7 @@ public class ProductsServiceImpl implements ProductsService {
     public List<Products> getAllPro() {
         return productRepository.findAll();
     }
-
+@Transactional
     @Override
     public List<Products> getAllPros() {
         return productRepository.getAllPros();
@@ -158,40 +157,88 @@ public class ProductsServiceImpl implements ProductsService {
 
 
 
-    @Override
-    public void updateProduct(Products products, MultipartFile[] files) throws IOException, SQLException {
+//    @Override
+//    public void updateProduct(Products products, MultipartFile[] files) throws IOException, SQLException {
+////        products.setUpdateDate(LocalDate.now());
+////        productRepository.save(products);
+//        List<Image> existingImages = imageRepository.getImageByProductIds(products.getId());
+//
+//        // Cập nhật thông tin sản phẩm
 //        products.setUpdateDate(LocalDate.now());
 //        productRepository.save(products);
-        List<Image> existingImages = imageRepository.getImageByProductIds(products.getId());
+//
+//        // Kiểm tra xem có ảnh mới được chọn không
+//        if (files != null && files.length > 0) {
+//            // Nếu có ảnh mới, xóa tất cả ảnh cũ của sản phẩm
+//            imageRepository.deleteAll(existingImages);
+//
+//            // Lưu ảnh mới vào danh sách
+//            for (MultipartFile file : files) {
+//                byte[] bytes = file.getBytes();
+//                Blob blob = new SerialBlob(bytes);
+//                Image newImage = new Image();
+//                newImage.setProductId(products);
+//                newImage.setUrl(blob);
+//                imageRepository.save(newImage);
+//            }
+//        } else {
+//            // Nếu không có ảnh mới, giữ nguyên ảnh cũ
+//            Products currentProducts = productRepository.findById(products.getId()).orElse(null);
+//
+//            if (currentProducts != null) {
+//                products.setImages(currentProducts.getImages());
+//            }
+//        }
+//
+//    }
+
+
+    @Override
+    public void updateProduct(Products products, MultipartFile[] files) throws IOException, SQLException {
+        // Lấy thông tin sản phẩm hiện tại
+        Products currentProduct = productRepository.findById(products.getId()).orElse(null);
+
+        // Nếu sản phẩm hiện tại không tồn tại, xử lý tùy thuộc vào yêu cầu của bạn
 
         // Cập nhật thông tin sản phẩm
-        products.setUpdateDate(LocalDate.now());
-        productRepository.save(products);
+        currentProduct.setName(products.getName());
+        currentProduct.setStatus(products.getStatus());
+        currentProduct.setUpdateDate(LocalDate.now());
 
-        // Kiểm tra xem có ảnh mới được chọn không
+        // Nếu có ảnh mới được cung cấp
+        // Trong hàm updateProduct
         if (files != null && files.length > 0) {
-            // Nếu có ảnh mới, xóa tất cả ảnh cũ của sản phẩm
-            imageRepository.deleteAll(existingImages);
+            // Kiểm tra xem danh sách ảnh mới có dữ liệu không
+            boolean hasValidImages = Arrays.stream(files).anyMatch(file -> file.getSize() > 0);
 
-            // Lưu ảnh mới vào danh sách
-            for (MultipartFile file : files) {
-                byte[] bytes = file.getBytes();
-                Blob blob = new SerialBlob(bytes);
-                Image newImage = new Image();
-                newImage.setProductId(products);
-                newImage.setUrl(blob);
-                imageRepository.save(newImage);
-            }
-        } else {
-            // Nếu không có ảnh mới, giữ nguyên ảnh cũ
-            Products currentProducts = productRepository.findById(products.getId()).orElse(null);
+            if (hasValidImages) {
+                // Xóa tất cả ảnh cũ của sản phẩm
+                List<Image> existingImages = currentProduct.getImages();
+                existingImages.clear();
 
-            if (currentProducts != null) {
-                products.setImages(currentProducts.getImages());
+                // Lưu ảnh mới vào danh sách
+                for (MultipartFile file : files) {
+                    if (file.getSize() > 0) {
+                        byte[] bytes = file.getBytes();
+                        Blob blob = new SerialBlob(bytes);
+                        Image newImage = new Image();
+                        newImage.setProductId(currentProduct);
+                        newImage.setUrl(blob);
+                        existingImages.add(newImage);
+                    }
+                }
             }
         }
 
+
+
+        // Lưu thông tin sản phẩm vào cơ sở dữ liệu
+        productRepository.save(currentProduct);
     }
+
+
+
+
 
     @Override
     public List<Integer> findSelectedSizeIds(Integer id) {

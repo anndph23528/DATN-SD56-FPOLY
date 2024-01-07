@@ -239,8 +239,8 @@
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                                 data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
-                            <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
-                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -336,20 +336,21 @@
                                                   style="color: red; font-size: 13px"
                                                   th:errors="*{zipcode}"></span>
                                         </div>
-
+                                <div class="form-group">
+                                    <label>fullName</label>
+                                    <input type="text" class="form-control" placeholder="Nhập Mã Bưu Chính"
+                                           th:field="*{fullName}">
+                                    <span th:if="${#fields.hasErrors('fullName')}"
+                                          style="color: red; font-size: 13px"
+                                          th:errors="*{fullName}"></span>
+                                </div>
                                         <div class="form-group">
                                             <label>Tài Khoản </label>
                                             <div class="input-group">
-                                                <select class="form-control" th:field="*{account_id}">
+                                                <select id="yourSelectId"  class="form-control" th:field="*{account}">
                                                     <option th:each="account:${accountlist}" th:value="${account.id}"
-                                                            th:text="${account.fullname}"></option>
+                                                            th:text="${account.name}"></option>
                                                 </select>
-<!--                                                <div id="openButton" class="input-group-append">-->
-<!--                                                    <button class="btn btn-primary" type="button"-->
-<!--                                                            onclick="popupChucVu()">-->
-<!--                                                        +-->
-<!--                                                    </button>-->
-<!--                                                </div>-->
                                             </div>
                                         </div>
 
@@ -710,6 +711,13 @@
         popup.style.display = 'none';
     }
 </script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var selectElement = document.getElementById("yourSelectId"); // Thay "yourSelectId" bằng ID của thẻ select của bạn
+                    selectElement.disabled = true;
+                });
+            </script>
+
 </body>
 
 

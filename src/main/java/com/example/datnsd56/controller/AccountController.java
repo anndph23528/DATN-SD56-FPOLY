@@ -23,6 +23,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/account")
+    @PreAuthorize("hasAuthority('admin')")
 public class AccountController {
     @Autowired
     private AccountService accountService;

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -84,29 +85,24 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/dashboard/css/**", "/dashboard/js/**", "/dashboard/img/**","/dashboard/bundles/**","/dashboard/fonts/**","/dashboard/lib/**","/dashboard/scss/**").permitAll()
             .requestMatchers("/website/css/**", "/website/js/**", "/website/img/**", "/website/lib/**", "/website/scss/**","templates/website/index/**","templates/dashboard/**","/website/**").permitAll()
             .requestMatchers("/hello").permitAll()
-            .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-            .requestMatchers("/pay/**").permitAll()// với endpoint /hello thì sẽ được cho qua
             .requestMatchers("/vnpay-ipn/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-//        .requestMatchers("/display/**").permitAll()
-//            .requestMatchers("/cart/**").permitAll()// với endpoint /hello thì sẽ được cho qua
              .requestMatchers("/error/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-            .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-            .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-           // .requestMatchers("/admin/san-pham-test/**").permitAll()// với endpoint /hello thì sẽ được cho qua
+            .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qu
+            .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qu
 
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/customer/**").authenticated()
             .requestMatchers("/cart/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
+//            .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
-          //  .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
-            .requestMatchers("/rest/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
+           .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
+            .requestMatchers("/rest/**").authenticated()
+            .requestMatchers("/product/saveVoucher/").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 
             .and().formLogin()// trả về page login nếu chưa authenticate
 
-           .defaultSuccessUrl("/product/hien-thi")
-
-
+           .defaultSuccessUrl("/product/trang-chu")
             .loginPage("/login/custom-login").permitAll().successHandler(new CustomAuthenticationSuccessHandler())//.failureHandler(new SimpleUrlAuthenticationFailureHandler())
             .and()
             .logout()

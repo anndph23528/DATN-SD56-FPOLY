@@ -1,6 +1,5 @@
 package com.example.datnsd56.service.impl;
 
-import com.example.datnsd56.controller.AccountNotFoundException;
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.repository.CartItemRepository;
 import com.example.datnsd56.repository.CartRepository;
@@ -16,7 +15,6 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SessionScope
 @Service
@@ -29,6 +27,7 @@ public class CartSeviceImpl implements CartService {
     Map<Integer, CartItem> maps = new HashMap<>();
     @Autowired
     private AccountService accountService;
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @Override
     public void add(CartItem item) {
@@ -39,6 +38,39 @@ public class CartSeviceImpl implements CartService {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         }
     }
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+    @Transactional
+    public void clearCart(String username) {
+        Optional<Account> accountOptional = accountService.finByName(username);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            Cart cart = account.getCart();
+
+            if (cart != null) {
+                // Xóa toàn bộ sản phẩm chi tiết trong giỏ hàng
+                cart.getCartItems().clear();
+
+                // Lưu giỏ hàng đã được xóa vào cơ sở dữ liệu
+                cartRepository.save(cart);
+            }
+        }
+    }
+
+
+    public int calculateTotalItems(SessionCart sessionCart) {
+        int totalItems = 0;
+
+        if (sessionCart != null && sessionCart.getCartItems() != null) {
+            for (SessionCartItem cartItem : sessionCart.getCartItems()) {
+                totalItems += cartItem.getQuantity();
+            }
+        }
+
+        return totalItems;
+    }
 
     @Override
     public void remove(Integer id) {
@@ -48,6 +80,28 @@ public class CartSeviceImpl implements CartService {
     @Override
     public void clear() {
         maps.clear();
+    }
+
+    @Override
+    public int getCartTotalItems(String username) {
+        // Lấy thông tin giỏ hàng của người dùng dựa trên tên đăng nhập
+        Optional<Account> accountOptional = accountService.finByName(username);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            Cart cart = account.getCart();
+            // Kiểm tra xem giỏ hàng có tồn tại hay không
+            if (cart != null) {
+                // Tính toán tổng số lượng sản phẩm trong giỏ hàng
+                return cart.getCartItems().stream()
+                    .mapToInt(CartItem::getQuantity)
+                    .sum();
+            } else {
+                // Nếu giỏ hàng không tồn tại, trả về 0
+                return 0;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -165,6 +219,7 @@ public class CartSeviceImpl implements CartService {
         BigDecimal totalPrice = totalPrice(cardItemList);
         cart.setTotalItems(totalItems);
         cart.setTotalPrice(totalPrice);
+
         return cartRepository.save(cart);
     }
 

@@ -138,24 +138,37 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                     boolean isVoucherUsed = voucherUsageService.isVoucherUsed(username, selectedVoucherCode);
 
                     if (!isVoucherUsed) {
-                        // Áp dụng giảm giá của voucher vào tổng tiền
-                        BigDecimal discountAmount = calculateDiscountValue(voucher, total);
+                        // Kiểm tra xem tổng giá trị của đơn hàng có đạt đến mức tối thiểu cho phép không
+                        if (total.compareTo(voucher.getMinOrderAmount()) >= 0) {
+                            // Áp dụng giảm giá của voucher vào tổng tiền
+                            BigDecimal discountAmount = calculateDiscountValue(voucher, total);
 
-                        // Đảm bảo giảm giá không vượt quá tổng tiền
-                        total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
+                            // Đảm bảo giảm giá không vượt quá tổng tiền
+                            total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
 
-                        // Giảm số lượng voucher sau khi áp dụng
-//                        reduceVoucherQuantity(voucher);
+                            // Giảm số lượng voucher sau khi áp dụng
+                            // reduceVoucherQuantity(voucher);
+                        } else {
+                            // Xử lý khi tổng giá trị đơn hàng không đạt đến mức tối thiểu
+                            // ...
+                            throw new RuntimeException("Đơn hàng chưa đạt đến mức tối thiểu cho phép áp dụng voucher.");
+
+                        }
                     }
                 } else {
                     // Xử lý khi hết số lượng voucher
                     // ...
+                    throw new RuntimeException("Hết số lượng voucher.");
+
                 }
             }
         }
 
         return total;
     }
+
+
+
 
 
     @Override
@@ -165,6 +178,20 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
 
 
+    public Orders placeOrderss(Cart cart, String address, String voucherCode, String selectedVoucherCode) {
+        Orders order = createOrder(cart, address);
+        if (order == null) {
+            return null;
+        }
+
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        processOrderDetailss(cart, order);
+
+        // Áp dụng voucher nếu có
+        applyVoucher(order, voucherCode, selectedVoucherCode);
+
+        return order;
+    }
 
     @Transactional
     @Override
@@ -199,6 +226,20 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return order;
     }
+    public void updateOrderStatusToCancelled(Orders order) {
+        // Kiểm tra xem đơn hàng có tồn tại không
+        if (order != null) {
+            // Gán trạng thái là "Đã Hủy"
+            order.setOrderStatus(0);
+
+            // Cập nhật ngày cập nhật (nếu bạn muốn lưu lại thời điểm hủy)
+            order.setUpdateDate(LocalDate.now());
+
+            // Lưu đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+            ordersRepository.save(order);
+        }
+    }
+
 
     public void processOrderDetails(Cart cart, Orders order) {
         // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
@@ -213,6 +254,25 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
             // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
             orderItemRepository.save(orderDetails);
+
+            // Giảm số lượng sản phẩm trong kho
+            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
+        }
+    }
+
+    public void processOrderDetailss(Cart cart, Orders order) {
+        // Xử lý chi tiết đơn hàng và giảm số lượng sản phẩm
+        Set<CartItem> cartItems = cart.getCartItems();
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderDetails = new OrderItem();
+            orderDetails.setOrders(order);
+            orderDetails.setProductDetails(cartItem.getProductDetails());
+            orderDetails.setQuantity(cartItem.getQuantity());
+            orderDetails.setPrice(cartItem.getProductDetails().getSellPrice());
+            orderDetails.setStatus(1);
+
+            // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
+//            orderItemRepository.save(orderDetails);
 
             // Giảm số lượng sản phẩm trong kho
             reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());

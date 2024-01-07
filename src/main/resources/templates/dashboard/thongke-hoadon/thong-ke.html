@@ -225,8 +225,8 @@
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                                 data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
-                            <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
-                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -276,7 +276,7 @@
                                 <div class="card-header">
                                     <h4>Thống Kê</h4>
                                 </div>
-                                <!-- -----o thong ke start -->
+                                <!--                                 -&#45;&#45;&#45;&#45;o thong ke start -->
                                 <div class="container-fluid pt-4 px-4">
                                     <div class="row g-4">
                                         <div class="col-sm-6 col-xl-3">
@@ -285,8 +285,8 @@
                                             >
                                                 <i class="fa fa-chart-line fa-3x text-primary"></i>
                                                 <div class="ms-3">
-                                                    <p class="mb-2">Doanh Thu Ngày</p>
-                                                    <h6 class="mb-0">$1234</h6>
+                                                    <p class="mb-2">Đơn hàng Trong Ngày</p>
+                                                    <h6 class="mb-0" th:text="${total1 != null ? total1 : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -296,8 +296,19 @@
                                             >
                                                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                                                 <div class="ms-3">
-                                                    <p class="mb-2">Doanh Thu Tháng</p>
-                                                    <h6 class="mb-0">$1234</h6>
+                                                    <p class="mb-2">Doanh Thu Trong  Ngày </p>
+                                                    <h6 class="mb-0"  th:text="${totalManey1 != null ? totalManey1 : 0}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Tổng Đơn Hủy </p>
+                                                    <h6 class="mb-0" th:text="${totalHuy != null ? totalHuy : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -307,11 +318,31 @@
                                             >
                                                 <i class="fa fa-chart-area fa-3x text-primary"></i>
                                                 <div class="ms-3">
-                                                    <p class="mb-2">Doanh Thu Năm</p>
-                                                    <h6 class="mb-0">$1234</h6>
+                                                    <p class="mb-2">Tổng số đơn hàng</p>
+                                                    <h6 class="mb-0" th:text="${totalAll != null ? totalAll : 0}"></h6>
                                                 </div>
                                             </div>
                                         </div>
+
+<!--                                        <div class="col-sm-6 col-xl-3">-->
+<!--                                            <div-->
+<!--                                                    class="bg-light rounded d-flex align-items-center justify-content-between p-4"-->
+<!--                                            >-->
+<!--                                                <i class="fa fa-chart-pie fa-3x text-primary"></i>-->
+<!--                                                <div class="ms-3">-->
+<!--                                                    <p class="mb-2">Tổng Doanh Thu</p>-->
+<!--                                                    <h6 class="mb-0" th:text="${totalAllManey}"></h6>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                    </div>
+                                </div>
+<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+                                <div class="container-fluid pt-4 px-4">
+                                    <div class="row g-4">
+
+
+
                                         <div class="col-sm-6 col-xl-3">
                                             <div
                                                     class="bg-light rounded d-flex align-items-center justify-content-between p-4"
@@ -319,12 +350,46 @@
                                                 <i class="fa fa-chart-pie fa-3x text-primary"></i>
                                                 <div class="ms-3">
                                                     <p class="mb-2">Tổng Doanh Thu</p>
-                                                    <h6 class="mb-0">$1234</h6>
+                                                    <h6 class="mb-0" th:text="${totalAllManey != null ? totalAllManey : 0}"></h6>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div class="card-header-form">
+                                                <form action="/admin/thong-ke/hien-thi/thoi-gian" method="get">
+                                                    <div class="input-group">
+                                                        <input name="tuNgay" type="text" class="form-control" placeholder="Start">
+                                                        <h6 style="margin-left: 5px; margin-right: 5px; margin-top: 10px">to</h6>
+                                                        <input name="denNgay" type="text" class="form-control" placeholder="End">
+                                                        <div lass="input-group-btn" style="margin-left: 10px; margin-right: 3px">
+                                                            <a href="/admin/thong-ke/hien-thi/thoi-gian/{tuNgay,denNgay}">
+                                                                <button type="submit" class="btn btn-primary"><i
+                                                                        class="fas fa-search"></i></button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <!--                                 Add filter buttons -->
+                                <div class="filter-buttons" style="text-align: right">
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi">All</a></button>
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi/top5">TOP5</a></button>
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi/dang-giao">ĐangGiao</a></button>
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi/hoan-thanh">Hoàn Thành</a></button>
+                                    <button class="btn btn-info">
+                                        <a href="/admin/thong-ke/hien-thi/huy">Hủy</a></button>
+
+                                </div>
+
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table
@@ -336,28 +401,33 @@
                                             <tr>
                                                 <th>MaHD</th>
                                                 <th>Khách Hàng</th>
+                                                <th>Account_id</th>
                                                 <th>SDT</th>
-                                                <th>Nhân Viên</th>
-                                                <th>Trang Thái</th>
+                                                <th>Sản Phẩm</th>
                                                 <th>Tổng Tiền</th>
                                                 <th>Ngày</th>
-                                                <th></th>
+                                                <th>Trang Thái</th>
+
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary">
-                                                        detail
-                                                    </button>
-                                                </td>
+                                            <tr th:each="list:${list}">
+                                                <!--                                                <td th:text="*${list.id}"></td>-->
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.id : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.fullname : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.accountId.id : '') : ''}"></td>
+                                                <!--                                                <td th:text="*${list.accountId}"></td>-->
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.phone : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.productDetails != null ? list.productDetails.id : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.total : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.createDate : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.orderStatus : '') : ''} "></td>
+
+                                                <!--                                                <td>-->
+                                                <!--                                                    <button class="btn btn-sm btn-primary">-->
+                                                <!--                                                        detail-->
+                                                <!--                                                    </button>-->
+                                                <!--                                                </td>-->
                                             </tr>
                                             </tbody>
                                         </table>
@@ -526,6 +596,19 @@
 <script th:src="@{/dashboard/js/scripts.js}"></script>
 <!-- Custom JS File -->
 <script th:src="@{/dashboard/js/custom.js}"></script>
+<!--<script th:inline="javascript">-->
+<!--    function getStatusText(status) {-->
+<!--        if (status === 2) {-->
+<!--            return 'Đang giao';-->
+<!--        } else if (status === 3) {-->
+<!--            return 'Xác nhận';-->
+<!--        } else if (status === 4) {-->
+<!--            return 'Chờ xác nhận';-->
+<!--        } else {-->
+<!--            return ''; // Handle other cases or unknown statuses-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
 </body>
 
 <!-- export-table.html  21 Nov 2019 03:56:01 GMT -->

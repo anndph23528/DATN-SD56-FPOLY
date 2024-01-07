@@ -227,8 +227,8 @@
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                                 data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
-                            <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
-                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -319,6 +319,13 @@
                                            th:field="*{quantity}" required>
                                     <span th:if="${#fields.hasErrors('quantity')}" style="color: red; font-size: 13px"
                                           th:errors="*{quantity}"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Đơn tối thiểu</label>
+                                    <input type="number" class="form-control" placeholder="Nhập số lượng "
+                                           th:field="*{minOrderAmount}" required>
+                                    <span th:if="${#fields.hasErrors('minOrderAmount')}" style="color: red; font-size: 13px"
+                                          th:errors="*{minOrderAmount}"></span>
                                 </div>
                                 <div class="form-group">
                                     <a th:href="@{/admin/voucher/new}">
