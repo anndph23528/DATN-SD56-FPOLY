@@ -24,6 +24,11 @@ public class TransactionsServiceIpml implements TransactionService {
     public List<Transactions> get() {
         return  transactionsRepository.findAll();
     }
+
+    @Override
+    public List<Transactions> findAllByOrderId(Integer orderId) {
+        return transactionsRepository.findAllByOrderId(orderId);
+    }
 //
 //    @Override
 //    public Optional<Transactions> findByOrderId(Integer id) {
