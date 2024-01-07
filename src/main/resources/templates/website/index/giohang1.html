@@ -232,7 +232,7 @@ https://templatemo.com/tm-559-zay-shop
                 <label for="selectedAddress">Địa Chỉ Nhận Hàng</label>
                 <input type="text" class="form-control" id="selectedAddress" name="selectedAddress" readonly
 
-                       th:value="${defaultAddress.streetName + ' ' + defaultAddress.district + ' ' + defaultAddress.province+ ' '+  ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+  (defaultAddress.defaultAddress ? 'Mặc Định':'')}"
+                       th:value="${ defaultAddress.fullName +'/'+ defaultAddress.zipcode+ '/' + defaultAddress.streetName + '/ ' + defaultAddress.district + '/ ' + defaultAddress.province+ '/ '+  ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+  (defaultAddress.defaultAddress ? 'Mặc Định':'')}"
 
                        th:if="${defaultAddress != null}"/>
 
@@ -269,20 +269,20 @@ https://templatemo.com/tm-559-zay-shop
                                         <div class="waBqqB YzoGWD">
                                             <input type="radio" name="selectedAddressRadio"
                                                    th:value="${address.id}"
-                                                   th:attr="data-streetName=${address.streetName}, data-district=${address.district}, data-province=${address.province}, data-defaultAddress=${address.defaultAddress }"
+                                                   th:attr="data-fullname=${address.fullName},data-zipcode=${address.zipcode},data-streetName=${address.streetName}, data-district=${address.district}, data-province=${address.province}, data-defaultAddress=${address.defaultAddress }"
                                                    onclick="updateSelectedAddress(this)">
                                             <!-- Địa chỉ hiện tại -->
                                             <div role="heading" class="waBqqB YzoGWD">
                                                 <div id="address-card_6390e80e-6c9e-4c54-9d54-6d09ed6f6ba8_header"
                                                      class="odP50+ On6XjY">
                                             <span class="zPR3Hm xrc+fE">
-                                                <div class="Xml7Ip" style="" th:text="${address.streetName}">
+                                                <div class="Xml7Ip" style="" th:text="${address.fullName}">
                                                     Nguyễn Đức An
                                                 </div>
                                             </span>
                                                     <div class="Q-T2Hu"></div>
                                                     <div role="row" class="jx3Tnl _6a1yZV J3cnC0"
-                                                         th:text="${address.district}">
+                                                         th:text="${address.zipcode}">
                                                         (+84) 795389855
                                                     </div>
                                                     <!-- Địa chỉ chi tiết -->
@@ -291,10 +291,10 @@ https://templatemo.com/tm-559-zay-shop
                                                          class="waBqqB YzoGWD">
                                                         <div class="odP50+ On6XjY">
                                                             <div class="EXsnBg">
-                                                                <div role="row" class="J3cnC0" style="">
+                                                                <div role="row" class="J3cnC0" style=""   th:text="${address.streetName}">
                                                                     Bếp Mẹ Bống, Số 21, Ngách 45 Ngõ 58 Trần Bình
                                                                 </div>
-                                                                <div role="row" class="J3cnC0" style="">
+                                                                <div role="row" class="J3cnC0" style="" th:text="${address.district} + ',' + ${address.province} ">
                                                                     Phường Mai Dịch, Quận Cầu Giấy, Hà Nội
                                                                 </div>
                                                             </div>
@@ -310,7 +310,12 @@ https://templatemo.com/tm-559-zay-shop
                                                     </div>
                                                 </div>
                                                 <div class="-mNtyE">
-                                                    <button class="lDkkQU">Cập nhật</button>
+                                                    <a th:href="@{'/admin/address/view-update/'+${address.id}}">
+                                                    <button type="button" class="lDkkQU">Cập nhật</button>
+                                                    </a>
+                                                    <a th:href="@{'/admin/address/delete/'+${address.id}}">
+                                                        <button type="button" class="lDkkQU">xóa</button>
+                                                    </a>
                                                 </div>
                                             </div>
                                             <!-- Ô input radio -->
@@ -468,6 +473,20 @@ https://templatemo.com/tm-559-zay-shop
                             <input type="hidden" th:field="*{id}"/>
                             <div class="card-body">
                                 <div class="mb-3">
+                                    <label for="fullName" class="form-label">Tên Người Nhận</label>
+                                    <input type="text" class="form-control" id="fullName"
+                                           placeholder="Nhập Số Điện Thoại" th:field="*{fullName}">
+                                    <span th:if="${#fields.hasErrors('fullName')}" style="color: red; font-size: 13px"
+                                          th:errors="*{fullName}"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="zipcode" class="form-label">Số Điện Thoại</label>
+                                    <input type="number" class="form-control" id="zipcode"
+                                           placeholder="Nhập Số Điện Thoại" th:field="*{zipcode}">
+                                    <span th:if="${#fields.hasErrors('zipcode')}" style="color: red; font-size: 13px"
+                                          th:errors="*{zipcode}"></span>
+                                </div>
+                                <div class="mb-3">
                                     <label for="streetName" class="form-label">Tên Đường</label>
                                     <input type="text" class="form-control" id="streetName" placeholder="Nhập Tên Đường"
                                            th:field="*{streetName}">
@@ -491,13 +510,7 @@ https://templatemo.com/tm-559-zay-shop
                                           th:errors="*{province}"></span>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="zipcode" class="form-label">Số Điện Thoại</label>
-                                    <input type="number" class="form-control" id="zipcode"
-                                           placeholder="Nhập Số Điện Thoại" th:field="*{zipcode}">
-                                    <span th:if="${#fields.hasErrors('zipcode')}" style="color: red; font-size: 13px"
-                                          th:errors="*{zipcode}"></span>
-                                </div>
+
 
                                 <!-- Checkbox để chọn làm địa chỉ mặc định -->
                                 <div class="mb-3 form-check">
@@ -645,24 +658,34 @@ https://templatemo.com/tm-559-zay-shop
                     return;
                 }
             }
-            var formattedTotals = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
 
-            // Sử dụng SweetAlert để hiển thị thông báo thành công
-            Swal.fire({
-                icon: 'success',
-                title: 'Áp dụng thành công',
-                text: 'Giá mới: ' + formattedTotals +''+ 'VND',
-            }).then((result) => {
-                // Kiểm tra xem người dùng đã nhấn OK hay không
-                if (result.isConfirmed) {
-                    // Cập nhật giao diện người dùng với giá mới
-// Cập nhật giao diện người dùng với giá mới, định dạng với 2 chữ số thập phân
-                    var formattedTotal = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
+            // Kiểm tra xem có thông báo lỗi khi chưa đạt mức tối thiểu hay không
+            if (data.ss1) {
+                // Sử dụng SweetAlert để hiển thị thông báo lỗi khi chưa đạt đơn tối thiểu
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: data.ss1,
+                });
+                return;
+            }
 
-                    document.getElementById("totalPrice").innerText = formattedTotal + ''+'VND';
-
-                }
-            });
+            // Kiểm tra xem có thông báo thành công hay không
+            if (data.ss) {
+                // Sử dụng SweetAlert để hiển thị thông báo thành công
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Áp dụng thành công',
+                    text: 'Giá mới: ' + data.newTotal + 'VND',
+                }).then((result) => {
+                    // Kiểm tra xem người dùng đã nhấn OK hay không
+                    if (result.isConfirmed) {
+                        // Cập nhật giao diện người dùng với giá mới
+                        var formattedTotal = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
+                        document.getElementById("totalPrice").innerText = formattedTotal + 'VND';
+                    }
+                });
+            }
         } else {
             // Sử dụng SweetAlert để hiển thị thông báo thất bại
             Swal.fire({
@@ -674,8 +697,9 @@ https://templatemo.com/tm-559-zay-shop
         }
     }
 
-
 </script>
+
+
 
 
 
@@ -776,10 +800,12 @@ https://templatemo.com/tm-559-zay-shop
                 var streetName = selectedRadio.attr('data-streetName');
                 var district = selectedRadio.attr('data-district');
                 var province = selectedRadio.attr('data-province');
+                var zipCode = selectedRadio.attr('data-zipcode');
+                var fullName = selectedRadio.attr('data-fullname');
                 var isDefaultAddress = selectedRadio.attr('data-defaultAddress') === 'true';
 
                 // Cập nhật giá trị của input text
-                $('#selectedAddress').val(isDefaultAddress ? 'mặc định' : streetName + ' ' + district + ' ' + province);
+                $('#selectedAddress').val(isDefaultAddress ? 'mặc định' : fullName + ' / ' + zipCode + ' /' + streetName + ' /'+ district + '/ ' + province );
 
                 // Hiển thị hoặc ẩn mặc định tùy thuộc vào giá trị của isDefaultAddress
                 if (isDefaultAddress) {

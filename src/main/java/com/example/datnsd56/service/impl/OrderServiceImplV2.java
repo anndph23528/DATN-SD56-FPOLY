@@ -138,33 +138,35 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                     boolean isVoucherUsed = voucherUsageService.isVoucherUsed(username, selectedVoucherCode);
 
                     if (!isVoucherUsed) {
-                        // Áp dụng giảm giá của voucher vào tổng tiền
-                        BigDecimal discountAmount = calculateDiscountValue(voucher, total);
+                        // Kiểm tra xem tổng giá trị của đơn hàng có đạt đến mức tối thiểu cho phép không
+                        if (total.compareTo(voucher.getMinOrderAmount()) >= 0) {
+                            // Áp dụng giảm giá của voucher vào tổng tiền
+                            BigDecimal discountAmount = calculateDiscountValue(voucher, total);
 
-                        // Kiểm tra xem tổng tiền sau khi áp dụng giảm giá có đạt đến mức tối thiểu cho phép không
-                        BigDecimal discountedTotal = total.subtract(discountAmount);
-                        BigDecimal minOrderAmount = voucher.getMinOrderAmount();  // Lấy mức tối thiểu từ voucher
-
-                        if (minOrderAmount != null && discountedTotal.compareTo(minOrderAmount) >= 0) {
                             // Đảm bảo giảm giá không vượt quá tổng tiền
-                            total = discountedTotal;
+                            total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
 
                             // Giảm số lượng voucher sau khi áp dụng
                             // reduceVoucherQuantity(voucher);
                         } else {
-                            // Xử lý khi tổng tiền sau giảm giá không đạt đến mức tối thiểu
+                            // Xử lý khi tổng giá trị đơn hàng không đạt đến mức tối thiểu
                             // ...
+                            throw new RuntimeException("Đơn hàng chưa đạt đến mức tối thiểu cho phép áp dụng voucher.");
+
                         }
                     }
                 } else {
                     // Xử lý khi hết số lượng voucher
                     // ...
+                    throw new RuntimeException("Hết số lượng voucher.");
+
                 }
             }
         }
 
         return total;
     }
+
 
 
 

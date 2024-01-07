@@ -270,6 +270,20 @@
                 id="productId"
                 name="id"
         />
+        <input
+            type="hidden"
+            value="Activewear" th:value="${sl.id}" th:name="orderItemId"
+            id="orderItemId"
+            name="orderItemId"
+        />
+<!--        <input type="hidden" id="orderItemId">-->
+
+        <input
+            type="hidden"
+            value="Activewear" th:value="${sl.orders.accountId.id}" th:name="accountId"
+            id="accountId"
+            name="accountId"
+        />
         <td>
             <img
                     th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
@@ -291,6 +305,16 @@
             </div>
         </td>
         <td class="align-middle" th:text="${sl.price * sl.quantity}"></td>
+        <td>
+            <!-- Button to show rating form -->
+            <!-- Button to show rating form -->
+            <button type="button" onclick="showRatingForm('${sl.id}', '${sl.orders.accountId.id}', '${sl.productDetails.productId.id}')">
+                Đánh Giá Sản Phẩm
+            </button>
+
+
+            <!-- Rating form for each order item -->
+
     </tr>
     </tbody>
     </thead>
@@ -298,6 +322,40 @@
     <!-- Các dòng dữ liệu sẽ được thêm vào đây bằng JavaScript -->
     </tbody>
 </table>
+<!-- Rating form for each order item -->
+<!--<div th:each="sl : ${order.getOrderItems()}">-->
+
+<!--<form id="ratingForm${sl.id}" style="display: none;"-->
+<!--      th:action="@{/product/orders/rate}" method="post" >-->
+<!--    <input type="hidden" name="orderItemId" th:value="${sl.id}">-->
+<!--    <input type="hidden" name="accountId" th:value="${sl.orders.accountId.id}">-->
+<!--    <input type="hidden" name="productId" th:value="${sl.productDetails.productId.id}">-->
+
+<!--    <label for="rating">Điểm Đánh Giá:</label>-->
+<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
+
+<!--    <label for="comment">Bình Luận:</label>-->
+<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
+
+<!--    <button type="submit">Gửi Đánh Giá</button>-->
+<!--</form>-->
+<!--</div>-->
+
+<!-- Thêm form đánh giá -->
+
+<!--<form id="ratingForm" style="display: none">-->
+<!--    &lt;!&ndash; Form đánh giá &ndash;&gt;-->
+<!--    <label for="rating">Điểm Đánh Giá:</label>-->
+<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
+
+<!--    <label for="comment">Bình Luận:</label>-->
+<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
+
+<!--    <button type="button" onclick="submitRating('${sl.id}', '${sl.orders.accountId.id}')">Gửi Đánh Giá</button>-->
+<!--</form>-->
+
+
+
 <div class="text-end">
 
     Tổng số tiền
@@ -420,9 +478,22 @@
 <script th:src="@{/website/lib/easing/easing.min.js}"></script>
 <script th:src="@{/website/lib/waypoints/waypoints.min.js}"></script>
 <script th:src="@{/website/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Template Javascript -->
 <script th:src="@{/website/js/main.js}"></script>
+
+<script>
+    function showRatingForm(orderItemId, accountId, productId) {
+        var ratingForm = document.getElementById('ratingForm' + orderItemId);
+        ratingForm.style.display = 'block';
+
+        ratingForm.querySelector('[name="orderItemId"]').value = orderItemId;
+        ratingForm.querySelector('[name="accountId"]').value = accountId;
+        ratingForm.querySelector('[name="productId"]').value = productId;
+    }
+</script>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

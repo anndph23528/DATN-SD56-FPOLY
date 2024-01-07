@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +30,8 @@ private CartSeviceImpl cartSevice;
     private CartService cartServices;
     @Autowired
     private ImageServiceImpl imageService;
+//    @Autowired
+//    private RateService rateService;
     @GetMapping("/product/detail/check-quantity")
     @ResponseBody
     public ResponseEntity<Integer> checkQuantity(
@@ -116,5 +116,17 @@ private CartSeviceImpl cartSevice;
             return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"Xóa ảnh thất bại.\"}");
         }
     }
+//    @PostMapping("/product/submit")
+//    public ResponseEntity<String> submitReview(@RequestParam("orderItemId") Integer orderItemId,
+//                                               @RequestParam Integer accountId,
+//                                               @RequestParam Integer rating,
+//                                               @RequestParam String comment) {
+//        try {
+//            rateService.addRate(orderItemId, accountId, rating, comment);
+//            return ResponseEntity.ok("Đánh giá đã được gửi thành công!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi khi xử lý đánh giá.");
+//        }
+//    }
 
 }
