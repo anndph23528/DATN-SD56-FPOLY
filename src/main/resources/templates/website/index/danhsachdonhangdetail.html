@@ -264,145 +264,26 @@
                 </div>
             </div>
         </div>
-=======
-<!-- Page Header End -->
-<table id="orderTable">
-    <caption style="text-align: left; padding: 10px 20px; text-align: center">
-        <h3 style="color: #45a049">Danh sách đơn hàng</h3>
-    </caption>
 
-    <thead>
-    <tr>
-        <th scope="col">Ảnh</th>
-        <th scope="col">Tên sản phẩm</th>
-        <th scope="col">Màu sắc</th>
-        <th scope="col">Size</th>
-        <th scope="col">Brand</th>
-        <th scope="col">Giá</th>
-        <th scope="col">Số lượng</th>
-        <th scope="col">Thành tiền</th>
-    </tr>
-    </thead>
-    <tbody class="align-middle">
-    <tr th:each="sl : ${order.getOrderItems()}">
-        <input
-                type="hidden"
-                value="Activewear" th:value="${sl.productDetails.id}" th:name="id"
-                id="productId"
-                name="id"
-        />
-        <input
-            type="hidden"
-            value="Activewear" th:value="${sl.id}" th:name="orderItemId"
-            id="orderItemId"
-            name="orderItemId"
-        />
-<!--        <input type="hidden" id="orderItemId">-->
-
-        <input
-            type="hidden"
-            value="Activewear" th:value="${sl.orders.accountId.id}" th:name="accountId"
-            id="accountId"
-            name="accountId"
-        />
-        <td>
-            <img
-                    th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
-                    th:src="@{'/user/display?id=' + ${sl.productDetails.productId.id} + '&imageId=' + ${sl.productDetails.productId.images[0].id}}"
-                    alt="Sản phẩm 1"
-                    style="max-width: 80px; max-height: 80px"
-            />
-        </td>
-
-        <td th:text="${sl.productDetails.productId.name}"></td>
-        <td th:text="${sl.productDetails.colorId.name}"></td>
-        <td th:text="${sl.productDetails.sizeId.name}"></td>
-        <td th:text="${sl.productDetails.productId.brandId.name}"></td>
-        <td
-            th:text="'₫' + ${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')}"></td>
-        <td class="align-middle">
-            <div class="input-group quantity mx-auto" style="width: 100px;">
-                <input type="text" readonly class="form-control form-control-sm bg-secondary text-center" name="quantity" th:value="${sl.quantity}">
-            </div>
-        </td>
-        <td class="align-middle" th:text="${sl.price * sl.quantity}"></td>
-        <td>
-            <!-- Button to show rating form -->
-            <!-- Button to show rating form -->
-            <button type="button" onclick="showRatingForm('${sl.id}', '${sl.orders.accountId.id}', '${sl.productDetails.productId.id}')">
-                Đánh Giá Sản Phẩm
-            </button>
-
-
-            <!-- Rating form for each order item -->
-
-    </tr>
-    </tbody>
-    </thead>
-    <tbody>
-    <!-- Các dòng dữ liệu sẽ được thêm vào đây bằng JavaScript -->
-    </tbody>
-</table>
-<!-- Rating form for each order item -->
-<!--<div th:each="sl : ${order.getOrderItems()}">-->
-
-<!--<form id="ratingForm${sl.id}" style="display: none;"-->
-<!--      th:action="@{/product/orders/rate}" method="post" >-->
-<!--    <input type="hidden" name="orderItemId" th:value="${sl.id}">-->
-<!--    <input type="hidden" name="accountId" th:value="${sl.orders.accountId.id}">-->
-<!--    <input type="hidden" name="productId" th:value="${sl.productDetails.productId.id}">-->
-
-<!--    <label for="rating">Điểm Đánh Giá:</label>-->
-<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
-
-<!--    <label for="comment">Bình Luận:</label>-->
-<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
-
-<!--    <button type="submit">Gửi Đánh Giá</button>-->
-<!--</form>-->
-<!--</div>-->
-
-<!-- Thêm form đánh giá -->
-
-<!--<form id="ratingForm" style="display: none">-->
-<!--    &lt;!&ndash; Form đánh giá &ndash;&gt;-->
-<!--    <label for="rating">Điểm Đánh Giá:</label>-->
-<!--    <input type="number" id="rating" name="rating" min="1" max="5" required>-->
-
-<!--    <label for="comment">Bình Luận:</label>-->
-<!--    <textarea id="comment" name="comment" rows="4" required></textarea>-->
-
-<!--    <button type="button" onclick="submitRating('${sl.id}', '${sl.orders.accountId.id}')">Gửi Đánh Giá</button>-->
-<!--</form>-->
-
-
-
-<div class="text-end">
-
-    Tổng số tiền
-
-    <label for="" style="color: red">
-        : <span id="" th:text="${order.total} + '' +'Đ'"></span>
-    </label>
-
-        <hr class="my-4"/>
 
         <div class="row">
             <div class="col-sm-6">
                 <div class="text-muted">
                     <h5 class="font-size-16 mb-3">Thông tin đơn hàng</h5>
                     <h6 class="font-size-15 mb-2" th:if="${bill.accountId != null}"
-                        th:text="'Khách hàng: ' + ${bill.accountId.name}">
+                        th:text="'Tài khoản: ' + ${bill.accountId.name}">
                     </h6>
+                    <div th:each="address : ${bill.accountId.address}">
                     <h6 class="font-size-15 mb-2 font-italic"
-                        th:text="'Tên người nhận: ' + ${bill.fullname}">
+                        th:text="'Tên người nhận: ' + ${address.fullName}">
                     </h6>
                     <p class="mb-1"
-                       th:text="'Địa chỉ nhận: ' + ${bill.address}">
+                       th:text="'Địa chỉ nhận: ' + ${address.streetName + ''+address.district+ '' +address.province}">
                     </p>
                     <p th:if="${bill.phone != null}"
-                       th:text="'SĐT: ' + ${bill.phone}">
+                       th:text="'SĐT: ' + ${address.zipcode}">
                     </p>
+                    </div>
                 </div>
             </div>
             <!-- end col -->
@@ -524,7 +405,7 @@
                                name="quantity" th:value="${sl.quantity}">
                     </div>
                 </td>
-                <td class="align-middle" th:text="${sl.price * sl.quantity}"></td>
+                <td class="align-middle" th:text="${ #numbers.formatDecimal(sl.price * sl.quantity, 0, 'COMMA', 0, 'POINT')}"></td>
             </tr>
             </tbody>
             </thead>
@@ -536,9 +417,16 @@
                     Voucher :
                 </th>
                 <td class="border-0" style="text-align: right" th:if="${bill.voucher != null}"
-                    th:text="'₫' + ${bill.voucher.discount}">
+                    th:text="${#numbers.formatDecimal(bill.voucher.discount, 0, 'COMMA', 0, 'POINT')}">
                     - $25.50
                 </td>
+                <div th:if="${bill.voucher != null}">
+
+                <td   th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</td>
+                <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</td>
+                </div>
+
+
             </tr>
             <!-- end tr -->
             <tr>
@@ -570,7 +458,7 @@
             Tổng thanh toán
 
             <label for="" style="color: red">
-                : <span id="" th:text="${bill.total} + '' +'Đ'"></span>
+                : <span id="" th:text="${#numbers.formatDecimal(bill.total , 0, 'COMMA', 0, 'POINT')} + '' +'Đ'"></span>
             </label>
 
         </div>
