@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -252,10 +253,10 @@ public class UserBillController {
             Cart cart = account.getCart();
 
             if (cart != null) {
-                // Tính toán giá tạm thời khi áp dụng voucher
-                BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
+                try {
+                    // Tính toán giá tạm thời khi áp dụng voucher
+                    BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
 
-                if (newTotal != null && newTotal.compareTo(BigDecimal.ZERO) >= 0) {
                     // Lưu giá mới vào session để sử dụng khi đặt hàng
                     session.setAttribute("appliedVoucherTotal", newTotal);
 
@@ -267,9 +268,11 @@ public class UserBillController {
                     response.put("newTotal", newTotal.toString());
                     response.put("ss", "Áp dụng mã giảm giá thành công");
                     return ResponseEntity.ok(response);
-                } else {
-                    // Xử lý khi giảm giá không đạt đến mức tối thiểu hoặc có lỗi khác
-                    model.addAttribute("ss", "Giảm giá không đạt đến mức tối thiểu hoặc có lỗi khác");
+                } catch (RuntimeException e) {
+                    // Xử lý ngoại lệ ném từ service
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("ss1", e.getMessage());
+                    return ResponseEntity.badRequest().body(response);
                 }
             }
         }
@@ -377,6 +380,60 @@ public class UserBillController {
                     Address savedAddress = addressService.addNewAddress(account, newAddress, newAddress.getDefaultAddress());
 
                     // Thực hiện đặt hàng với địa chỉ mới
+                    // ...
+
+                    session.setAttribute("successMessage", "Thêm thành công");
+                    modelAndView.setViewName("redirect:/user/checkout");
+                }
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        }
+
+        return modelAndView;
+    }
+    @PostMapping("/update1/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public ModelAndView update(@Valid @ModelAttribute("newAddress") Address newAddress,
+                               Principal principal,
+                               BindingResult result,
+                               @PathVariable("id") Integer id,
+                               Model model,
+                               HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (result.hasErrors()) {
+            // Handle validation errors...
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+                Cart cart = account.getCart();
+                modelAndView.addObject("cart", cart);
+
+                List<Address> accountAddresses = addressService.findAccountAddresses(account.getId());
+                modelAndView.addObject("accountAddresses", accountAddresses);
+
+                modelAndView.setViewName("website/index/giohang1");
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        } else {
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+
+                // Kiểm tra xem có địa chỉ được chọn từ danh sách không
+                if (newAddress.getId() != null) {
+                    // Thực hiện đặt hàng với địa chỉ đã chọn
+                    Address selectedAddress = addressService.findAccountDefaultAddress(newAddress.getId());
+                    // Thực hiện các bước đặt hàng với địa chỉ đã chọn
+                    // ...
+
+                } else {
+                    // Nếu không có địa chỉ được chọn, sử dụng địa chỉ mới từ form
+                    Address savedAddress = addressService.addNewAddress(account, newAddress, newAddress.getDefaultAddress());
+
+                    // Thực hiện các bước đặt hàng với địa chỉ mới
                     // ...
 
                     session.setAttribute("successMessage", "Thêm thành công");

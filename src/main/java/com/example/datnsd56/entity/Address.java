@@ -34,8 +34,10 @@ public class Address {
     private String province;
     @NotBlank(message = "không được để trống !")
 
-    @Column(name = "zipcode")
+    @Column(name = "phone")
     private String zipcode;
+    @Column(name = "fullName")
+    private String fullName;
 @Column(name = "default_address")
 private Boolean defaultAddress;
     @ManyToOne
