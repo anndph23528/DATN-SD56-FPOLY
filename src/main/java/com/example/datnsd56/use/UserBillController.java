@@ -39,7 +39,9 @@ import java.util.stream.Collectors;
 @SessionAttributes("appliedVoucherCode")
 @Controller
 @RequestMapping("/user")
-public class UserBillController {
+public class
+
+UserBillController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -202,7 +204,7 @@ public class UserBillController {
                         transaction.setCreateDate(LocalDate.now());
                         transaction.setUpdateDate(LocalDate.now());
                         transaction.setPaymentMethod(paymentMethod);
-                        transaction.setStatus("success"); // Điều chỉnh trạng thái thành công
+                        transaction.setStatus("pending"); // Điều chỉnh trạng thái thành công
                         transaction.setCustomerId(order.getCustomerId());
                         transaction.setOrderId(order);
                         transaction.setAccountId(account.getCart().getAccountId());
@@ -310,13 +312,27 @@ public class UserBillController {
     }
 
     @GetMapping("/order-detail/{id}")
-    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal) {
+    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal,RedirectAttributes attributes) {
         if (principal == null) {
             return "redirect:/login";
         }
+        Optional<Account> account = accountService.finByName(principal.getName());
         Orders bill = ordersService.getOneBill(id);
-        model.addAttribute("order", bill);
-        return "website/index/danhsachdonhangdetail";
+        if (bill == null){
+            attributes.addFlashAttribute("success", "Không có thông tin đơn hàng tương ứng");
+            return "redirect:/user/orders";
+        }
+        if (account.get().getId().equals(bill.getAccountId().getId())){
+            List<OrderItem> lstBillDetails = ordersService.getLstDetailByOrderId(id);
+            List<Transactions> listTransactiopn = transactionService.findAllByOrderId(id);
+            model.addAttribute("bill", bill);
+            model.addAttribute("lstBillDetails", lstBillDetails);
+            model.addAttribute("listTransaction", listTransactiopn);
+            return "website/index/danhsachdonhangdetail";
+        } else {
+            attributes.addFlashAttribute("success", "Bạn không có quyền xem đơn hàng này");
+            return "redirect:/user/orders";
+        }
     }
 
 

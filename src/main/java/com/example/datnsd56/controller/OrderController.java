@@ -1,11 +1,10 @@
 package com.example.datnsd56.controller;
 
-import com.example.datnsd56.entity.Color;
-import com.example.datnsd56.entity.OrderItem;
-import com.example.datnsd56.entity.Orders;
+import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.AccountService;
 import com.example.datnsd56.service.AddressService;
 import com.example.datnsd56.service.OrdersService;
+import com.example.datnsd56.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/hoa-don")
@@ -25,6 +26,8 @@ public class OrderController {
     private OrdersService ordersService;
     @Autowired
     private AddressService service;
+    @Autowired
+    TransactionService transactionService;
 
     @GetMapping("/hien-thi")
     public String viewHoaDon(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
@@ -35,12 +38,30 @@ public class OrderController {
         return "/dashboard/thongke-hoadon/hoa-don";
     }
 
+//    @GetMapping("/lich-su-hoa-don")
+//    public String lSVoucher1(Model model){
+//        List<Orders> listorder = ordersService.getAllOrders();
+//
+//        model.addAttribute("list",listorder);
+//        return "dashboard/thongke-hoadon/hoa-don";
+//
+//    }
+
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable Integer id,
-                         Model model) {
-        List<OrderItem> lstBillDetails = ordersService.getLstDetailByOrderId(id);
-        model.addAttribute("page", lstBillDetails);
-        return "/admin/thongke-hoadon/update-hoa-don";
+                         Model model,RedirectAttributes attributes) {
+        Orders bill = ordersService.getOneBill(id);
+        if (bill != null) {
+            List<OrderItem> lstBillDetails = ordersService.getLstDetailByOrderId(id);
+            List<Transactions> listTransection = transactionService.findAllByOrderId(id);
+            model.addAttribute("bill", bill);
+            model.addAttribute("lstBillDetails", lstBillDetails);
+            model.addAttribute("listTransection", listTransection);
+            return "/dashboard/thongke-hoadon/update-hoa-don";
+        } else {
+            attributes.addFlashAttribute("message", "Không tìm thấy hoá đơn");
+            return "redirect:/admin/hoa-don/hien-thi";
+        }
     }
 
 
@@ -63,8 +84,13 @@ public class OrderController {
     }
 
     @GetMapping("/complete-bill/{id}")
-    public String completeBill(@PathVariable Integer id, RedirectAttributes attributes) {
-        ordersService.completeOrder(id);
+    public String completeBill(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
+        Orders bill = ordersService.getOneBill(id);
+        String name = principal.getName();
+        Optional<Account> account = accountService.finByName(name);
+        if (bill != null){
+             ordersService.completeOrder(id, account.get());
+            }
         return "redirect:/admin/hoa-don/hien-thi";
     }
 }

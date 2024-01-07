@@ -193,8 +193,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         order.setShippingFee(BigDecimal.ZERO);
         order.setTotal(cart.getTotalPrice().setScale(2, RoundingMode.HALF_UP));
         order.setOrderStatus(10);
-        order.setCreateDate(LocalDate.now());
-        order.setUpdateDate(LocalDate.now());
+        order.setCreateDate(LocalDateTime.now());
+        order.setUpdateDate(LocalDateTime.now());
         order.setAccountId(cart.getAccountId());
 
         return order;

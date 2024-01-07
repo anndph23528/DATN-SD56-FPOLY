@@ -235,7 +235,7 @@
                                 data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
-                            <li><a class="nav-link" th:href="@{/admin/hoa-don}">Hoá đơn</a></li>
+                            <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -294,6 +294,7 @@
                                                 <th scope="col">Id</th>
                                                 <th scope="col">Khách Hàng</th>
                                                 <th scope="col">Ngày đặt</th>
+                                                <th scope="col">Số điện thoại</th>
                                                 <th scope="col">Tổng</th>
                                                 <th scope="col">Trạng thái</th>
                                                 <th scope="col">Thao tác</th>
@@ -303,8 +304,30 @@
                                                 <td th:text="${bill.id}"></td>
                                                 <td th:text="${bill.accountId.name}"></td>
                                                 <td th:text="${(bill.createDate)}"></td>
+                                                <td th:text="${(bill.phone)}"></td>
                                                 <td th:text="'₫' + ${#numbers.formatDecimal(bill.total, 0, 'COMMA', 0, 'POINT')}"></td>
-                                                <td th:text="${bill.getStatusName()}">
+<!--                                                <td th:text="${bill.getStatusName()}">-->
+<!--                                                </td>-->
+                                                <td>
+
+                    <span class="text-warning font-weight-bold"
+                          th:if="${bill.orderStatus == 10}">&nbsp;Chờ xác nhận
+                    </span>
+                                                    <span class="text-secondary font-weight-bold"
+                                                          th:if="${bill.orderStatus == 3}">&nbsp;Chờ giao hàng
+                    </span>
+                                                    <span class="text-info font-weight-bold"
+                                                          th:if="${bill.orderStatus == 2}">&nbsp;Đang giao hàng
+                    </span>
+
+                                                    <span  class="text-success font-weight-bold"
+                                                           th:if="${bill.orderStatus == 1}">&nbsp;Đã hoàn thành
+                    </span>
+
+                                                    <span th:if="${bill.orderStatus == 0}" class="text-danger font-weight-bold">
+                        &nbsp; Đã hủy
+                    </span>
+
                                                 </td>
                                                 <td class="d-flex justify-content-center">
                                                     <div style="margin-right: 10px">
