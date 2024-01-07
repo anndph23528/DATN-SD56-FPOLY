@@ -10,6 +10,7 @@ public interface TransactionService {
     Optional<Transactions> getTransactionsById(Integer id);
     Transactions getById(Integer id);
     List<Transactions> get();
+    List<Transactions> findAllByOrderId(Integer orderId);
 //    Transactions findByOrderInfo(String orderInfo);
 //Optional<Transactions> findByOrderId(Integer id);
 

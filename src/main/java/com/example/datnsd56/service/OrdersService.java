@@ -17,6 +17,8 @@ public interface OrdersService {
 
     List<Orders> getAll();
 
+    List<Orders> getAllOrders();
+
     Page<Orders> getAllOrders(Integer page);
 
     Orders getOneBill(Integer id);
@@ -46,7 +48,7 @@ Optional<Orders> getOrderId(Integer id);
 
     Orders shippingOrder(Integer id, BigDecimal shippingFee);
 
-    Orders completeOrder(Integer id);
+    Orders completeOrder(Integer id,Account account);
 
 //    Orders create(JsonNode orderDate);
 }

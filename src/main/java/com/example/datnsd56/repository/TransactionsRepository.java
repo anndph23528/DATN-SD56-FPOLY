@@ -4,6 +4,7 @@ import com.example.datnsd56.entity.Transactions;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TransactionsRepository extends JpaRepository<Transactions,Integer> {
@@ -12,5 +13,7 @@ public interface TransactionsRepository extends JpaRepository<Transactions,Integ
     @Query(value = "select * from Transactions where order_info=?1",nativeQuery = true)
     Transactions findByOrderInfo(String orderInfo);
 //    Optional<Transactions> findByOrderId(Integer id);
+    @Query(value = "select * from Transactions where order_id=?1",nativeQuery = true)
+    List<Transactions> findAllByOrderId(Integer orderId);
 
 }
