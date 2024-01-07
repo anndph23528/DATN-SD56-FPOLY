@@ -162,8 +162,8 @@ https://templatemo.com/tm-559-zay-shop
                             />
                         </td>
 
-                        <td class="" th:text="${sl.price}"></td>
-                        <td class="" th:text="${sl.price * sl.quantity}"></td>
+                        <td class="" th:text="${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+                        <td class="" th:text="${#numbers.formatDecimal(sl.price * sl.quantity, 0, 'COMMA', 0, 'POINT')} + 'VND '"></td>
                         <td>                            <a th:href="@{'/user/delete/'+ ${sl.productDetails.id}}"  style="text-decoration: none; padding-right: 20px">
 
                             <button  type="button" class="btn btn-sm btn-primary">
@@ -197,7 +197,7 @@ https://templatemo.com/tm-559-zay-shop
                 Tổng số tiền
 
                 <label for="" style="color: red">
-                    : <span id="" th:text="${grandTotal} + '' +'Đ'"></span>
+                    : <span id="" th:text="${#numbers.formatDecimal(grandTotal, 0, 'COMMA', 0, 'POINT')} + '' +'VND'"></span>
                 </label>
 
             </div>
