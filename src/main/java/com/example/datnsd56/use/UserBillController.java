@@ -480,8 +480,9 @@ public class UserBillController {
 
 
                         cartServicel.deleteCartById(cart.getId());
-
+model.addAttribute("tr",pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
+                        return "website/index/payment-result";
 
                     } else {
                         // Xử lý khi thanh toán không thành công
@@ -499,7 +500,7 @@ public class UserBillController {
                             ordersRepository.save(orderToUpdate);
                             transactionService.saveTransaction(pendingTransaction);
 
-                            return "website/index/payment-failure";
+                            return "redirect:/user/cart";
 
                             // ... (Thêm các thuộc tính khác cần thiết)
                         }

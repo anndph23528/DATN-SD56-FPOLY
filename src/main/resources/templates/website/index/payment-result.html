@@ -72,17 +72,17 @@
 <body class="pay">
 <div class="c1">
     <h2>Giao Dịch Thành Công</h2>
-    <p>Cảm ơn <span th:text="${order.accountId.name}"></span> đã đặt hàng!</p>
+    <p>Cảm ơn <span th:text="${tr.accountId.name}"></span> đã đặt hàng!</p>
     <p>Thông tin đơn hàng:</p>
-    <p>Mã đơn hàng: <span th:text="${order.id}"></span></p>
-    <p>Tổng số tiền: <span th:text="${order.total} + 'Đ' "></span></p>
+    <p>Mã đơn hàng: <span th:text="${tr.id}"></span></p>
+    <p>Tổng số tiền: <span th:text="${tr.amount} + 'Đ' "></span></p>
     <p>
         Hình thức thanh toán:
         <span
-                th:text="${order.transactions.iterator().next().paymentMethod}"
+                th:text="${tr.paymentMethod}"
         ></span>
     </p>
-    <p>Ngày đặt hàng: <span th:text="${order.createDate}"></span></p>
+    <p>Ngày đặt hàng: <span th:text="${tr.createDate}"></span></p>
     <div style="margin-top: 20px">
         <a th:href="@{/product/hien-thi}">Mua Tiếp</a>
         <a th:href="@{/user/orders}">Xem Đơn Hàng</a>
