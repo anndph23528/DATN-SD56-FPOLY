@@ -13,7 +13,7 @@ public class RateController {
     @Autowired
     private RateService rateService;
 
-    @GetMapping("getAll")
+    @GetMapping("/api/rate/getAll")
     public List<Rate> getAll(@RequestParam(value = "page",defaultValue = "0")Integer page){
         List<Rate> list=rateService.getAll(page).getContent();
         return list;

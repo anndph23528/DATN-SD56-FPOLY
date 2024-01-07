@@ -354,13 +354,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-xl-3">
+                                        <div class="col-sm-6 col-xl-6">
                                             <div class="card-header-form">
                                                 <form action="/admin/thong-ke/hien-thi/thoi-gian" method="get">
                                                     <div class="input-group">
-                                                        <input name="tuNgay" type="text" class="form-control" placeholder="Start">
-                                                        <h6 style="margin-left: 5px; margin-right: 5px; margin-top: 10px">to</h6>
-                                                        <input name="denNgay" type="text" class="form-control" placeholder="End">
+                                                        <label for="startDate">Ngày bắt đầu:</label>
+                                                        <input type="date" id="startDate" name="tuNgay">
+<!--                                                        <h6 style="margin-left: 5px; margin-right: 5px; margin-top: 10px">to</h6>-->
+
+                                                        <label for="endDate">Ngày kết thúc:</label>
+                                                        <input type="date" id="endDate" name="denNgay">
+
+<!--                                                        <input name="tuNgay" type="date" class="form-control" placeholder="Start">-->
+<!--                                                        <input name="denNgay" type="date" class="form-control" placeholder="End">-->
                                                         <div lass="input-group-btn" style="margin-left: 10px; margin-right: 3px">
                                                             <a href="/admin/thong-ke/hien-thi/thoi-gian/{tuNgay,denNgay}">
                                                                 <button type="submit" class="btn btn-primary"><i
@@ -377,16 +383,16 @@
 
                                 <!--                                 Add filter buttons -->
                                 <div class="filter-buttons" style="text-align: right">
-                                    <button class="btn btn-info">
-                                        <a href="/admin/thong-ke/hien-thi">All</a></button>
-                                    <button class="btn btn-info">
-                                        <a href="/admin/thong-ke/hien-thi/top5">TOP5</a></button>
-                                    <button class="btn btn-info">
-                                        <a href="/admin/thong-ke/hien-thi/dang-giao">ĐangGiao</a></button>
-                                    <button class="btn btn-info">
-                                        <a href="/admin/thong-ke/hien-thi/hoan-thanh">Hoàn Thành</a></button>
-                                    <button class="btn btn-info">
-                                        <a href="/admin/thong-ke/hien-thi/huy">Hủy</a></button>
+                                    <button class="btn btn-success">
+                                        <a href="/admin/thong-ke/hien-thi" style="color: black">All</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/thong-ke/hien-thi/top5" style="color: black">TOP5</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/thong-ke/hien-thi/dang-giao" style="color: black">ĐangGiao</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/thong-ke/hien-thi/hoan-thanh" style="color: black">Hoàn Thành</a></button>
+                                    <button class="btn btn-danger">
+                                        <a href="/admin/thong-ke/hien-thi/huy" style="color: black">Hủy</a></button>
 
                                 </div>
 
@@ -404,6 +410,9 @@
                                                 <th>Account_id</th>
                                                 <th>SDT</th>
                                                 <th>Sản Phẩm</th>
+                                                <th>Mã Voucher</th>
+                                                <th>Giảm Giá </th>
+
                                                 <th>Tổng Tiền</th>
                                                 <th>Ngày</th>
                                                 <th>Trang Thái</th>
@@ -416,9 +425,13 @@
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.id : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.fullname : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.accountId.id : '') : ''}"></td>
+
+
                                                 <!--                                                <td th:text="*${list.accountId}"></td>-->
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.phone : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.productDetails != null ? list.productDetails.id : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.voucher.code : '') : ''}"></td>
+                                                <td th:text="${list != null ? (list.orders != null ? list.orders.voucher.description : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.total : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.createDate : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.orderStatus : '') : ''} "></td>

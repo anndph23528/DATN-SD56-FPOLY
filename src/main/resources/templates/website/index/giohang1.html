@@ -69,6 +69,7 @@ https://templatemo.com/tm-559-zay-shop
         /* Add your custom styles here */
         body {
             font-family: Arial, sans-serif;
+            background-image: url("../../dashboard/");
         }
 
         /*.form-group {*/
@@ -208,7 +209,7 @@ https://templatemo.com/tm-559-zay-shop
     </style>
     <!-- ... (Các khai báo khác như trong mã HTML trước) ... -->
 </head>
-<body>
+<body class="pay">
 <div class="container mt-5">
     <h1 class="text-center">Giỏ hàng</h1>
     <div>
@@ -229,7 +230,7 @@ https://templatemo.com/tm-559-zay-shop
             <!-- Form nhập địa chỉ mới -->
             <!-- Trong file giohang1.html hoặc trang thanh toán tương ứng -->
             <div class="form-group">
-                <label for="selectedAddress">Địa Chỉ Nhận Hàng</label>
+                <label for="selectedAddress" style="color: #dae0e5;">Địa Chỉ Nhận Hàng</label>
                 <input type="text" class="form-control" id="selectedAddress" name="selectedAddress" readonly
 
                        th:value="${defaultAddress.streetName + ' ' + defaultAddress.district + ' ' + defaultAddress.province+ ' '+  ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+  (defaultAddress.defaultAddress ? 'Mặc Định':'')}"
