@@ -265,25 +265,24 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="col-sm-6">
                 <div class="text-muted">
                     <h5 class="font-size-16 mb-3">Thông tin đơn hàng</h5>
                     <h6 class="font-size-15 mb-2" th:if="${bill.accountId != null}"
-                        th:text="'Tài khoản: ' + ${bill.accountId.name}">
+                        th:text="'Khách hàng: ' + ${bill.accountId.name}">
                     </h6>
-                    <div th:each="address : ${bill.accountId.address}">
-                    <h6 class="font-size-15 mb-2 font-italic"
-                        th:text="'Tên người nhận: ' + ${address.fullName}">
-                    </h6>
-                    <p class="mb-1"
-                       th:text="'Địa chỉ nhận: ' + ${address.streetName + ''+address.district+ '' +address.province}">
-                    </p>
-                    <p th:if="${bill.phone != null}"
-                       th:text="'SĐT: ' + ${address.zipcode}">
-                    </p>
-                    </div>
+
+                    <th:block class="mb-1" th:with="addressParts=${bill.splitAddress(bill.address)}">
+                        <h6 class="font-size-15 mb-2 font-italic"
+                            th:text="'Tên người nhận : ' + ${addressParts[6].substring(addressParts[6].indexOf('=') + 1)}">
+                        </h6>
+                        <p class="mb-1" th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[4].substring(addressParts[4].indexOf('=') + 1)}"></p>
+                        <p class="mb-1"
+                           th:text="'SĐT: ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
+                        </p>
+                    </th:block>
+
                 </div>
             </div>
             <!-- end col -->
@@ -292,7 +291,7 @@
                     <div>
                         <h5 class="font-size-15 mb-1">Ngày mua hàng:</h5>
                         <p
-                                th:text="${bill.createDate}">
+                            th:text="${#temporals.format(bill.createDate, 'dd/MM/yyyy HH:mm')}">
                         </p>
                     </div>
                 </div>

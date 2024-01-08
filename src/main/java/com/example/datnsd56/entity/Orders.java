@@ -100,6 +100,10 @@ public class Orders {
             return null;
         }
     }
+    // Trong class Orders hoặc một class thích hợp khác
+    public String[] splitAddress(String address) {
+        return address.split(","); // Hoặc phương thức phân tách chuỗi của bạn
+    }
 
 
 }
