@@ -74,7 +74,7 @@ public class AddressController {
         List<Account> listr=accountService.get();
         model.addAttribute("accountlist",listr);
         model.addAttribute("account",new Account());
-        return "/website/index/updateAderss";
+        return "/website/index/updateadresss";
     }
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('admin')")
@@ -90,7 +90,6 @@ public class AddressController {
         addressService.add(address);
         session.setAttribute("successMessage", "Thêm thành công");
         return "redirect:/admin/address/hien-thi";
-
     }
     @GetMapping("/your-form-url")
     public String showForm(Model model) {
@@ -122,7 +121,7 @@ public class AddressController {
 //    }
 
     @PostMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin')")
     public String update( @Valid @ModelAttribute("address") Address address,Principal principal, BindingResult result,@PathVariable("id") Integer id , Model model, HttpSession session) {
         if (result.hasErrors()) {
             model.addAttribute("address",address);

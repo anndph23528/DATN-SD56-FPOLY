@@ -37,5 +37,8 @@ public class CartItem {
 //    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 //    @JoinColumn(name = "cart_id", referencedColumnName = "id")
 //    private Cart cart;
-
+// Phương thức kiểm tra xem sản phẩm có phù hợp với các thông số đầu vào không
+public boolean matches(Integer productId, Integer colorId, Integer sizeId) {
+    return this.productDetails.getProductId().equals(productId) && this.productDetails.getColorId().equals(colorId) && this.productDetails.getSizeId().equals(sizeId);
+}
 }
