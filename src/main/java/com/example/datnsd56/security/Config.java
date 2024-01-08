@@ -89,6 +89,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
              .requestMatchers("/error/**").permitAll()// với endpoint /hello thì sẽ được cho qua
             .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qu
             .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qu
+            .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qu
 
             .and()
             .authorizeHttpRequests()
@@ -96,7 +97,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/cart/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 //            .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
-           .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
+//           .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/rest/**").authenticated()
             .requestMatchers("/product/saveVoucher/").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 
