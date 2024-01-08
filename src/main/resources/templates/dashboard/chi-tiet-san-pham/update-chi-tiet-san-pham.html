@@ -296,27 +296,34 @@
                                 <div class="form-group">
                                     <label>Sản phẩm</label>
                                     <input type="hidden" th:field="*{productId}" th:each="product:${products}" th:value="${product.id}" />
-                                    <select disabled="disabled" class="form-control" th:field="*{productId}"  >
-                                        <option th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>
-                                    </select>
+
+                                    <input type="hidden" th:field="*{productId}" th:each="product:${products}"
+                                           th:value="${product.id}"/>
+                                    <input type="hidden" th:field="*{colorId}" th:each="color:${colors}"
+                                           th:value="${color.id}"/>
+                                    <input type="hidden" th:field="*{sizeId}" th:each="size:${sizes}"
+                                           th:value="${size.id}"/>
+<!--                                    <select disabled="disabled" class="form-control" th:field="*{productId}"  >-->
+<!--                                        <option th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>-->
+<!--                                    </select>-->
 
                                     <!--                                    <input disabled="disabled" type="text" class="form-control" placeholder="Nhập số lượng"-->
 <!--                                           th:field="*{productId}">-->
                                 </div>
-                                <div class="form-group">
-                                    <label>Màu sắc</label>
-                                    <select disabled="disabled" class="form-control" th:field="*{colorId}">
-                                        <option th:each="color:${colors}" th:value="${color.id}"
-                                                th:text="${color.name}"></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Size</label>
-                                    <select disabled="disabled" class="form-control" th:field="*{sizeId}">
-                                        <option th:each="size:${sizes}" th:value="${size.id}"
-                                                th:text="${size.name}"></option>
-                                    </select>
-                                </div>
+<!--                                <div class="form-group">-->
+<!--&lt;!&ndash;                                    <label>Màu sắc</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <select disabled="disabled" class="form-control" th:field="*{colorId}">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <option th:each="color:${colors}" th:value="${color.id}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                th:text="${color.name}"></option>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </select>&ndash;&gt;-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>Size</label>-->
+<!--                                    <select disabled="disabled" class="form-control" th:field="*{sizeId}">-->
+<!--                                        <option th:each="size:${sizes}" th:value="${size.id}"-->
+<!--                                                th:text="${size.name}"></option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
                                 <div class="form-group">
                                     <label>Số lượng</label>
                                     <div class="input-group colorpickerinput">

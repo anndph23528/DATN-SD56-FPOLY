@@ -522,7 +522,7 @@
                                         <td th:text="${list != null ? (list.colorId != null ? list.colorId.name : '') : ''}"></td>
                                         <td th:text="${list != null ? (list.sizeId != null ? list.sizeId.name : '') : ''}"></td>
                                         <td th:text="*{list.quantity}"></td>
-                                        <td th:text="*{#numbers.formatDecimal(list.sellPrice, 0, 'COMMA', 0, 'POINT')}"></td>
+                                        <td th:text="${#numbers.formatDecimal(list.sellPrice, 0, 'COMMA', 0, 'POINT')} +'VND'"></td>
 
                                         <td>
                                             <div id="carousel-{{list.productId.id}}" class="carousel slide" data-ride="carousel">

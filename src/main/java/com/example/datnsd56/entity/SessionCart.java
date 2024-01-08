@@ -53,4 +53,14 @@ public class SessionCart {
         }
         return total;
     }
+
+    public int getQuantity(Integer productId, Integer colorId, Integer sizeId) {
+       CartItem cartItem=new CartItem();
+        for (CartItem cartItems : cartItemss.values()) {
+            if (cartItem.matches(productId, colorId, sizeId)) {
+                return cartItems.getQuantity();
+            }
+        }
+        return 0; // Trả về 0 nếu không tìm thấy sản phẩm trong giỏ hàng
+    }
 }

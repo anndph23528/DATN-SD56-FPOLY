@@ -222,7 +222,7 @@ https://templatemo.com/tm-559-zay-shop
             <div>
                 <a th:href="@{/product/hien-thi}">
                     <button id="myButton" type="button" class="btn btn-success remove" title="thêm sản phẩm mới">
-                        <i class="fas fa-plus-circle"></i>
+                        <i class="fas fa-plus-circle"> Mua thêm</i>
                     </button>
                 </a>
             </div>
@@ -230,7 +230,7 @@ https://templatemo.com/tm-559-zay-shop
             <!-- Form nhập địa chỉ mới -->
             <!-- Trong file giohang1.html hoặc trang thanh toán tương ứng -->
             <div class="form-group">
-                <label for="selectedAddress" style="color: #dae0e5;">Địa Chỉ Nhận Hàng</label>
+                <h4 class="font-weight-semi-bold mt-4" style="color: white;">Địa Chỉ Nhận Hàng</h4>
                 <input type="text" class="form-control" id="selectedAddress" name="selectedAddress" readonly
 
                        th:value="${ defaultAddress.fullName +'/'+ defaultAddress.zipcode+ '/' + defaultAddress.streetName + '/ ' + defaultAddress.district + '/ ' + defaultAddress.province+ '/ '+  ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+ ' '+  (defaultAddress.defaultAddress ? 'Mặc Định':'')}"
@@ -438,15 +438,15 @@ https://templatemo.com/tm-559-zay-shop
                             </td>
                             <td th:text="${sl.productDetails.productId.name}"></td>
                             <td th:text="${sl.quantity}"></td>
-                            <td th:text=" ${#numbers.formatDecimal(sl.productDetails.sellPrice, 0, 'COMMA', 0, 'POINT')}"></td>
-                            <td th:text="${sl.price * sl.quantity}"></td>
+                            <td th:text=" ${#numbers.formatDecimal(sl.productDetails.sellPrice, 0, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+                            <td th:text="${ #numbers.formatDecimal(sl.price * sl.quantity, 0, 'COMMA', 0, 'POINT')} + 'VND'"></td>
                         </tr>
                         </tbody>
                     </table>
 
                     <!-- Tổng số tiền -->
                     <div class="text-end">
-                        Tổng số tiền ban đầu : <span id="totalPrice" th:text="${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')}"
+                        Tổng số tiền thanh toán : <span id="totalPrice" th:text="${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')} + 'VND'"
                                                      style="color: red;"></span> <br>
                         <!--                        Tổng số tiền cuối cùng: <p style="color: red;" id="totalPrice1"></p>-->
 
@@ -674,10 +674,12 @@ https://templatemo.com/tm-559-zay-shop
             // Kiểm tra xem có thông báo thành công hay không
             if (data.ss) {
                 // Sử dụng SweetAlert để hiển thị thông báo thành công
+                // var formattedTotal1 = new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0));
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Áp dụng thành công',
-                    text: 'Giá mới: ' + data.newTotal + 'VND',
+                    text: 'Giá mới: ' + data.formattedTotal1 + 'VND',
                 }).then((result) => {
                     // Kiểm tra xem người dùng đã nhấn OK hay không
                     if (result.isConfirmed) {
