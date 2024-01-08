@@ -91,6 +91,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qu
             .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qu
 
+
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/customer/**").authenticated()
