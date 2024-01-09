@@ -369,7 +369,6 @@ public class OrdersServiceImpl implements OrdersService {
     @Transactional
     public Orders cancelOrder(Integer id) {
         Orders bill = ordersRepository.findById(id).orElse(null);
-        bill.setOrderStatus(0);
 //        List<OrderItem> billDetailList = bill.getOrderItems();
 //        for (OrderItem billDetail : billDetailList){
 //            billDetail.setStatus(0);
@@ -380,7 +379,18 @@ public class OrdersServiceImpl implements OrdersService {
 //            productDetailsRepository.save(productDetail);
 //        }
 //        bill.setOrderItems(billDetailList);
-        return ordersRepository.save(bill);
+        if (bill.getOrderStatus() == 0) {
+            return ordersRepository.save(bill);
+        } else {
+            bill.setOrderStatus(0);
+//            bill.setEmployee(account);
+            List<Transactions> paymentMethodList = transactionsRepository.findAllByOrderId(id);
+            for (Transactions paymentMethod : paymentMethodList) {
+                paymentMethod.setStatus("fail");
+                transactionsRepository.save(paymentMethod);
+            }
+            return ordersRepository.save(bill);
+        }
     }
 
     @Override
