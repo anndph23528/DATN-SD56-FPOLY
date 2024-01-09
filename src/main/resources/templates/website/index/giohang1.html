@@ -679,7 +679,7 @@ https://templatemo.com/tm-559-zay-shop
                 Swal.fire({
                     icon: 'success',
                     title: 'Áp dụng thành công',
-                    text: 'Giá mới: ' + data.formattedTotal1 + 'VND',
+                    text: 'Giá mới: ' + new Intl.NumberFormat('en-US').format(parseFloat(data.newTotal).toFixed(0)) + ' ' + 'VND',
                 }).then((result) => {
                     // Kiểm tra xem người dùng đã nhấn OK hay không
                     if (result.isConfirmed) {
