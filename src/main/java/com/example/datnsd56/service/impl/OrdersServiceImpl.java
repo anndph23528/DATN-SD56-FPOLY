@@ -51,8 +51,9 @@ public class OrdersServiceImpl implements OrdersService {
     private VoucherUsageRepository voucherUsageRepository;
     @Autowired
     private TransactionsServiceIpml transactionsService;
-@Autowired
-private VoucherUsageService voucherUsageService;
+    @Autowired
+    private VoucherUsageService voucherUsageService;
+
     @Autowired
     public void OrdersService(OrdersRepository ordersRepository, TransactionsRepository transactionsRepository) {
         this.ordersRepository = ordersRepository;
@@ -70,8 +71,13 @@ private VoucherUsageService voucherUsageService;
     }
 
     @Override
+    public List<Orders> getAllOrders() {
+        return ordersRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
+    }
+
+    @Override
     public Page<Orders> getAllOrders(Integer page) {
-        Pageable pageable = PageRequest.of(page, 5,Sort.by(Sort.Direction.DESC, "createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createDate"));
         return ordersRepository.findAll(pageable);
     }
 
@@ -93,7 +99,7 @@ private VoucherUsageService voucherUsageService;
             orders.setId(orders1.getId());
             orders.setOrderStatus(orders1.getOrderStatus());
             orders.setCreateDate((orders1.getCreateDate()));
-            orders.setUpdateDate((LocalDate.now()));
+            orders.setUpdateDate((LocalDateTime.now()));
             return ordersRepository.save(orders);
         }
         return null;
@@ -122,7 +128,7 @@ private VoucherUsageService voucherUsageService;
 
             // Lấy thông tin voucher đã áp dụng trong giỏ hàng
             Optional<VoucherUsage> appliedVoucherOptional = voucherUsageRepository
-                .findTopByAccountIdAndIsUsedFalseAndVoucher_ActiveTrueOrderByUsedDateDesc(accountOptional.get().getId());
+                    .findTopByAccountIdAndIsUsedFalseAndVoucher_ActiveTrueOrderByUsedDateDesc(accountOptional.get().getId());
 
             if (appliedVoucherOptional.isPresent()) {
                 VoucherUsage appliedVoucher = appliedVoucherOptional.get();
@@ -148,11 +154,6 @@ private VoucherUsageService voucherUsageService;
         // Nếu không có voucher nào được áp dụng hoặc voucher không hợp lệ, trả về giá tiền hiện tại của giỏ hàng
         return cart.getTotalPrice();
     }
-
-
-
-
-
 
 
     private BigDecimal calculateTotal(Cart cart, Voucher voucher) {
@@ -185,7 +186,7 @@ private VoucherUsageService voucherUsageService;
         // Kiểm tra xem voucher có hoạt động không, thời gian hiện tại có trước thời gian hết hạn không
         // và tổng giá trị đơn hàng lớn hơn hoặc bằng giảm giá voucher
         return voucher.isActive() && currentTime.isBefore(voucher.getExpiryDateTime())
-            && order.getTotal().compareTo(voucher.getDiscount()) >= 0;
+                && order.getTotal().compareTo(voucher.getDiscount()) >= 0;
     }
 
     @Override
@@ -241,8 +242,8 @@ private VoucherUsageService voucherUsageService;
         bill.setShippingFee(BigDecimal.ZERO);
         bill.setTotal(BigDecimal.ZERO);
         bill.setOrderStatus(10);
-        bill.setCreateDate(LocalDate.now());
-        bill.setUpdateDate(LocalDate.now());
+        bill.setCreateDate(LocalDateTime.now());
+        bill.setUpdateDate(LocalDateTime.now());
         bill.setAccountId(cart.getAccountId());
 
         // Lưu Orders để có giá trị 'id' được sinh tự động
@@ -284,7 +285,7 @@ private VoucherUsageService voucherUsageService;
         return bill;
     }
 
-//  public Orders planceOrder(Cart cart, String address) {
+    //  public Orders planceOrder(Cart cart, String address) {
 //        Orders bill = new Orders();
 ////        Address customerAddress = addressRepository.findById(Integer.valueOf(address)).orElse(null);
 //////        bill.setAccountId(customerAddress.getAccount());
@@ -327,8 +328,8 @@ private VoucherUsageService voucherUsageService;
     @Override
     public Orders add(Orders hoaDon) {
         hoaDon.setOrderStatus(10);
-        hoaDon.setCreateDate(LocalDate.now());
-        hoaDon.setUpdateDate(LocalDate.now());
+        hoaDon.setCreateDate(LocalDateTime.now());
+        hoaDon.setUpdateDate(LocalDateTime.now());
         return ordersRepository.save(hoaDon);
     }
 
@@ -342,19 +343,32 @@ private VoucherUsageService voucherUsageService;
     }
 
     @Override
-    public Orders completeOrder(Integer id) {
+    public Orders completeOrder(Integer id,Account account) {
         Orders bill = ordersRepository.findById(id).orElse(null);
+//            bill.setOrderStatus(1);
+//            bill.setCreateDate(LocalDateTime.now());
+//        return ordersRepository.save(bill);
+        if (bill.getOrderStatus() != 2) {
+            return ordersRepository.save(bill);
+        } else {
             bill.setOrderStatus(1);
-            bill.setCreateDate(LocalDate.now());
-        return ordersRepository.save(bill);
-
+            bill.setCreateDate(LocalDateTime.now());
+            bill.setAccountId(account);
+            List<Transactions> listPaymentMethod = transactionsRepository.findAllByOrderId(id);
+            for (Transactions paymentMethod : listPaymentMethod) {
+                if ("pending".equals(paymentMethod.getStatus())) {
+                    paymentMethod.setStatus("success");
+                    transactionsRepository.save(paymentMethod);
+                }
+            }
+            return ordersRepository.save(bill);
+        }
     }
 
     @Override
     @Transactional
     public Orders cancelOrder(Integer id) {
         Orders bill = ordersRepository.findById(id).orElse(null);
-        bill.setOrderStatus(0);
 //        List<OrderItem> billDetailList = bill.getOrderItems();
 //        for (OrderItem billDetail : billDetailList){
 //            billDetail.setStatus(0);
@@ -365,7 +379,18 @@ private VoucherUsageService voucherUsageService;
 //            productDetailsRepository.save(productDetail);
 //        }
 //        bill.setOrderItems(billDetailList);
-        return ordersRepository.save(bill);
+        if (bill.getOrderStatus() == 0) {
+            return ordersRepository.save(bill);
+        } else {
+            bill.setOrderStatus(0);
+//            bill.setEmployee(account);
+            List<Transactions> paymentMethodList = transactionsRepository.findAllByOrderId(id);
+            for (Transactions paymentMethod : paymentMethodList) {
+                paymentMethod.setStatus("fail");
+                transactionsRepository.save(paymentMethod);
+            }
+            return ordersRepository.save(bill);
+        }
     }
 
     @Override

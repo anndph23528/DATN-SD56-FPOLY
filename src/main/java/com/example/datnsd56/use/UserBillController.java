@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,7 +41,9 @@ import java.util.stream.Collectors;
 @SessionAttributes("appliedVoucherCode")
 @Controller
 @RequestMapping("/user")
-public class UserBillController {
+public class
+
+UserBillController {
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -207,11 +210,12 @@ public class UserBillController {
                         transaction.setCreateDate(LocalDate.now());
                         transaction.setUpdateDate(LocalDate.now());
                         transaction.setPaymentMethod(paymentMethod);
-                        transaction.setStatus("success"); // Điều chỉnh trạng thái thành công
+                        transaction.setStatus("pending"); // Điều chỉnh trạng thái thành công
                         transaction.setCustomerId(order.getCustomerId());
                         transaction.setOrderId(order);
                         transaction.setAccountId(account.getCart().getAccountId());
                         transactionService.saveTransaction(transaction);
+                        session.removeAttribute("appliedVoucherTotal");
 
                         // Xóa giỏ hàng
                         cartServicel.deleteCartById(cart.getId());
@@ -241,6 +245,7 @@ public class UserBillController {
     public ResponseEntity<Map<String, Object>> applyVoucher(
         @RequestParam(name = "selectedVoucherCode", required = false) String selectedVoucherCode,
         Principal principal, HttpSession session, Model model) {
+
         if (principal == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -251,10 +256,10 @@ public class UserBillController {
             Cart cart = account.getCart();
 
             if (cart != null) {
-                // Tính toán giá tạm thời khi áp dụng voucher
-                BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
+                try {
+                    // Tính toán giá tạm thời khi áp dụng voucher
+                    BigDecimal newTotal = orderServiceImplV2.calculateTotalWithVoucher(cart, selectedVoucherCode, principal.getName());
 
-                if (newTotal != null) {
                     // Lưu giá mới vào session để sử dụng khi đặt hàng
                     session.setAttribute("appliedVoucherTotal", newTotal);
 
@@ -266,12 +271,11 @@ public class UserBillController {
                     response.put("newTotal", newTotal.toString());
                     response.put("ss", "Áp dụng mã giảm giá thành công");
                     return ResponseEntity.ok(response);
-                } else {
-                    // Thiết lập thông điệp thất bại trong Model để truyền về view
-                    model.addAttribute("ss", "Áp dụng mã giảm giá thất bại");
-
-                    // Trả về phản hồi lỗi nếu có vấn đề
-                    return ResponseEntity.badRequest().build();
+                } catch (RuntimeException e) {
+                    // Xử lý ngoại lệ ném từ service
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("ss1", e.getMessage());
+                    return ResponseEntity.badRequest().body(response);
                 }
             }
         }
@@ -315,13 +319,27 @@ public class UserBillController {
     }
 
     @GetMapping("/order-detail/{id}")
-    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal) {
+    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal, RedirectAttributes attributes) {
         if (principal == null) {
             return "redirect:/login";
         }
+        Optional<Account> account = accountService.finByName(principal.getName());
         Orders bill = ordersService.getOneBill(id);
-        model.addAttribute("order", bill);
-        return "website/index/danhsachdonhangdetail";
+        if (bill == null) {
+            attributes.addFlashAttribute("success", "Không có thông tin đơn hàng tương ứng");
+            return "redirect:/user/orders";
+        }
+        if (account.get().getId().equals(bill.getAccountId().getId())) {
+            List<OrderItem> lstBillDetails = ordersService.getLstDetailByOrderId(id);
+            List<Transactions> listTransactiopn = transactionService.findAllByOrderId(id);
+            model.addAttribute("bill", bill);
+            model.addAttribute("lstBillDetails", lstBillDetails);
+            model.addAttribute("listTransaction", listTransactiopn);
+            return "website/index/danhsachdonhangdetail";
+        } else {
+            attributes.addFlashAttribute("success", "Bạn không có quyền xem đơn hàng này");
+            return "redirect:/user/orders";
+        }
     }
 
 
@@ -391,6 +409,61 @@ public class UserBillController {
         return modelAndView;
     }
 
+    @PostMapping("/update1/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public ModelAndView update(@Valid @ModelAttribute("newAddress") Address newAddress,
+                               Principal principal,
+                               BindingResult result,
+                               @PathVariable("id") Integer id,
+                               Model model,
+                               HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (result.hasErrors()) {
+            // Handle validation errors...
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+                Cart cart = account.getCart();
+                modelAndView.addObject("cart", cart);
+
+                List<Address> accountAddresses = addressService.findAccountAddresses(account.getId());
+                modelAndView.addObject("accountAddresses", accountAddresses);
+
+                modelAndView.setViewName("website/index/giohang1");
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        } else {
+            Optional<Account> accountOptional = accountService.finByName(principal.getName());
+            if (accountOptional.isPresent()) {
+                Account account = accountOptional.get();
+
+                // Kiểm tra xem có địa chỉ được chọn từ danh sách không
+                if (newAddress.getId() != null) {
+                    // Thực hiện đặt hàng với địa chỉ đã chọn
+                    Address selectedAddress = addressService.findAccountDefaultAddress(newAddress.getId());
+                    // Thực hiện các bước đặt hàng với địa chỉ đã chọn
+                    // ...
+
+                } else {
+                    // Nếu không có địa chỉ được chọn, sử dụng địa chỉ mới từ form
+                    Address savedAddress = addressService.addNewAddress(account, newAddress, newAddress.getDefaultAddress());
+
+                    // Thực hiện các bước đặt hàng với địa chỉ mới
+                    // ...
+
+                    session.setAttribute("successMessage", "Thêm thành công");
+                    modelAndView.setViewName("redirect:/user/checkout");
+                }
+            } else {
+                modelAndView.setViewName("redirect:/login");
+            }
+        }
+
+        return modelAndView;
+    }
+
 
     @GetMapping("/vnpay-ipn")
     public String vnpayIPN(@RequestParam("vnp_ResponseCode") String responseCode,
@@ -421,11 +494,13 @@ public class UserBillController {
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("success");
                         transactionService.saveTransaction(pendingTransaction);
+                        session.removeAttribute("appliedVoucherTotal");
 
 
                         cartServicel.deleteCartById(cart.getId());
-
+                        model.addAttribute("tr", pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
+                        return "website/index/payment-result";
 
                     } else {
                         // Xử lý khi thanh toán không thành công
@@ -443,7 +518,7 @@ public class UserBillController {
                             ordersRepository.save(orderToUpdate);
                             transactionService.saveTransaction(pendingTransaction);
 
-                            return "website/index/payment-failure";
+                            return "redirect:/user/checkout";
 
                             // ... (Thêm các thuộc tính khác cần thiết)
                         }
@@ -467,6 +542,7 @@ public class UserBillController {
         }
         return null;
     }
+
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
         if (principal == null) {

@@ -208,7 +208,7 @@
                         <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                             <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
                             <a th:href="@{/user/dsdonhang}" class="dropdown-item has-icon "> <i class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
-                            <a th:href="@{/admin/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
+                            <a th:href="@{/product/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
 
                             <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i> Logout</a>
                         </th:block>
@@ -284,6 +284,7 @@
     <tr>
         <th>Đơn hàng</th>
         <th>Ngày đặt hàng</th>
+        <th>Số điện thoại</th>
         <th>Tổng tiền</th>
         <th>Trạng thái đơn hàng</th>
         <th>Thao tác</th>
@@ -295,9 +296,28 @@
         <td class="align-middle"
             th:text="${(order.fullname)}"></td>
         <td class="align-middle"
-            th:text="'₫' + ${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')}"></td>
+            th:text="${(order.phone)}"></td>
         <td class="align-middle"
-            th:text="${order.getStatusName()}">
+            th:text="'₫' + ${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')}"></td>
+        <td class="align-middle">
+
+        <span class="text-warning font-weight-bold"
+              th:if="${order.orderStatus == 10}">&nbsp;Chờ xác nhận
+                    </span>
+        <span class="text-secondary font-weight-bold"
+              th:if="${order.orderStatus == 3}">&nbsp;Chờ giao hàng
+                    </span>
+        <span class="text-info font-weight-bold"
+              th:if="${order.orderStatus == 2}">&nbsp;Đang giao hàng
+                    </span>
+
+        <span  class="text-success font-weight-bold"
+               th:if="${order.orderStatus == 1}">&nbsp;Đã hoàn thành
+                    </span>
+
+        <span th:if="${order.orderStatus == 0}" class="text-danger font-weight-bold">
+                        &nbsp; Đã hủy
+                    </span>
         </td>
         <td class="align-middle">
             <a class="btn btn-sm btn-primary"

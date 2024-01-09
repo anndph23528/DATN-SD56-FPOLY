@@ -66,38 +66,47 @@ public class ViewProductController {
     }
     @GetMapping("/hien-thi")
     public String productView(Model model, Principal principal, HttpSession session) {
-//List<Products>lists=productsService.getAllPro();
-//        List<ProductDetails> list = productDetailsService.getAllCTSP();
         List<Products> lists = productsService.getAllPros();
-//        Optional<Account> account = accountService.finByName(principal.getName());
-
 
         // Lấy danh sách tất cả voucher
         List<Voucher> allVouchers = voucherSeviceImpl.getAllls();
 
-        // Lấy danh sách voucher đã lưu cho tài khoản
-//        List<VoucherUsage> voucherUsages = voucherUsageService.findVoucherUsagesByAccount(account.get().getId());
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (principal != null) {
+            // Nếu đã đăng nhập
+            Optional<Account> account = accountService.finByName(principal.getName());
 
-        // Loại bỏ những voucher đã lưu khỏi danh sách tất cả voucher
-//        allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
+            // Lấy danh sách voucher đã lưu cho tài khoản
+            List<VoucherUsage> voucherUsages = voucherUsageService.findVoucherUsagesByAccount(account.get().getId());
 
-        model.addAttribute("allVouchers", allVouchers);
+            // Loại bỏ những voucher đã lưu khỏi danh sách tất cả voucher
+            allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
+
+            model.addAttribute("allVouchers", allVouchers);
+        } else {
+            // Nếu chưa đăng nhập, hiển thị tất cả voucher
+            model.addAttribute("allVouchers", allVouchers);
+        }
+
         // Sắp xếp sản phẩm theo brand
         Collections.sort(lists, Comparator.comparing(product -> product.getBrandId().getName()));
         model.addAttribute("views", lists);
-// Tạo một Map để nhóm sản phẩm theo brand
-        Map<String, List<Products>> productsByBrand = new HashMap<>();
 
-        List<Products> productList = null;
+        // Tạo một Map để nhóm sản phẩm theo brand
+        Map<String, List<Products>> productsByBrand = new HashMap<>();
+        List<Products> productList;
+
         for (Products product : lists) {
             String brandName = product.getBrandId().getName();
             productList = productsByBrand.getOrDefault(brandName, new ArrayList<>());
             productList.add(product);
             productsByBrand.put(brandName, productList);
         }
+
         if (productsByBrand == null) {
             productsByBrand = new HashMap<>();
         }
+
         int totalCartItems = 0;
 
         if (principal == null) {
@@ -116,18 +125,19 @@ public class ViewProductController {
                     totalCartItems = cart.getCartItems().size();
                 }
             }
+
+            // Lưu và xóa voucher cho người dùng đã đăng nhập
+            // Xử lý logic lưu/xóa voucher tại đây
+            // ...
         }
 
         model.addAttribute("totalItems", totalCartItems);
         model.addAttribute("productsByBrand", productsByBrand);
 
-
-//        List<Image> listIm=  imageService.getall();
-//        model.addAttribute("view",list);
-//        model.addAttribute("viewss",listIm);
-//        model.addAttribute("views", list);
         return "website/index/product";
     }
+
+
     @GetMapping("/display")
     public ResponseEntity<byte[]> getImage(@RequestParam("id") Integer productId,@RequestParam("imageId") Integer imageId) throws SQLException {
         List<Image> imageList= imageService.getImagesForProducts(productId,imageId);

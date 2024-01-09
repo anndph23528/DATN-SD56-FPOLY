@@ -1,10 +1,7 @@
 package com.example.datnsd56.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rate")
@@ -24,16 +22,22 @@ import java.time.LocalDate;
 
 public class Rate {
     @Id
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "RateID")
+    private Integer rateID;
 
-    @Column(name = "score")
-    private Integer score;
+    @Column(name = "rating")
+    private Integer Rating;
 
-    @Column(name = "comment")
+    @Column(name = "Comment")
     private String comment;
 
-    @Column(name = "createDate")
-    private LocalDate createDate;
-
+    @Column(name = "Timestamp")
+    private LocalDateTime timeStamp;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "OrderDetailID")
+    private OrderItem orderItem;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "UserID")
+    private Account account;
 }

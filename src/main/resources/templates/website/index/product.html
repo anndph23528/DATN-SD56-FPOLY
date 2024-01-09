@@ -154,7 +154,7 @@
                             <!-- Nếu đã đăng nhập, hiển thị đơn hàng và logout -->
                             <a th:href="@{/user/orders}" class="dropdown-item has-icon "> <i
                                     class="bi bi-file-earmark-text"></i> Đơn Hàng</a>
-                            <a th:href="@{/admin/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
+                            <a th:href="@{/product/voucher/user-voucher}" class="dropdown-item has-icon "> <i class="fas fa-ticket-alt"></i> Voucher</a>
 
                             <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i
                                     class="fas fa-sign-out-alt"></i> Logout</a>
@@ -197,6 +197,7 @@
 <!-- Products Start -->
 <div class="container-fluid product py-5">
     <div class="container py-5">
+<!--        <input type="color" style="text-align: right"> lọc-->
         <p class="fs-5 fw-medium fst-italic text-primary ">Voucher</p>
 
         <div class="owl-carousel product-carousel wow fadeInUp" data-wow-delay="0.4s">
@@ -267,7 +268,7 @@
                     >
                         <h4 class="text-primary" th:text="${product.name}"></h4>
 
-                        <!--                        <span class="text-body">10000</span>-->
+                                                <span style="color: #0D0A0A; font-weight: bold" class="text-body" th:text="${ #numbers.formatDecimal(product.productDetails[0].sellPrice, 0, 'COMMA', 0, 'POINT')} +' '+'VNĐ'">10000</span>
 
                     </div>
                     <div class="store-overlay">
@@ -277,7 +278,7 @@
                         >More Detail <i class="fa fa-arrow-right ms-2"></i
                         ></a>
                         <a
-                                th:href="@{'/cart/add/' + ${product.id}}"
+                                th:href="@{'/product/detail/chi-tiet/' + ${product.id}}"
                                 class="btn btn-dark rounded-pill py-2 px-4 m-2"
                                 id="addToCartButton"
                         >Add to Cart <i class="fa fa-cart-plus ms-2"></i

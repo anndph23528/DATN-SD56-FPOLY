@@ -138,24 +138,37 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                     boolean isVoucherUsed = voucherUsageService.isVoucherUsed(username, selectedVoucherCode);
 
                     if (!isVoucherUsed) {
-                        // Áp dụng giảm giá của voucher vào tổng tiền
-                        BigDecimal discountAmount = calculateDiscountValue(voucher, total);
+                        // Kiểm tra xem tổng giá trị của đơn hàng có đạt đến mức tối thiểu cho phép không
+                        if (total.compareTo(voucher.getMinOrderAmount()) >= 0) {
+                            // Áp dụng giảm giá của voucher vào tổng tiền
+                            BigDecimal discountAmount = calculateDiscountValue(voucher, total);
 
-                        // Đảm bảo giảm giá không vượt quá tổng tiền
-                        total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
+                            // Đảm bảo giảm giá không vượt quá tổng tiền
+                            total = discountAmount.compareTo(total) >= 0 ? BigDecimal.ZERO : total.subtract(discountAmount);
 
-                        // Giảm số lượng voucher sau khi áp dụng
-//                        reduceVoucherQuantity(voucher);
+                            // Giảm số lượng voucher sau khi áp dụng
+                            // reduceVoucherQuantity(voucher);
+                        } else {
+                            // Xử lý khi tổng giá trị đơn hàng không đạt đến mức tối thiểu
+                            // ...
+                            throw new RuntimeException("Đơn hàng chưa đạt đến mức tối thiểu cho phép áp dụng voucher.");
+
+                        }
                     }
                 } else {
                     // Xử lý khi hết số lượng voucher
                     // ...
+                    throw new RuntimeException("Hết số lượng voucher.");
+
                 }
             }
         }
 
         return total;
     }
+
+
+
 
 
     @Override
@@ -207,8 +220,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         order.setShippingFee(BigDecimal.ZERO);
         order.setTotal(cart.getTotalPrice().setScale(2, RoundingMode.HALF_UP));
         order.setOrderStatus(10);
-        order.setCreateDate(LocalDate.now());
-        order.setUpdateDate(LocalDate.now());
+        order.setCreateDate(LocalDateTime.now());
+        order.setUpdateDate(LocalDateTime.now());
         order.setAccountId(cart.getAccountId());
 
         return order;
@@ -220,7 +233,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             order.setOrderStatus(0);
 
             // Cập nhật ngày cập nhật (nếu bạn muốn lưu lại thời điểm hủy)
-            order.setUpdateDate(LocalDate.now());
+            order.setUpdateDate(LocalDateTime.now());
 
             // Lưu đối tượng Orders đã cập nhật vào cơ sở dữ liệu
             ordersRepository.save(order);

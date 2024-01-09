@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +35,10 @@ public class Orders {
     private BigDecimal shippingFee;
 
     @Column(name = "create_date")
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "update_date")
-    private LocalDate updateDate;
+    private LocalDateTime updateDate;
 
     @Column(name = "address")
     private String address;
@@ -98,6 +99,10 @@ public class Orders {
         } else {
             return null;
         }
+    }
+    // Trong class Orders hoặc một class thích hợp khác
+    public String[] splitAddress(String address) {
+        return address.split(","); // Hoặc phương thức phân tách chuỗi của bạn
     }
 
 

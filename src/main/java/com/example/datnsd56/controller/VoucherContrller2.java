@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -35,21 +36,26 @@ private AccountService accountService;
 @Autowired
 private VoucherSeviceImpl voucherSevice;
     @GetMapping("/saveVoucher/{voucherId}")
-    public String saveVoucher(@PathVariable Integer voucherId, Principal principal) {
-        // Lấy thông tin tài khoản đang đăng nhập
+    public String saveVoucher(@PathVariable Integer voucherId, Principal principal, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (principal == null) {
+            // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+            redirectAttributes.addFlashAttribute("message", "Vui lòng đăng nhập để lưu voucher.");
+            return "redirect:/login/custom-login"; // Thay thế "/dang-nhap" bằng URL trang đăng nhập thực tế của bạn
+        }
+
+        // Nếu đã đăng nhập, tiếp tục xử lý lưu voucher
         Optional<Account> account = accountService.finByName(principal.getName());
-
-
-        // Lấy thông tin voucher
         Optional<Voucher> voucher = voucherSeviceImpl.findByid(voucherId);
 
         // Lưu voucher cho tài khoản
         voucherUsageService.saveVoucherForAccount(voucher.get(), account.get());
 
-        return "redirect:/product/vouchers";
+        return "redirect:/product/hien-thi";
     }
 
-    @GetMapping("/vouchers")
+
+    @GetMapping("/voucher/user-voucher")
     public String getVouchers(Model model, Principal principal) {
         // Lấy thông tin tài khoản đang đăng nhập
         Optional<Account> account = accountService.finByName(principal.getName());

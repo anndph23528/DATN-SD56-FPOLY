@@ -48,6 +48,8 @@ public class Voucher {
     private Boolean isVisible;
     @Column(name = "DiscountType")
     private DiscountType discountType;
+    @Column(name = "minOrderAmount")
+    private BigDecimal minOrderAmount;
     @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL)
     private List<Orders> orders;
     // Constructors, getters, setters

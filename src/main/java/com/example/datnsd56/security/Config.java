@@ -43,14 +43,14 @@ public class Config {
     //sql
     @Autowired
     private final AccountRepository repository;
-//@Autowired
+    //@Autowired
 //    UserService userService;
     //sql- start
     @Bean
     public UserDetailsService userDetailsService(  ) {
         return new UserInforDetailService(repository);
-        };
-//    }
+    };
+    //    }
 //    sql- end
 //    @Bean
 //    protected void configure(AuthenticationManagerBuilder auth)
@@ -78,18 +78,18 @@ public class Config {
     }
 
 
-@Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf().disable()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
             .authorizeHttpRequests()
             .requestMatchers("/dashboard/css/**", "/dashboard/js/**", "/dashboard/img/**","/dashboard/bundles/**","/dashboard/fonts/**","/dashboard/lib/**","/dashboard/scss/**").permitAll()
             .requestMatchers("/website/css/**", "/website/js/**", "/website/img/**", "/website/lib/**", "/website/scss/**","templates/website/index/**","templates/dashboard/**","/website/**").permitAll()
             .requestMatchers("/hello").permitAll()
             .requestMatchers("/vnpay-ipn/**").permitAll()// với endpoint /hello thì sẽ được cho qua
-             .requestMatchers("/error/**").permitAll()// với endpoint /hello thì sẽ được cho qua
+            .requestMatchers("/error/**").permitAll()// với endpoint /hello thì sẽ được cho qua
             .requestMatchers("/product/**").permitAll()// với endpoint /hello thì sẽ được cho qu
+            .requestMatchers("/admin/**").permitAll()// với endpoint /hello thì sẽ được cho qu
             .requestMatchers("/login/**").permitAll()// với endpoint /hello thì sẽ được cho qu
-//            .requestMatchers("/admin/account/hien-thi").permitAll()// với endpoint /hello thì sẽ được cho qu
 
             .and()
             .authorizeHttpRequests()
@@ -97,29 +97,28 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/cart/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 //            .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/user/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
-           .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
+//            .requestMatchers("/admin/**").authenticated() // với endpoint /customer/** sẽ yêu cầu authenticate
             .requestMatchers("/rest/**").authenticated()
-//            .requestMatchers("/product/**").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
+            .requestMatchers("/product/saveVoucher/").authenticated()// với endpoint /customer/** sẽ yêu cầu authenticate
 
             .and().formLogin()// trả về page login nếu chưa authenticate
 
-           .defaultSuccessUrl("/product/trang-chu")
+            .defaultSuccessUrl("/product/trang-chu")
             .loginPage("/login/custom-login").permitAll().successHandler(new CustomAuthenticationSuccessHandler())//.failureHandler(new SimpleUrlAuthenticationFailureHandler())
             .and()
             .logout()
             .logoutSuccessUrl("/login/custom-login")
             .permitAll()
             .and().build();
-}
+    }
 
     //sql
-@Bean
-public AuthenticationProvider authenticationProvider(){
-    DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
-    authenticationProvider.setUserDetailsService(userDetailsService());
-    authenticationProvider.setPasswordEncoder(passwordEncoder());
-    return authenticationProvider;
-}
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
 }
-

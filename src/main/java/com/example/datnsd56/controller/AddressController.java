@@ -66,7 +66,7 @@ public class AddressController {
 
     }
     @GetMapping("/view-update/{id}")
-    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin')")
     public String detail(@PathVariable("id") Integer id,Model model){
 //        model.addAttribute("address",new Address());
         Address address= addressService.detail(id);
@@ -74,7 +74,7 @@ public class AddressController {
         List<Account> listr=accountService.get();
         model.addAttribute("accountlist",listr);
         model.addAttribute("account",new Account());
-        return "/dashboard/address/update";
+        return "/website/index/updateadresss";
     }
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('admin')")
@@ -90,7 +90,6 @@ public class AddressController {
         addressService.add(address);
         session.setAttribute("successMessage", "Thêm thành công");
         return "redirect:/admin/address/hien-thi";
-
     }
     @GetMapping("/your-form-url")
     public String showForm(Model model) {
@@ -122,8 +121,8 @@ public class AddressController {
 //    }
 
     @PostMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('admin')")
-    public String update( @Valid @ModelAttribute("address") Address address, BindingResult result,@PathVariable("id") Integer id , Model model, HttpSession session) {
+//    @PreAuthorize("hasAuthority('admin')")
+    public String update( @Valid @ModelAttribute("address") Address address,Principal principal, BindingResult result,@PathVariable("id") Integer id , Model model, HttpSession session) {
         if (result.hasErrors()) {
             model.addAttribute("address",address);
             List<Account> listr=accountService.get();
@@ -132,15 +131,16 @@ public class AddressController {
             return "/dashboard/address/update";
 
         }
-        addressService.update(address);
+        Optional<Account> accountOptional = accountService.finByName(principal.getName());
+        addressService.addNewAddress(accountOptional.get(),address,address.getDefaultAddress());
         session.setAttribute("successMessage", "sửa thành công");
-        return "redirect:/admin/address/hien-thi";
+        return "redirect:/user/checkout";
     }
     @GetMapping("delete/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public String delete(@PathVariable("id") Integer id){
         addressService.delete(id);
-        return "redirect:/admin/address/hien-thi";
+        return "redirect:/user/checkout";
     }
     @GetMapping("search")
     @PreAuthorize("hasAuthority('admin')")

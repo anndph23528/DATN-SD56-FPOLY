@@ -146,7 +146,7 @@ public class VoucherSeviceImpl implements VoucherService  {
     public void delete(Integer id) {
 
     }
-
+@Transactional
     @Override
     public List<Voucher> getAllls() {
         return voucherRepository.getAllls();
