@@ -438,6 +438,7 @@
                                                 <td th:text="${list != null ? (list.orders != null ? (list.orders.voucher != null ? list.orders.voucher.description : '') : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.total : '') : ''}"></td>
                                                 <td th:text="${list != null ? (list.orders != null ? list.orders.createDate : '') : ''}"></td>
+
 <!--                                                <td th:text="${list != null ? (list.orders != null ? list.orders.orderStatus : '') : ''} "></td>-->
 8
                                                 <td class="align-middle">
@@ -455,6 +456,7 @@
                                                     <span class="text-success font-weight-bold"
                                                           th:if="${list.orders.orderStatus == 1}">&nbsp;Đã hoàn thành
                     </span>
+
 
                                                     <span th:if="${list.orders.orderStatus == 0}"
                                                           class="text-danger font-weight-bold">
