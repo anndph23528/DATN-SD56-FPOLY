@@ -32,18 +32,20 @@ private CartSeviceImpl cartSevice;
     private ImageServiceImpl imageService;
 //    @Autowired
 //    private RateService rateService;
-    @GetMapping("/product/detail/check-quantity")
-    @ResponseBody
-    public ResponseEntity<Integer> checkQuantity(
-            @RequestParam("productId") Integer productId,
-            @RequestParam("size") Integer sizeId,
-            @RequestParam("color") Integer colorId) {
+@GetMapping("/product/detail/check-quantity")
+@ResponseBody
+public ResponseEntity<Integer> checkQuantity(
+    @RequestParam("productId") Integer productId,
+    @RequestParam("size") Integer sizeId,
+    @RequestParam("color") Integer colorId,
+    @RequestParam("quantity") Integer quantity) {
 
-        // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
-        int remainingQuantity = productDetailsService.checkQuantity(productId, colorId, sizeId);
+    // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
+    int remainingQuantity = productDetailsService.checkQuantity(productId, colorId, sizeId, quantity);
 
-        return new ResponseEntity<>(remainingQuantity, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(remainingQuantity, HttpStatus.OK);
+}
+
 
     @GetMapping("/product/cart-total-items")
     @ResponseBody
