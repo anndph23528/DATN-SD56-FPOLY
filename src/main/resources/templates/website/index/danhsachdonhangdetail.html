@@ -371,7 +371,7 @@
             <tr>
                 <th scope="col">Ảnh</th>
                 <th scope="col">Tên sản phẩm</th>
-                <th scope="col">Ngày Đặt</th>
+<!--                <th scope="col">Ngày Đặt</th>-->
                 <th scope="col">Màu sắc</th>
                 <th scope="col">Size</th>
                 <th scope="col">Brand</th>
@@ -398,7 +398,7 @@
                 </td>
 
                 <td th:text="${sl.productDetails.productId.name}"></td>
-                <td th:text="${ #temporals.format(sl.orders.createDate, 'dd/MM/yyyy HH:mm')}"></td>
+<!--                <td th:text="${ #temporals.format(sl.orders.createDate, 'dd/MM/yyyy HH:mm')}"></td>-->
                 <td th:text="${sl.productDetails.colorId.name}"></td>
                 <td th:text="${sl.productDetails.sizeId.name}"></td>
                 <td th:text="${sl.productDetails.productId.brandId.name}"></td>
@@ -426,12 +426,15 @@
                     th:text=" ${ '-'+ #numbers.formatDecimal(bill.voucher.discount , 0, 'POINT', 0, 'COMMA')}">
                     - $25.50
                 </td>
+                <div th:if="${bill.voucher != null}">
+
                 <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
                     %
                 </td>
                 <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
                     VND
                 </td>
+                </div>
 
             </tr>
             <!-- end tr -->
