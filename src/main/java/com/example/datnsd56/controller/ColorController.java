@@ -25,7 +25,8 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/mau-sac")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class ColorController {
     @Qualifier("colorServiceImpl")
     @Autowired
@@ -163,7 +164,8 @@ public String add(@Valid @ModelAttribute("color") Color color, BindingResult res
 
     }
     @GetMapping("search")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
     public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
         model.addAttribute("color", new Color());
         Page<Color> page = service.findByName(name);

@@ -19,7 +19,8 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/kich-co")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class SizeController {
     @Qualifier("sizeServiceImpl")
     @Autowired
@@ -143,7 +144,8 @@ public class SizeController {
     }
 
     @GetMapping("/search")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
     public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
         model.addAttribute("size", new Size());
         Page<Size> page = service.findByName(name);
