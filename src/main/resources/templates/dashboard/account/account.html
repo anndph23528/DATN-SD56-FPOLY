@@ -217,10 +217,10 @@
         <div class="main-sidebar sidebar-style-2">
             <aside id="sidebar-wrapper">
                 <div class="sidebar-brand">
-                    <a th:href="@{/admin/account/hien-thi}">
+                    <a th:href="@{/product/hien-thi}">
                         <img alt="image" th:src="@{/website/img/logo1.png}"
                              class="header-logo"/> <span
-                        class="logo-name">SneakerBeer</span>
+                            class="logo-name">SneakerBeer</span>
                     </a>
                 </div>
                 <ul class="sidebar-menu">
@@ -229,7 +229,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
+                                data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/san-pham-test/create}">Sản phẩm</a></li>
                             <li><a class="nav-link" th:href="@{/admin/mau-sac/hien-thi}">Màu sắc</a></li>
@@ -244,7 +244,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            data-feather="layout"></i><span>Hoá đơn</span></a>
+                                data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
 
                             <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
@@ -252,14 +252,14 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            data-feather="image"></i><span>Account</span></a>
+                                data-feather="image"></i><span>Account</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/account/hien-thi}">Account</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            data-feather="map"></i><span>Tài khoản</span></a>
+                                data-feather="map"></i><span>Tài khoản</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/roles/hien-thi}">Chức vụ</a></li>
                             <li><a th:href="@{/admin/nhan-vien/hien-thi}">Nhân viên</a></li>
@@ -268,11 +268,19 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            data-feather="map"></i><span>Voucher</span></a>
+                                data-feather="map"></i><span>Voucher</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/voucher/hien-thi}">Danh sách</a></li>
+                            <li><a th:href="@{/admin/voucher/lich-su-dung-voucher}">Lịch Sử Dùng Voucher</a></li>
                             <li><a th:href="@{/admin/voucher/view-add}">Thêm mới</a></li>
                             <!--                            <li><a th:href="@{/admin/khach-hang/hien-thi}">Khách hàng</a></li>-->
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                                data-feather="map"></i><span>Thống Kê</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/admin/thong-ke/hien-thi}">Thống Kê</a></li>
                         </ul>
                     </li>
                 </ul>

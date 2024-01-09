@@ -26,7 +26,7 @@ public class RolesController {
     private RolesService rolesService;
 
         @GetMapping("/hien-thi1")
-        @PreAuthorize("hasAuthority('user')")
+        @PreAuthorize("hasAuthority('admin')")
     public String get(Model model){
 //        model.addAttribute("roles",new Roles());
         List<Roles> page = rolesService.getAll();
@@ -34,6 +34,8 @@ public class RolesController {
         return "/dashboard/roles/roles";
     }
     @GetMapping("/hien-thi")
+    @PreAuthorize("hasAuthority('admin')")
+
     public String getAll( Model model,@RequestParam(defaultValue = "0") Integer page){
         model.addAttribute("roles",new Roles());
         Page<Roles> page1 = rolesService.getAllbypage(PageRequest.of(page,5));
@@ -54,6 +56,8 @@ public class RolesController {
         return "dashboard/roles/update-roles";
     }
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('admin')")
+
     public String add(@Valid @ModelAttribute("roles") Roles roles,  BindingResult result, Model model, HttpSession session,RedirectAttributes redirectAttributes){
         if(result.hasErrors()){
             model.addAttribute("list",rolesService.getAllbypage(Pageable.unpaged()));

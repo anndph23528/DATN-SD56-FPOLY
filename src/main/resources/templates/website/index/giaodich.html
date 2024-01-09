@@ -75,14 +75,14 @@
     <p>Cảm ơn <span th:text="${order.accountId.name}"></span> đã đặt hàng!</p>
     <p>Thông tin đơn hàng:</p>
     <p>Mã đơn hàng: <span th:text="${order.id}"></span></p>
-    <p>Tổng số tiền: <span th:text="${order.total} + 'Đ' "></span></p>
+    <p>Tổng số tiền: <span th:text="${ #numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + 'VNĐ' "></span></p>
     <p>
         Hình thức thanh toán:
         <span
                 th:text="${order.transactions.iterator().next().paymentMethod}"
         ></span>
     </p>
-    <p>Ngày đặt hàng: <span th:text="${order.createDate}"></span></p>
+    <p>Ngày đặt hàng: <span th:text="${#temporals.format(order.createDate , 'dd/MM/yyyy HH:mm')}"></span></p>
     <div style="margin-top: 20px">
         <a th:href="@{/product/hien-thi}">Mua Tiếp</a>
         <a th:href="@{/user/orders}">Xem Đơn Hàng</a>

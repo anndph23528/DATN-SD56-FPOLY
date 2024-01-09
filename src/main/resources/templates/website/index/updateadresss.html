@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập Nhật Địa Chỉ</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Cập Nhật Địa Chỉ</h2>
+
+    <!-- Form -->
+    <form th:action="@{'/admin/address/update/'+${id}}" method="post" th:object="${address}"
+          onsubmit="return  confirm('Bạn có update không?')" class="mt-4">
+        <!-- Đoạn mã ẩn để chuyển id địa chỉ cần cập nhật -->
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <p th:text="${errorMessage}"></p>
+        </div>
+        <div th:if="${Message}" class="alert alert-success">
+            <p th:text="${Message}"></p>
+        </div>
+        <input type="hidden" name="addressId" value="1"> <!-- Thay thế 1 bằng id thực tế của địa chỉ cần cập nhật -->
+
+        <!-- Các trường nhập dữ liệu -->
+        <div class="form-group">
+            <label for="district">Quận/Huyện:</label>
+            <input  th:field="*{district}" type="text" class="form-control" id="district" name="district" required>
+            <span th:if="${#fields.hasErrors('district')}"
+                  style="color: red; font-size: 13px"
+                  th:errors="*{district}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="province">Tỉnh/Thành phố:</label>
+            <input  th:field="*{province}" type="text" class="form-control" id="province" name="province" required>
+            <span th:if="${#fields.hasErrors('province')}"
+                  style="color: red; font-size: 13px"
+                  th:errors="*{province}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="streetName">Tên Đường:</label>
+            <input th:field="*{streetName}" type="text" class="form-control" id="streetName" name="streetName" required>
+            <span th:if="${#fields.hasErrors('streetName')}"
+                  style="color: red; font-size: 13px"
+                  th:errors="*{streetName}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Số Điện Thoại:</label>
+            <input th:field="*{zipcode}" type="tel" class="form-control" id="phone" name="phone" required>
+            <span th:if="${#fields.hasErrors('zipcode')}"
+                  style="color: red; font-size: 13px"
+                  th:errors="*{zipcode}"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">Họ và Tên:</label>
+            <input th:field="*{fullName}" type="text" class="form-control" id="fullName" name="fullName" required>
+        </div>
+        <div class="form-group">
+
+            <div class="input-group">
+                <input type="hidden" th:field="*{account}" th:each="account:${accountlist}"
+                       th:value="${account.id}"/>
+<!--                <select type="hidden" id="yourSelectId" class="form-control" th:field="*{account}">-->
+<!--                    <option th:each="account:${accountlist}" th:value="${account.id}"-->
+<!--                            th:text="${account.name}"></option>-->
+<!--                </select>-->
+            </div>
+        </div>
+        <div class="form-group form-check">
+            <input th:field="*{defaultAddress}"  type="checkbox" class="form-check-input" id="defaultAddress" name="defaultAddress">
+            <label class="form-check-label" for="defaultAddress">Địa chỉ mặc định</label>
+        </div>
+        <a th:href="@{/admin/address/update}">
+        <!-- Nút cập nhật -->
+        <button type="submit" class="btn btn-primary">Cập Nhật Địa Chỉ</button>
+        </a>
+        <a th:href="@{/user/checkout}">
+            <!-- Nút cập nhật -->
+            <button type="submit" class="btn btn-danger">Quay lại</button>
+        </a>
+    </form>
+</div>
+
+<!-- Bootstrap JS và Popper.js -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
