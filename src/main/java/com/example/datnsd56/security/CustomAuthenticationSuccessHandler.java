@@ -27,7 +27,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("admin"))) {
             // Nếu là admin, chuyển hướng đến /admin
             response.sendRedirect("/admin/thong-ke/hien-thi");
-        } else {
+        }else if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("staff"))){
+            response.sendRedirect("/admin/chi-tiet-san-pham/hien-thi");
+
+        }
+        else {
             // Ngược lại, chuyển hướng đến /product
             response.sendRedirect("/product/hien-thi");
         }

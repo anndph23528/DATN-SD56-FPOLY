@@ -7,6 +7,7 @@ import com.example.datnsd56.service.OrdersService;
 import com.example.datnsd56.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/hoa-don")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class OrderController {
     @Autowired
     private AccountService accountService;
