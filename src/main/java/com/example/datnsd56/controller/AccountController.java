@@ -42,7 +42,7 @@ public class AccountController {
 //        return "/dashboard/account/account";
 //    }
     @GetMapping("/hien-thi")
-    @PreAuthorize("hasAuthority('admin')")
+
     public String getAllBypage( Model model,@RequestParam(defaultValue = "0") Integer page){
         model.addAttribute("account",new Account());
         Page<Account> page1 = accountService.getAll(PageRequest.of(page,5));
@@ -56,7 +56,7 @@ public class AccountController {
 
     }
     @GetMapping("/view-update/{id}")
-    @PreAuthorize("hasAuthority('admin')")
+
     public String detail(@PathVariable("id") Integer id,Model model){
 //        model.addAttribute("account",new Account());
         Account account= accountService.detail(id);
@@ -91,7 +91,7 @@ public class AccountController {
 //
 //    }
 @PostMapping("/add")
-@PreAuthorize("hasAuthority('admin') || hasAuthority('user')")
+//@PreAuthorize("hasAuthority('admin') || hasAuthority('user')")
 public String add(@Valid @ModelAttribute("account") Account account, BindingResult result, Model model, HttpSession session, @RequestParam(defaultValue = "0") Integer page,RedirectAttributes redirectAttributes) {
     if (result.hasErrors()) {
         // Handle validation errors

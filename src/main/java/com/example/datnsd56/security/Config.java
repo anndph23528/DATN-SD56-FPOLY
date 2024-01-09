@@ -7,6 +7,7 @@ import com.example.datnsd56.repository.AccountRepository;
 //import com.example.datnsd56.security1.UserService;
 //import com.example.datnsd56.service.impl.UserInforDetailService;
 //import com.example.datnsd56.service.impl.UserInforDetailService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -106,6 +107,13 @@ public class Config {
             .defaultSuccessUrl("/product/trang-chu")
             .loginPage("/login/custom-login").permitAll().successHandler(new CustomAuthenticationSuccessHandler())//.failureHandler(new SimpleUrlAuthenticationFailureHandler())
             .and()
+                .exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Access Denied! You do not have permission to access this resource.");
+
+                })
+                .and()
             .logout()
             .logoutSuccessUrl("/login/custom-login")
             .permitAll()
