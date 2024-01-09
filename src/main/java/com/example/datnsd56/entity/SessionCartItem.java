@@ -27,4 +27,5 @@ public class SessionCartItem {
     private SessionCart cart;
 
     private ProductDetails productDetail;
+
 }

@@ -67,7 +67,7 @@ public class Account {
     @Column(name = "phone")
     private String phone;
     @Column(name = "gender")
-    private Boolean gender;
+    private boolean gender;
     @Past(message ="ngày sinh không hợp lệ! ")
     @NotNull(message = "Không đuộc để trống!")
     @Column(name = "birthdate")

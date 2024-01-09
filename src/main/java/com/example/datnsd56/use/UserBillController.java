@@ -215,6 +215,7 @@ UserBillController {
                         transaction.setOrderId(order);
                         transaction.setAccountId(account.getCart().getAccountId());
                         transactionService.saveTransaction(transaction);
+                        session.removeAttribute("appliedVoucherTotal");
 
                         // Xóa giỏ hàng
                         cartServicel.deleteCartById(cart.getId());
@@ -284,7 +285,6 @@ UserBillController {
     }
 
 
-
     @PostMapping("/setDefaultAddress")
     public String setDefaultAddress(@RequestParam("addressId") Integer addressId, Principal principal) {
         if (principal == null) {
@@ -319,17 +319,17 @@ UserBillController {
     }
 
     @GetMapping("/order-detail/{id}")
-    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal,RedirectAttributes attributes) {
+    public String getOrderDetail(@PathVariable Integer id, Model model, Principal principal, RedirectAttributes attributes) {
         if (principal == null) {
             return "redirect:/login";
         }
         Optional<Account> account = accountService.finByName(principal.getName());
         Orders bill = ordersService.getOneBill(id);
-        if (bill == null){
+        if (bill == null) {
             attributes.addFlashAttribute("success", "Không có thông tin đơn hàng tương ứng");
             return "redirect:/user/orders";
         }
-        if (account.get().getId().equals(bill.getAccountId().getId())){
+        if (account.get().getId().equals(bill.getAccountId().getId())) {
             List<OrderItem> lstBillDetails = ordersService.getLstDetailByOrderId(id);
             List<Transactions> listTransactiopn = transactionService.findAllByOrderId(id);
             model.addAttribute("bill", bill);
@@ -408,6 +408,7 @@ UserBillController {
 
         return modelAndView;
     }
+
     @PostMapping("/update1/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ModelAndView update(@Valid @ModelAttribute("newAddress") Address newAddress,
@@ -493,10 +494,11 @@ UserBillController {
                         pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("success");
                         transactionService.saveTransaction(pendingTransaction);
+                        session.removeAttribute("appliedVoucherTotal");
 
 
                         cartServicel.deleteCartById(cart.getId());
-model.addAttribute("tr",pendingTransaction);
+                        model.addAttribute("tr", pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
                         return "website/index/payment-result";
 
@@ -516,7 +518,7 @@ model.addAttribute("tr",pendingTransaction);
                             ordersRepository.save(orderToUpdate);
                             transactionService.saveTransaction(pendingTransaction);
 
-                            return "redirect:/user/cart";
+                            return "redirect:/user/checkout";
 
                             // ... (Thêm các thuộc tính khác cần thiết)
                         }
@@ -540,6 +542,7 @@ model.addAttribute("tr",pendingTransaction);
         }
         return null;
     }
+
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
         if (principal == null) {
