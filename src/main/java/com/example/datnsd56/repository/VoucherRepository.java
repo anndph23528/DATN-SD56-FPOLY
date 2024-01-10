@@ -2,6 +2,9 @@ package com.example.datnsd56.repository;
 
 import com.example.datnsd56.entity.Voucher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +23,6 @@ public interface VoucherRepository extends JpaRepository<Voucher,Integer> {
     Optional<Voucher> findByCode(String code);
 @Query(value = "SELECT * FROM Voucher  WHERE Active = 1 AND quantity > 0 AND expiryDate > CURRENT_TIMESTAMP",nativeQuery = true)
     List<Voucher> getAllls();
+
+//    Page<Voucher> findAll(Pageable pageable, Sort createDate);
 }

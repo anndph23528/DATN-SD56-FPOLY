@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,22 +65,10 @@ public class VoucherController {
 
     }
 
-    @PostMapping("/new")
-    public String newVoucherSubmit(@Valid @ModelAttribute("voucher") Voucher voucher, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
-        if (bindingResult.hasErrors()) {
-            // Nếu có lỗi validation, điều hướng trở lại form với thông báo lỗi
-            List<Voucher> vouchers = voucherService.getAllVouchers();
-            model.addAttribute("vouchers", vouchers);
-            return "/dashboard/voucher/voucher";
-        }
-        voucher.setStartDate(LocalDateTime.now());
-        voucher.setActive(true);
-        voucherService.saveVoucher(voucher);
-        redirectAttributes.addFlashAttribute("successMessage", "Voucher created successfully!");
 
 
-        return "redirect:/admin/voucher/hien-thi";
-    }
+
+
 
     @PostMapping("/update/{id}")
     public String update(@Valid @ModelAttribute("voucher") Voucher voucher, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model,@PathVariable("id") Integer id) {

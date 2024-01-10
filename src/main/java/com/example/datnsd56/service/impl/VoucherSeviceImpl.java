@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -102,8 +103,11 @@ public class VoucherSeviceImpl implements VoucherService  {
 
     //    @Override
     public Page<Voucher> getAll(Pageable pageable) {
-//        Pageable pageable = PageRequest.of(page, 5);
-        return voucherRepository.findAll(pageable);
+        // Sắp xếp theo trường ngày tạo (createdDate) giảm dần để hiển thị voucher mới nhất lên đầu
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+            Sort.by("startDate").descending());
+
+        return voucherRepository.findAll(sortedPageable);
     }
     public boolean canUseVoucher(Account account, Voucher voucher) {
         // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
