@@ -1,6 +1,7 @@
 
 package com.example.datnsd56.repository;
 
+import com.example.datnsd56.entity.Account;
 import com.example.datnsd56.entity.OrderItem;
 import com.example.datnsd56.entity.Orders;
 import com.example.datnsd56.entity.Voucher;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +30,12 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     public Page<OrdersCustomer> hienThiPageHD(Pageable pageable);
 
     List<Orders> findAllByOrderStatus(Integer orderStatus);
+
+    @Query(value = "select o.id,o.total,o.Shipping_fee,o.create_date,o.update_date,o.address,o.fullname,o.email,o.phone,o.sale_method,o.order_status,o.account_id,o.voucher_id,o.customer_id,o.code from Orderss o\n" +
+            "where o.phone = ?1 or o.fullname =?1",
+            nativeQuery = true)
+
+    Page<Orders> findOrdersByPhone(String phone, Pageable pageable);
 
 
 
@@ -45,4 +53,6 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     List<Orders> getAllOrders(@Param("accountId") Integer accountId);
 
 //    List<Orders> findByAccountIdOrderByCreateDateDesc(Integer accountId);
+//@Query(value = "select * from  Orderss o where o.create_date BETWEEN :createDate AND :updateDate", nativeQuery = true)
+//Page<Orders> searchOrder(@Param("createDate") LocalDateTime createDate, @Param("updateDate") LocalDateTime updateDate, Pageable pageable);
 }
