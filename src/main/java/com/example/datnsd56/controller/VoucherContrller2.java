@@ -8,6 +8,7 @@ import com.example.datnsd56.service.VoucherService;
 import com.example.datnsd56.service.VoucherUsageService;
 import com.example.datnsd56.service.impl.VoucherSeviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/product/")
+@PreAuthorize("hasAuthority('admin')")
 public class VoucherContrller2 {
 
     @Autowired

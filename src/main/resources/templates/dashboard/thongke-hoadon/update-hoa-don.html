@@ -306,26 +306,18 @@
                                                 <h6 class="font-size-15 mb-2" th:if="${bill.accountId != null}"
                                                     th:text="'Khách hàng: ' + ${bill.accountId.name}">
                                                 </h6>
-                                                <h6 class="font-size-15 mb-2 font-italic"
-                                                    th:text="'Tên người nhận: ' + ${bill.fullname}">
-                                                </h6>
-                                                <p class="mb-1"
-                                                   th:text="'Địa chỉ nhận: ' + ${bill.address}">
-                                                </p>
-                                                <p th:if="${bill.phone != null}"
-                                                   th:text="'SĐT: ' + ${bill.phone}">
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <!-- end col -->
-                                        <div class="col-sm-6">
-                                            <div class="text-muted" style="text-align: right">
-                                                <div>
-                                                    <h5 class="font-size-15 mb-1">Ngày mua hàng:</h5>
-                                                    <p
-                                                            th:text="${bill.createDate}">
+
+                                                <th:block class="mb-1" th:with="addressParts=${bill.splitAddress(bill.address)}">
+                                                    <h6 class="font-size-15 mb-2 font-italic"
+                                                        th:text="'Tên người nhận : ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
+                                                    </h6>
+                                                    <p class="mb-1"
+                                                       th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[3].substring(addressParts[3].indexOf('=') + 1)}"></p>
+                                                    <p class="mb-1"
+                                                       th:text="'SĐT: ' + ${addressParts[4].substring(addressParts[4].indexOf('=') + 1)}">
                                                     </p>
-                                                </div>
+                                                </th:block>
+
                                             </div>
                                         </div>
                                         <!-- end col -->

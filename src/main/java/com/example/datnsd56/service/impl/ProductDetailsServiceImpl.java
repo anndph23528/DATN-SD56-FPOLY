@@ -57,21 +57,23 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
         int availableQuantity = productDetail.getQuantity();
         return availableQuantity >= requestedQuantity;
     }
-    public int checkQuantity(Integer productId,  Integer colorId,Integer sizeId) {
-        // Thực hiện logic kiểm tra số lượng và trả về số lượng còn lại
-        // Trong trường hợp này, giả sử bạn có một phương thức tương ứng trong repository
-        // để lấy thông tin sản phẩm và kiểm tra số lượng
-        ProductDetails productDetails = productDetailsRepository.getCart(productId, colorId,sizeId);
+
+
+    public int checkQuantity(Integer productId, Integer colorId, Integer sizeId, Integer requestedQuantity) {
+        ProductDetails productDetails = productDetailsRepository.getCart(productId, colorId, sizeId);
 
         if (productDetails != null) {
             int availableQuantity = productDetails.getQuantity();
-            // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
-            return availableQuantity > 0 ? availableQuantity : 0;
+            return (availableQuantity >= requestedQuantity) ? (availableQuantity - requestedQuantity) : -1;
         } else {
-            // Trả về -1 hoặc giá trị nào đó để biểu thị rằng sản phẩm không tồn tại
             return -1;
         }
     }
+
+
+
+
+
     @Override
     public int getProductQuantity(int productId) {
 

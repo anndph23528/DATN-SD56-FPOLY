@@ -36,7 +36,8 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/san-pham-test")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class ProductsController {
     @Qualifier("productsServiceImpl")
     @Autowired
@@ -59,8 +60,7 @@ public class ProductsController {
     private ImageService imageService;
 
     @GetMapping("/create")
-    @PreAuthorize("hasAuthority('admin')")
-
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
     public String createProduct(Model model) {
         model.addAttribute("product", new Products());
         List<Brand> brands = brand.getAllBrand();
@@ -84,7 +84,8 @@ public class ProductsController {
     }
 
     @GetMapping("/display")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public ResponseEntity<byte[]> getImage(@RequestParam("id") Integer productId,@RequestParam("imageId") Integer imageId, Model model) throws SQLException {
         List<Image> imageList = imageService.getImagesForProducts(productId,imageId);
@@ -101,9 +102,10 @@ public class ProductsController {
     }
 
     @PostMapping("/add-product")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
 
-    public String addProduct(@Valid @ModelAttribute("sanPham") Products products, BindingResult result, @RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files, Model model) throws SQLException, IOException {
+
+    public String addProduct(@Valid @ModelAttribute("sanPham") Products products, BindingResult result, Model model,@RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files) throws SQLException, IOException {
         if (result.hasErrors()) {
             model.addAttribute("product", new Products());
             List<Brand> brands = brand.getAllBrand();
@@ -123,7 +125,9 @@ public class ProductsController {
             model.addAttribute("listPending", productDetailsService.listPending());
             model.addAttribute("listColor", colorService.getAllColor());
             model.addAttribute("listSize", sizeService.getAllSZ());
+//            return "dashboard/san-pham/add-san-pham";
         }
+
 
         products.setStatus(1);
         productService.addProduct(products, colorList, kichThuocList, files);
@@ -137,7 +141,8 @@ public class ProductsController {
     }
 
     @GetMapping("/view-update/{id}")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public String viewUpdateProduct(@PathVariable("id") Integer id, @RequestParam(name = "imageId", required = false) Integer imageId, Model model) {
         System.out.println("id: " + id);
@@ -172,7 +177,8 @@ public class ProductsController {
     }
 
     @PostMapping("/update-san-pham/{id}")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public String updateSanPham(@Valid @ModelAttribute("product") Products products, BindingResult result, @RequestParam("images") MultipartFile[] files, Model model) throws SQLException, IOException {
         if (result.hasErrors()) {
@@ -204,14 +210,16 @@ public class ProductsController {
     }
 
     @PostMapping("/update-chi-tiet-san-pham")
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public String updateProductDetail(@RequestParam("ids") List<Integer> id, @RequestParam("soLuongs") List<Integer> soLuong, @RequestParam("donGias") List<BigDecimal> donGia) {
         productService.updateProductDetail(id, soLuong, donGia);
         return "redirect:/admin/san-pham-test/create";
     }
 //    @GetMapping("/search")images
-////    @PreAuthorize("hasAuthority('admin')")
+////    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 //    public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
 //        model.addAttribute("product", new Products());
 //        Page<Products> page1 = productService.findByName(name);

@@ -6,6 +6,7 @@ import com.example.datnsd56.service.CartService;
 import com.example.datnsd56.service.ImageService;
 import com.example.datnsd56.service.ProductDetailsService;
 import com.example.datnsd56.service.impl.CartSeviceImpl;
+import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,8 @@ public class UseCartController {
     private CartSeviceImpl cartSeviceImpl;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private ProductDetailsServiceImpl productDetailsServices;
 @Transactional
     @GetMapping("/cart")
     public String cart(Model model, Principal principal, HttpSession session) {
@@ -84,9 +87,10 @@ public class UseCartController {
             return new ResponseEntity<>("Vui lòng chọn size và màu!", HttpStatus.BAD_REQUEST);
         }
 
-        boolean isQuantityAvailable = productDetailsService.isQuantityAvailable(productId, sizeId, colorId, quantity);
+        // Sử dụng phương thức checkQuantity để kiểm tra số lượng
+        int remainingQuantity = productDetailsServices.checkQuantity(productId, colorId, sizeId, quantity);
 
-        if (!isQuantityAvailable) {
+        if (remainingQuantity < 0) {
             return new ResponseEntity<>("Sản phẩm không có đủ số lượng!", HttpStatus.BAD_REQUEST);
         }
 
@@ -101,12 +105,17 @@ public class UseCartController {
             SessionCart sessionCart = cartService.addToCartSession(oldSessionCart, productDetail, quantity);
             session.setAttribute("sessionCart", sessionCart);
             session.setAttribute("totalItems", sessionCart.getTotalItems());
-
-//            return new ResponseEntity<>("redirect:/login/custom-login", HttpStatus.FOUND);
         } else {
             String name = principal.getName();
-            Cart cart = cartService.addToCart(productDetail, quantity, name);
-            session.setAttribute("totalItems", cart.getTotalItems());
+            try {
+                // Thử thêm vào giỏ hàng và kiểm tra kết quả
+                Cart cart = cartService.addToCart(productDetail, quantity, name);
+                session.setAttribute("totalItems", cart.getTotalItems());
+                return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
+            } catch (RuntimeException e) {
+                // Bắt exception nếu có lỗi (ví dụ: số lượng không đủ)
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
 
         return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
