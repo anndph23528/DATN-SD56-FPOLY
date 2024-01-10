@@ -14,6 +14,7 @@
     <link th:href="@{/dashboard/css/style.css}" rel="stylesheet">
     <link th:href="@{/dashboard/css/components.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 
     <!-- Custom style CSS -->
     <link th:href="@{/dashboard/css/custom.css}">
@@ -275,26 +276,26 @@
                         <div class="card-header">
                             <h4>Voucher</h4>
                         </div>
-                        <form th:action="@{/admin/voucher/new}" method="post" th:object="${voucher}"
-                              onsubmit="return submitForm()">
-                            <div th:if="${errorMessage}" class="alert alert-danger">
-                                <p th:text="${errorMessage}"></p>
-                            </div><div th:if="${Message}" class="alert alert-success">
-                            <p th:text="${Message}"></p>
-                        </div>
+                        <form id="voucherForm" th:action="@{/admin/voucher/new}" method="post" th:object="${voucher}"
+                             >
+<!--                            <div th:if="${errorMessage}" class="alert alert-danger">-->
+<!--                                <p th:text="${errorMessage}"></p>-->
+<!--                            </div><div th:if="${Message}" class="alert alert-success">-->
+<!--                            <p th:text="${Message}"></p>-->
+<!--                        </div>-->
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Mã Voucher</label>
                                     <div class="input-group colorpickerinput">
-                                        <input type="text" class="form-control" placeholder="Nhập mã voucher"
-                                               th:field="*{code}">
+                                        <input type="text" class="form-control" placeholder="Nhập mã voucher" th:field="*{code}" name="code">
+
                                         <span th:if="${#fields.hasErrors('code')}" style="color: red; font-size: 13px"
                                               th:errors="*{code}"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Mô tả</label>
-                                    <input type="text" class="form-control" placeholder="Nhập giá trị giảm"
+                                    <input type="text" class="form-control" name="description" placeholder="Nhập giá trị giảm"
                                            th:field="*{description}" required>
                                     <span th:if="${#fields.hasErrors('description')}" style="color: red; font-size: 13px"
                                           th:errors="*{description}"></span>
@@ -307,7 +308,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="discount">Discount:</label>
-                                    <input type="number" id="discount" name="discount" th:field="*{discount}" required oninput="validateDiscount()">
+                                    <input type="number" id="discount" name="discount" th:field="*{discount}" required >
                                     <select id="discountType" name="discountType" th:field="*{discountType}">
                                         <option th:value="${T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</option>
                                         <option th:value="${T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</option>
@@ -315,21 +316,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Số Lượng</label>
-                                    <input type="number" class="form-control" placeholder="Nhập số lượng "
+                                    <input type="number" id="quantity" name="quantity" class="form-control" placeholder="Nhập số lượng "
                                            th:field="*{quantity}" required>
                                     <span th:if="${#fields.hasErrors('quantity')}" style="color: red; font-size: 13px"
                                           th:errors="*{quantity}"></span>
                                 </div>
                                 <div class="form-group">
                                     <label>Đơn tối thiểu</label>
-                                    <input type="number" class="form-control" placeholder="Nhập số lượng "
+                                    <input type="number" id="minOrderAmount" name="minOrderAmount" class="form-control" placeholder="Nhập số lượng "
                                            th:field="*{minOrderAmount}" required>
                                     <span th:if="${#fields.hasErrors('minOrderAmount')}" style="color: red; font-size: 13px"
                                           th:errors="*{minOrderAmount}"></span>
                                 </div>
                                 <div class="form-group">
                                     <a th:href="@{/admin/voucher/new}">
-                                        <button class="btn btn-primary mr-1" type="submit">Thêm</button>
+                                        <button class="btn btn-primary mr-1" type="button" onclick="validateDiscount()">Thêm</button>
                                     </a>
                                 </div>
                             </div>
@@ -457,6 +458,7 @@
     <script th:src="@{/dashboard/js/custom.js}"></script>
 <!-- Thêm vào phần head hoặc trước khi đóng thẻ body -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script type="text/javascript">
     function validateDiscount() {
@@ -480,13 +482,14 @@
                     text: 'Bạn có muốn thêm với giảm giá là ' + discountValue + '% không?',
                     showCancelButton: true,
                     confirmButtonText: 'Có',
-                    cancelButtonText: 'Không'
+                    cancelButtonText: 'Không',
+                    timer: 1500
                 }).then((result) => {
                     if (result.value) {
-                        return true;
+                        // Nếu xác nhận, thực hiện submit
+                        submitForm();
                     } else {
                         discountInput.value = '';
-                        return false;
                     }
                 });
             }
@@ -502,21 +505,99 @@
             }
         }
 
-        return true;
+        // Nếu không phải là giảm giá từ 80 đến 100, hoặc không phải giảm giá phần trăm, thực hiện submit
+        submitForm();
     }
 
     function submitForm() {
-        if (!validateDiscount()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Vui lòng kiểm tra lại thông tin trước khi submit!'
+        var voucherForm = document.getElementById('voucherForm');
+        var formData = new FormData(voucherForm);
+
+        // Chuyển đổi FormData thành đối tượng JSON
+        var jsonObject = {};
+        formData.forEach(function(value, key){
+            jsonObject[key] = value;
+        });
+
+        fetch('/admin/voucher/new', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonObject),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý phản hồi từ server
+                if (data === 'confirm') {
+                    // Hiển thị thông báo xác nhận
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'Xác nhận',
+                        text: 'Bạn có muốn thêm voucher này không?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Có',
+                        cancelButtonText: 'Không',
+                    })
+                        .then((result) => {
+                            if (result.value) {
+                                // Nếu xác nhận, thực hiện xác nhận thêm
+                                confirmAdd();
+                            }
+                        });
+                } else if (data === 'success') {
+                    // Xử lý khi thành công
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Voucher được tạo thành công!',
+                    })
+                        .then((result) => {
+                            // Chuyển hướng sau khi xác nhận
+                            window.location.href = '/admin/voucher/hien-thi';
+                        });
+                }
+            })
+            .catch(error => {
+                // Xử lý lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Có lỗi xảy ra khi tạo voucher!',
+                });
             });
-            return false;
-        }
-        return true;
     }
+
+    // Hàm xác nhận thêm
+    function confirmAdd() {
+        // Thực hiện các xử lý xác nhận thêm tại đây (nếu cần)
+        // Ví dụ: Gửi yêu cầu xác nhận thêm voucher
+        fetch('/admin/voucher/confirm-add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ confirmation: true }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Xử lý phản hồi từ server (nếu cần)
+                console.log('Confirmed added successfully');
+            })
+            .catch(error => {
+                // Xử lý lỗi (nếu cần)
+                console.error('Error confirming add', error);
+            });
+    }
+
+
 </script>
+
+
+
+
+
+
 
 
 
