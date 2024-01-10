@@ -447,11 +447,18 @@
                                                         style="text-align: right">
                                                         Voucher :
                                                     </th>
+                                                    <div  th:if="${bill.voucher != null}">
                                                     <td class="border-0" style="text-align: right"
-                                                        th:if="${bill.voucher != null}"
                                                         th:text="'₫' + ${bill.voucher.discount}">
                                                         - $25.50
                                                     </td>
+                                                    <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
+                                                        %
+                                                    </td>
+                                                    <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
+                                                        VND
+                                                    </td>
+                                                    </div>
                                                 </tr>
                                                 <!-- end tr -->
                                                 <tr>

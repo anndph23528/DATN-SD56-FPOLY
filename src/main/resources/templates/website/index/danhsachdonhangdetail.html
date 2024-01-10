@@ -422,7 +422,8 @@
                 <th scope="row" colspan="7" class="border-0" style="text-align: right">
                     Voucher :
                 </th>
-                <td class="border-0" style="text-align: right; margin-left: 500px" th:if="${bill.voucher != null}"
+                <div  th:if="${bill.voucher != null}">
+                <td class="border-0" style="text-align: right; margin-left: 500px"
                     th:text=" ${ '-'+ #numbers.formatDecimal(bill.voucher.discount , 0, 'POINT', 0, 'COMMA')}">
                     - $25.50
                 </td>
@@ -432,6 +433,7 @@
                 <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
                     VND
                 </td>
+                </div>
 
             </tr>
             <!-- end tr -->

@@ -286,8 +286,32 @@
                                     <h4>Hóa Đơn</h4>
                                 </div>
                                 <!-- -----o thong ke start -->
+                                <form action="/admin/hoa-don/thoi-gian" method="get">
+                                    <label for="startDate">Ngày bắt đầu:</label>
+                                    <input type="date" id="startDate" name="startDate">
 
+                                    <label for="endDate">Ngày kết thúc:</label>
+                                    <input type="date" id="endDate" name="endDate">
+
+                                    <!--                                    <label for="searchInput">Tìm kiếm:</label>-->
+                                    <input type="hidden" id="searchInput" name="searchInput">
+
+                                    <button type="submit">Lọc</button>
+                                </form>
                                 <div class="card-body">
+                                    <div class="card-header">
+                                            <form action="/admin/hoa-don/search " method="get">
+                                                <div class="input-group">
+                                                    <input name="phone" type="text" class="form-control" placeholder="Search">
+                                                    <div lass="input-group-btn">
+                                                        <a href="/admin/hoa-don/search/{phone}">
+                                                            <button type="submit" class="btn btn-primary"><i
+                                                                    class="fas fa-search"></i></button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table text-center">
                                             <tr>

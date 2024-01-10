@@ -545,12 +545,20 @@ UserBillController {
 
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
-        if (principal == null) {
-            return "redirect:/login";
+//        if (principal == null) {
+//            return "redirect:/login";
+//        }
+//        Optional<Account> account = accountService.finByName(principal.getName());
+//        ordersService.cancelOrder(id,account.get());
+//        attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
+//        return "redirect:/user/orders";
+        Orders bill = ordersService.getOneBill(id);
+        String name = principal.getName();
+        Optional<Account> account = accountService.finByName(name);
+        if (bill != null){
+            ordersService.cancelOrder(id, account.get());
+            attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         }
-        Optional<Account> account = accountService.finByName(principal.getName());
-        ordersService.cancelOrder(id);
-        attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         return "redirect:/user/orders";
     }
 

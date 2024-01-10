@@ -13,10 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +22,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
@@ -366,32 +364,69 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable) {
+        Page<Orders> historyList = ordersRepository.findAll(pageable);
+
+        // Lọc theo ngày
+        if (startDate != null && endDate != null) {
+            historyList = historyList
+                    .stream()
+                    .filter(history -> !history.getCreateDate().isBefore(startDate.atStartOfDay())
+                            && !history.getCreateDate().isAfter(endDate.atTime(23, 59, 59)))
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
+        }
+        return historyList;
+    }
+
+    @Override
+    public Page<Orders> findByPhone(String phone) {
+        Pageable page=PageRequest.of(0,10);
+        Page<Orders> list= ordersRepository.findOrdersByPhone(phone,page);
+        return list;
+    }
+
+    //    @Override
+//    public Page<Orders> search(LocalDateTime createDate, LocalDateTime updateDate) {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        return ordersRepository.searchOrder( createDate,updateDate, pageable);
+//    }
+    @Override
     @Transactional
-    public Orders cancelOrder(Integer id) {
+    public Orders cancelOrder(Integer id, Account account) {
         Orders bill = ordersRepository.findById(id).orElse(null);
-//        List<OrderItem> billDetailList = bill.getOrderItems();
-//        for (OrderItem billDetail : billDetailList){
-//            billDetail.setStatus(0);
-//            orderItemRepository.save(billDetail);
-//            ProductDetails productDetail = productDetailsRepository.findById(billDetail.getProductDetails().getId()).orElse(null);
-//            productDetail.setQuantity(productDetail.getQuantity() + billDetail.getQuantity());
-//            productDetail.setStatus(true);
-//            productDetailsRepository.save(productDetail);
-//        }
-//        bill.setOrderItems(billDetailList);
-        if (bill.getOrderStatus() == 0) {
+
+        if (bill != null && bill.getOrderStatus() == 0) {
             return ordersRepository.save(bill);
-        } else {
+        } else if (bill != null) {
             bill.setOrderStatus(0);
-//            bill.setEmployee(account);
+            bill.setAccountId(account);
             List<Transactions> paymentMethodList = transactionsRepository.findAllByOrderId(id);
             for (Transactions paymentMethod : paymentMethodList) {
                 paymentMethod.setStatus("fail");
                 transactionsRepository.save(paymentMethod);
             }
+
+            List<OrderItem> billDetailList = new ArrayList<>(bill.getOrderItems());
+            for (OrderItem billDetail : billDetailList) {
+                billDetail.setStatus(0);
+                orderItemRepository.save(billDetail);
+
+                ProductDetails productDetail = productDetailsRepository.findById(billDetail.getProductDetails().getId()).orElse(null);
+                if (productDetail != null) {
+                    productDetail.setQuantity(productDetail.getQuantity() + billDetail.getQuantity());
+                    productDetail.setStatus(true);
+                    productDetailsRepository.save(productDetail);
+                }
+            }
+
+            bill.setOrderItems(billDetailList);
             return ordersRepository.save(bill);
         }
+
+        return null; // Trả về null nếu đơn hàng không tồn tại
     }
+
+
 
     @Override
     public Orders acceptBill(Integer Id) {

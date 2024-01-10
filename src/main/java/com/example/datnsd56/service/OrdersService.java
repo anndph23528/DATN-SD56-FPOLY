@@ -7,8 +7,11 @@ import com.example.datnsd56.entity.OrderItem;
 import com.example.datnsd56.entity.Orders;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +43,7 @@ Optional<Orders> getOrderId(Integer id);
 
     List<Orders> getAllOrders1(Integer accountId);
 
-    Orders cancelOrder(Integer Id);
+    Orders cancelOrder(Integer Id,Account account);
 
     Orders acceptBill(Integer Id);
 
@@ -49,6 +52,11 @@ Optional<Orders> getOrderId(Integer id);
     Orders shippingOrder(Integer id, BigDecimal shippingFee);
 
     Orders completeOrder(Integer id,Account account);
+
+//    Page<Orders> search(LocalDateTime createDate, LocalDateTime updateDate);
+    Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable);
+
+    Page<Orders> findByPhone(String phone);
 
 //    Orders create(JsonNode orderDate);
 }

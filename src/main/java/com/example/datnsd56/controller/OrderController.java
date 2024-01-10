@@ -1,12 +1,12 @@
 package com.example.datnsd56.controller;
 
 import com.example.datnsd56.entity.*;
-import com.example.datnsd56.service.AccountService;
-import com.example.datnsd56.service.AddressService;
-import com.example.datnsd56.service.OrdersService;
-import com.example.datnsd56.service.TransactionService;
+import com.example.datnsd56.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,8 @@ public class OrderController {
     private AddressService service;
     @Autowired
     TransactionService transactionService;
+    @Autowired
+    ThongKeService thongKeService;
 
     @GetMapping("/hien-thi")
     public String viewHoaDon(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
@@ -66,8 +70,13 @@ public class OrderController {
 
 
     @GetMapping("/cancel-bill/{id}")
-    public String cancelBill(@PathVariable Integer id, RedirectAttributes attributes) {
-        ordersService.cancelOrder(id);
+    public String cancelBill(@PathVariable Integer id, RedirectAttributes attributes,Principal principal) {
+        Orders bill = ordersService.getOneBill(id);
+        String name = principal.getName();
+        Optional<Account> account = accountService.finByName(name);
+        if (bill != null){
+            ordersService.cancelOrder(id, account.get());
+        }
         return "redirect:/admin/hoa-don/hien-thi";
     }
     @PostMapping("/shipping-bill")
@@ -92,5 +101,33 @@ public class OrderController {
              ordersService.completeOrder(id, account.get());
             }
         return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @GetMapping("/thoi-gian")
+    public String getVoucherHistory(
+            @RequestParam(name = "startDate", required = false) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) LocalDate endDate,
+            @RequestParam(name = "searchInput", required = false) String searchInput,
+            @PageableDefault(size = 10, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model) {
+
+        Page<Orders> filteredHistory = ordersService.filterAndSearch(startDate, endDate, searchInput, pageable);
+        model.addAttribute("totalPages", filteredHistory.getTotalPages());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("list", filteredHistory);
+        return "/dashboard/thongke-hoadon/hoa-don";
+    }
+
+    @GetMapping("search")
+//    @PreAuthorize("hasAuthority('admin')")
+    public String search(@RequestParam("phone") String phone, Model model, RedirectAttributes redirectAttributes) {
+        Page<Orders> orders = ordersService.findByPhone(phone);
+        model.addAttribute("totalPages", orders.getTotalPages());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("list", orders);
+
+//        model.addAttribute("list",accountService.getAll(Pageable.unpaged()));
+//        redirectAttributes.addAttribute("phone", phone);
+        return "/dashboard/thongke-hoadon/hoa-don";
     }
 }
