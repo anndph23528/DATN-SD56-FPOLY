@@ -72,6 +72,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 
 
+
+
     @Override
     public int getProductQuantity(int productId) {
 

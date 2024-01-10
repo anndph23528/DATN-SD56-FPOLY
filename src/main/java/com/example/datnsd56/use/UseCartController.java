@@ -90,7 +90,7 @@ public class UseCartController {
         // Sử dụng phương thức checkQuantity để kiểm tra số lượng
         int remainingQuantity = productDetailsServices.checkQuantity(productId, colorId, sizeId, quantity);
 
-        if (remainingQuantity <= 0) {
+        if (remainingQuantity < 0) {
             return new ResponseEntity<>("Sản phẩm không có đủ số lượng!", HttpStatus.BAD_REQUEST);
         }
 
@@ -120,6 +120,7 @@ public class UseCartController {
 
         return new ResponseEntity<>("Thêm giỏ hàng thành công!", HttpStatus.OK);
     }
+
 
 
     @PostMapping("/update-cart-quantity")
