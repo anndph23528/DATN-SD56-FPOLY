@@ -241,6 +241,7 @@ UserBillController {
 
         return "redirect:/user/checkout";
     }
+
     @GetMapping("/vnpay-ipn")
     public String vnpayIPN(@RequestParam("vnp_ResponseCode") String responseCode,
                            HttpServletRequest request,
@@ -265,10 +266,10 @@ UserBillController {
                 if (transactionOptional.isPresent()) {
                     Transactions pendingTransaction = transactionOptional.get();
 
-                        // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
+                    // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
 //                        orderItemRepository.save(orderDetails);
 
-                        // Giảm số lượng sản phẩm trong kho
+                    // Giảm số lượng sản phẩm trong kho
 //                        reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 //                    orderServiceImplV21.reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 
@@ -299,17 +300,18 @@ UserBillController {
 //                        pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("fail");
                         Optional<Orders> orderOptional = ordersRepository.findById(transactionOptional.get().getOrderId().getId());
+                        session.removeAttribute("appliedVoucherTotal");
 
                         if (orderOptional.isPresent()) {
                             Orders orderToUpdate = orderOptional.get();
 
                             // Cập nhật trạng thái của hóa đơn thành 0
                             orderToUpdate.setOrderStatus(0);
-
+                             orderToUpdate.setTotal(orderToUpdate.getAccountId().getCart().getTotalPrice());
                             // Lưu lại đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+                            orderServiceImplV21.cancalevoucher(orderToUpdate, orderToUpdate.getVoucher());
                             ordersRepository.save(orderToUpdate);
                             transactionService.saveTransaction(pendingTransaction);
-
                             return "redirect:/user/checkout";
 
                             // ... (Thêm các thuộc tính khác cần thiết)
@@ -334,6 +336,7 @@ UserBillController {
         }
         return null;
     }
+
     @PostMapping("/apply-voucher")
     public ResponseEntity<Map<String, Object>> applyVoucher(
         @RequestParam(name = "selectedVoucherCode", required = false) String selectedVoucherCode,
@@ -558,8 +561,6 @@ UserBillController {
     }
 
 
-
-
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
 //        if (principal == null) {
@@ -572,7 +573,7 @@ UserBillController {
         Orders bill = ordersService.getOneBill(id);
         String name = principal.getName();
         Optional<Account> account = accountService.finByName(name);
-        if (bill != null){
+        if (bill != null) {
             ordersService.cancelOrder(id, account.get());
             attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         }
@@ -586,5 +587,3 @@ UserBillController {
 //
 //        return "website/index/danhsachdonhang";
 //    }
-
-

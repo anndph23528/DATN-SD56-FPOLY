@@ -64,6 +64,22 @@ public class VoucherController {
         return "dashboard/voucher/voucher";
 
     }
+    @PostMapping("/new")
+    public String newVoucherSubmit(@Valid @ModelAttribute("voucher") Voucher voucher, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            // Nếu có lỗi validation, điều hướng trở lại form với thông báo lỗi
+            List<Voucher> vouchers = voucherService.getAllVouchers();
+            model.addAttribute("vouchers", vouchers);
+            return "/dashboard/voucher/voucher";
+        }
+        voucher.setStartDate(LocalDateTime.now());
+        voucher.setActive(true);
+        voucherService.saveVoucher(voucher);
+        redirectAttributes.addFlashAttribute("successMessage", "Voucher created successfully!");
+
+
+        return "redirect:/admin/voucher/hien-thi";
+    }
 
 
 
