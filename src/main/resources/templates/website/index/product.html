@@ -210,18 +210,23 @@
                         <div class="voucher-discount" >
                             <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
                                 <p>
-                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> VND
+                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')} "></span> VND
+
                                 </p>
+                                Đơn tối thiểu : <div th:text="${ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT')}"> VNĐ</div>
+
                             </div>
                             <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
                                 <p>
                                     Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> %
                                 </p>
+                                <div style="font-size: 15px" th:text="${ ' Đơn tối thiểu :' + ' '+ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT') +'VNĐ'}"> </div>
+
                             </div>
                         </div>
                         <div class="voucher-content" th:text="${voucher.description}">cho những sản phẩm của của like, adidas</div>
                         <div class="voucher-hsd" th:text="${'HSD :'+' ' + voucher.expiryDateTime}">HSD: 23/23/2023</div>
-                        <div class="voucher-hsd" th:text="${'Số Lượng  :'+' ' + voucher.quantity}">HSD: 23/23/2023</div>
+                        <div class="voucher-hsd" th:text="${'Số Lượng còn lại  :'+' ' + voucher.quantity}">HSD: 23/23/2023</div>
                         <form th:action="@{/product/saveVoucher/{voucherId}(voucherId=${voucher.id})}" method="get">
                             <button type="submit" class="save-button">  Lưu
                             </button>

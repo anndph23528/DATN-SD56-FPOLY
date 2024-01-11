@@ -68,9 +68,10 @@ public class VoucherController {
     public String newVoucherSubmit(@Valid @ModelAttribute("voucher") Voucher voucher, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
             // Nếu có lỗi validation, điều hướng trở lại form với thông báo lỗi
-            List<Voucher> vouchers = voucherService.getAllVouchers();
-            model.addAttribute("vouchers", vouchers);
-            return "/dashboard/voucher/voucher";
+            Page<Voucher> page1 = voucherService.getAll(Pageable.ofSize(5));
+            model.addAttribute("vouchers", page1);
+            return "dashboard/voucher/add";
+
         }
         voucher.setStartDate(LocalDateTime.now());
         voucher.setActive(true);
