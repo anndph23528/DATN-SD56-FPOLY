@@ -50,32 +50,6 @@ public ResponseEntity<Integer> checkQuantity(
 
     return new ResponseEntity<>(remainingQuantity, HttpStatus.OK);
 }
-    @PostMapping("/admin/voucher/new")
-    @ResponseBody
-    public ResponseEntity<String> newVoucherSubmit(@ModelAttribute Voucher voucher, Model model, HttpSession session) {
-        BigDecimal discount = voucher.getDiscount();
-
-        if (discount != null) {
-            if (voucher.getDiscountType() == DiscountType.PERCENTAGE &&
-                (discount.compareTo(BigDecimal.valueOf(80)) >= 0 &&
-                    discount.compareTo(BigDecimal.valueOf(100)) <= 0)) {
-                // Trả về thông báo yêu cầu xác nhận
-                return ResponseEntity.ok("confirm");
-            } else {
-                // Thực hiện lưu voucher
-                voucher.setStartDate(LocalDateTime.now());
-                voucher.setActive(true);
-                voucher.setDiscount(discount.setScale(2, RoundingMode.HALF_UP)); // Set scale cho giá trị discount
-                voucherService.saveVoucher(voucher);
-                session.setAttribute("successMessage", "Voucher created successfully!");
-                return ResponseEntity.ok("success");
-            }
-        } else {
-            // Xử lý khi discount là null, có thể trả về thông báo lỗi hoặc thực hiện các xử lý khác
-            return ResponseEntity.ok("error");
-        }
-    }
-
 
 
     @GetMapping("/product/cart-total-items")

@@ -36,7 +36,7 @@ public class Voucher {
     private LocalDateTime startDate;
     @Column(name = "ExpiryDate")
     private LocalDateTime expiryDateTime;
-    @Max(value = 100, message = "Giảm giá không được lớn hơn 100%")
+//    @Max(value = 100, message = "Giảm giá không được lớn hơn 100%")
     @Column(name = "Discount")
     private BigDecimal discount;
 
