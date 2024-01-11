@@ -539,6 +539,7 @@
                                         <th>Ngày Hết Han</th>
                                         <th>Giá Trị Giảm</th>
                                         <th>Hình thức giảm</th>
+                                        <th>Đơn tối thiểu</th>
                                         <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -552,10 +553,13 @@
                                         <td th:text="${#numbers.formatDecimal(vouchers.discount, 0, 'COMMA', 0, 'POINT')}"></td>
                                         <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</td>
                                         <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</td>
+                                        <td th:text="${ #numbers.formatDecimal(vouchers.minOrderAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+
                                         <td
                                                 style="color: red"
                                                 th:text="${vouchers.active} ? 'New' : 'Hết hạn'"
                                         ></td>
+
                                         <!--                                        <td th:text="${list.status  ? 'Hoạt động' : 'Không hoạt động'}"></td>-->
                                         <td>
                                             <a

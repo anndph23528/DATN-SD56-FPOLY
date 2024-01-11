@@ -178,6 +178,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     }
 
     @Override
+    public void deletess(Integer id) {
+        productDetailsRepository.deleteById(id);
+    }
+
+    @Override
     public List<ProductDetails> getProductsByProductId(Integer productId) {
         return productDetailsRepository.getProductDetailsByProductId(productId);
     }

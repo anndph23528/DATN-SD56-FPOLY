@@ -227,5 +227,10 @@ public class ProductsController {
 ////        model.addAttribute("list", page1);
 //        return "/dashboard/roles/roles";
 //    }
-
+@GetMapping("delete-chi-tiet-san-pham/{id}")
+//    @PreAuthorize("hasAuthority('admin')")
+public String delete(@PathVariable("id") Integer id){
+    productDetailsService.deletess(id);
+    return "redirect:/admin/san-pham-test/create";
+}
 }

@@ -25,4 +25,5 @@ List<Products> getAllPros();
     @Query(value = "select * from Products  where name = ?1 ",
             nativeQuery = true)
     Page<Products> findByName(String name, Pageable pageable);
+
 }

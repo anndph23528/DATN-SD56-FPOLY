@@ -37,6 +37,7 @@ public interface ProductDetailsService {
 
     List<ProductDetails> listPending();
     void delete(Integer id);
+    void deletess(Integer id);
     List<ProductDetails> getProductsByProductId(Integer productId);
     BigDecimal getPrice(Integer id, Integer colorId, Integer sizeId);
     Integer getQuantity(Integer id, Integer colorId, Integer sizeId);
