@@ -548,8 +548,8 @@
                                         <td th:text="${vouchers.code}"></td>
                                         <td th:text="${vouchers.description}"></td>
                                         <td th:text="${vouchers.quantity}"></td>
-                                        <td th:text="${vouchers.startDate}"></td>
-                                        <td th:text="${vouchers.expiryDateTime}"></td>
+                                        <td th:text="${ #temporals.format(vouchers.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td th:text="${ #temporals.format(vouchers.expiryDateTime, 'dd/MM/yyyy HH:mm')}"></td>
                                         <td th:text="${#numbers.formatDecimal(vouchers.discount, 0, 'COMMA', 0, 'POINT')}"></td>
                                         <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</td>
                                         <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</td>

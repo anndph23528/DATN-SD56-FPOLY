@@ -74,7 +74,7 @@
     <h2>Giao Dịch Thành Công</h2>
     <p>Cảm ơn <span th:text="${tr.accountId.name}"></span> đã đặt hàng!</p>
     <p>Thông tin đơn hàng:</p>
-    <p>Mã đơn hàng: <span th:text="${tr.id}"></span></p>
+    <p>Mã đơn hàng: <span th:text="${tr.orderId.code}"></span></p>
     <p>Tổng số tiền: <span th:text="${#numbers.formatDecimal(tr.amount, 0, 'COMMA', 0, 'POINT')} + 'VNĐ' "></span></p>
     <p>
         Hình thức thanh toán:

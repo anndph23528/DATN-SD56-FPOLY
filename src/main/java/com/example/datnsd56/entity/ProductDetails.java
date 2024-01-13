@@ -28,7 +28,7 @@ public class ProductDetails {
     private Integer id;
 
     @Column(name = "quantity")
-    @NotNull(message = "Không đuộc để trống!")
+//    @NotNull(message = "Không đuộc để trống!")
     private Integer quantity;
 
     @Column(name = "create_date")

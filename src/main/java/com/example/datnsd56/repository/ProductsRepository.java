@@ -19,11 +19,13 @@ public interface ProductsRepository extends JpaRepository<Products,Integer> {
 //    List<Products> getProductDetailsById(Integer id);
     @Modifying
     @Transactional
-    @Query(value = "select DISTINCT  p.id,p.brand_id,p.category_id,p.create_date,p.material_id,p.shoe_sole_id,p.status,p.update_date,p.code,p.description,p.name from Products as p join Product_details as pd on p.id=pd.product_id",nativeQuery = true)
+    @Query(value = "select DISTINCT  p.id,p.brand_id,p.category_id,p.create_date,p.material_id,p.shoe_sole_id,p.status,p.update_date,p.code,p.description,p.name from Products as p join Product_details as pd on p.id=pd.product_id where p.status=1",nativeQuery = true)
 List<Products> getAllPros();
     boolean existsByName(String name);
     @Query(value = "select * from Products  where name = ?1 ",
             nativeQuery = true)
     Page<Products> findByName(String name, Pageable pageable);
+
+
 
 }

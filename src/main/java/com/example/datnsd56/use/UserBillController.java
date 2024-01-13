@@ -575,6 +575,7 @@ UserBillController {
         Optional<Account> account = accountService.finByName(name);
         if (bill != null) {
             ordersService.cancelOrder(id, account.get());
+            orderServiceImplV21.cancalevoucher(bill,bill.getVoucher());
             attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         }
         return "redirect:/user/orders";

@@ -47,8 +47,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     @Autowired
     private VoucherUsageService voucherUsageService;
     @Autowired
-    private  VoucherUsageHistoryRepository voucherUsageHistoryRepository;
-
+    private VoucherUsageHistoryRepository voucherUsageHistoryRepository;
 
 
     @Transactional
@@ -115,7 +114,6 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
 
-
     @Override
     public BigDecimal calculateTotalWithVoucher(Cart cart, String selectedVoucherCode, String username) {
         // Lấy thông tin giỏ hàng
@@ -168,14 +166,10 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
 
-
-
-
     @Override
     public List<VoucherUsage> findByIsVisibleTrue() {
         return voucherUsageRepository.findByIsVisibleTrue();
     }
-
 
 
     public Orders placeOrderss(Cart cart, String address, String voucherCode, String selectedVoucherCode) {
@@ -213,6 +207,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     public Orders createOrder(Cart cart, String address) {
         // Tạo mới đối tượng Orders và thiết lập thông tin cần thiết
         Orders order = new Orders();
+        String code = "HD0" + new Random().nextInt(100000);
+        order.setCode(code);
         order.setAddress(address);
         order.setPhone(cart.getAccountId().getPhone());
         order.setEmail(cart.getAccountId().getEmail());
@@ -226,6 +222,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return order;
     }
+
     public void updateOrderStatusToCancelled(Orders order) {
         // Kiểm tra xem đơn hàng có tồn tại không
         if (order != null) {
@@ -278,6 +275,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 //            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
         }
     }
+
     // Trong OrderServiceImplV2
     public void saveOrderAfterVnpaySuccess(Orders order, Cart cart) {
         // Lưu đơn hàng và chi tiết đơn hàng vào cơ sở dữ liệu sau khi thanh toán VNPAY thành công
@@ -286,6 +284,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         // Các bước xử lý khác sau khi thanh toán VNPAY thành công (nếu có)
     }
+
     public void saveOrderAfterSuccess(Orders order, Cart cart) {
         // Lưu đơn hàng vào cơ sở dữ liệu
         order = ordersRepository.save(order);
@@ -311,8 +310,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 if (canUseVoucher && voucher.getQuantity() > 0) {
                     // Áp dụng voucher từ mã
                     applyVoucherByCode(order, voucher);
-                }else {
-                    return ;
+                } else {
+                    return;
                 }
             }
         } else if (selectedVoucherCode != null && !selectedVoucherCode.isEmpty()) {
@@ -321,7 +320,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 Voucher selectedVoucher = selectedVoucherOptional.get();
                 boolean canUseVouchers = canUseVoucher(order.getAccountId(), selectedVoucher);
 
-                if (canUseVouchers && selectedVoucher.getQuantity() >0) {
+                if (canUseVouchers && selectedVoucher.getQuantity() > 0) {
                     // Áp dụng voucher từ danh sách
                     applyVoucherFromList(order, selectedVoucher);
                 }
@@ -356,16 +355,19 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 //        saveVoucherUsageHistorys(order.getAccountId(), voucher);
         order.setVoucher(voucher);
     }
+
     private void reduceVoucherQuantity(Voucher voucher) {
         int remainingQuantity = voucher.getQuantity() - 1;
         voucher.setQuantity(remainingQuantity);
         voucherService.saveVoucher(voucher);
     }
+
     private void refundVoucherQuantity(Voucher voucher) {
         int remainingQuantity = voucher.getQuantity() + 1;
         voucher.setQuantity(remainingQuantity);
         voucherService.saveVoucher(voucher);
     }
+
     // ...
     private void markVoucherAsUsedfalse(Account account, Voucher voucher) {
         // Đánh dấu voucher là đã sử dụng trong bảng VoucherUsage
@@ -381,11 +383,13 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             }
         }
     }
+
     public void cancalevoucher(Orders order, Voucher voucher) {
         refundVoucherQuantity(voucher);
-        markVoucherAsUsedfalse(order.getAccountId(),voucher);
+        markVoucherAsUsedfalse(order.getAccountId(), voucher);
         order.setVoucher(null);
     }
+
     private void markVoucherAsUsed(Account account, Voucher voucher) {
         // Đánh dấu voucher là đã sử dụng trong bảng VoucherUsage
         List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVoucher(account, voucher);
@@ -414,18 +418,17 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     // ...
 
 
-
-
     private boolean canUseVoucher(Account account, Voucher voucher) {
         // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
         List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVoucher(account, voucher);
         for (VoucherUsage usage : voucherUsages) {
-            if (!usage.getIsUsed() && !isVoucherExpired(voucher) && voucher.getQuantity() >0 ) {
+            if (!usage.getIsUsed() && !isVoucherExpired(voucher) && voucher.getQuantity() > 0) {
                 return true; // Tài khoản có thể sử dụng voucher này
             }
         }
         return false; // Tài khoản không thể sử dụng voucher này
     }
+
     //    private boolean canUseVouchers(Account account, String selectedVoucherCode ) {
 //        // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
 //        List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVouchers(account, selectedVoucherCode);
@@ -459,16 +462,6 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return false; // Tài khoản không thể sử dụng voucher này
     }
-
-
-
-
-
-
-
-
-
-
 
 
     @Override
