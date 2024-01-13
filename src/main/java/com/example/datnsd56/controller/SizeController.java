@@ -142,7 +142,29 @@ public class SizeController {
         return "redirect:/admin/san-pham-test/create";
 
     }
+    @PostMapping("/add3")
+    public String add3(@Valid @ModelAttribute("size") Size size,  BindingResult result, Model model, HttpSession session,RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            Page<Size> page = service.getAll(0);
+            model.addAttribute("totalPages", page.getTotalPages());
+            model.addAttribute("list", page);
+            model.addAttribute("currentPage", 0);
+            return "/dashboard/kich-co/kich-co";
+        }
+        if (service.existsByName(size.getName())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Size with the same name already exists");
+            return "redirect:/admin/san-pham-test/view-update/{id}";
 
+        }
+        String code = "KC" + new Random().nextInt(100000);
+        size.setCode(code);
+        size.setStatus(true);
+        model.addAttribute("size", size);
+        service.add(size);
+        redirectAttributes.addFlashAttribute("Message", "Thêm thành công");
+        return "redirect:/admin/san-pham-test/create";
+
+    }
     @GetMapping("/search")
 //    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
 

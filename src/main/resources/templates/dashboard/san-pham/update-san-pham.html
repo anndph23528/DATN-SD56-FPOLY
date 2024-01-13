@@ -251,7 +251,7 @@
                     <a th:href="@{/product/hien-thi}">
                         <img alt="image" th:src="@{/website/img/logo1.png}"
                              class="header-logo"/> <span
-                            class="logo-name">SneakerBeer</span>
+                        class="logo-name">SneakerBeer</span>
                     </a>
                 </div>
                 <ul class="sidebar-menu">
@@ -260,7 +260,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
+                            data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/san-pham-test/create}">Sản phẩm</a></li>
                             <li><a class="nav-link" th:href="@{/admin/mau-sac/hien-thi}">Màu sắc</a></li>
@@ -275,7 +275,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="layout"></i><span>Hoá đơn</span></a>
+                            data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
 
                             <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
@@ -283,14 +283,14 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="image"></i><span>Account</span></a>
+                            data-feather="image"></i><span>Account</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/account/hien-thi}">Account</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Tài khoản</span></a>
+                            data-feather="map"></i><span>Tài khoản</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/roles/hien-thi}">Chức vụ</a></li>
                             <li><a th:href="@{/admin/nhan-vien/hien-thi}">Nhân viên</a></li>
@@ -299,7 +299,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Voucher</span></a>
+                            data-feather="map"></i><span>Voucher</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/voucher/hien-thi}">Danh sách</a></li>
                             <li><a th:href="@{/admin/voucher/lich-su-dung-voucher}">Lịch Sử Dùng Voucher</a></li>
@@ -309,7 +309,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Thống Kê</span></a>
+                            data-feather="map"></i><span>Thống Kê</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/thong-ke/hien-thi}">Thống Kê</a></li>
                         </ul>
@@ -335,14 +335,14 @@
 
                             <div class="card-body">
                                 <div class="form-group">
-<!--                                    <label>Mã sản phẩm</label>-->
+                                    <!--                                    <label>Mã sản phẩm</label>-->
                                     <div class="input-group colorpickerinput">
                                         <input type="hidden" th:field="*{code}"/>
-<!--                                        <input disabled="disabled" type="text" class="form-control"-->
-<!--                                               placeholder="Nhập mã sản phẩm"-->
-<!--                                               th:field="*{code}">-->
-<!--                                        <span th:if="${#fields.hasErrors('code')}" style="color: red; font-size: 13px"-->
-<!--                                              th:errors="*{code}"></span>-->
+                                        <!--                                        <input disabled="disabled" type="text" class="form-control"-->
+                                        <!--                                               placeholder="Nhập mã sản phẩm"-->
+                                        <!--                                               th:field="*{code}">-->
+                                        <!--                                        <span th:if="${#fields.hasErrors('code')}" style="color: red; font-size: 13px"-->
+                                        <!--                                              th:errors="*{code}"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -385,95 +385,95 @@
 
 
                                 <div class="form-group">
-<!--                                    <label>Thương hiệu</label>-->
+                                    <!--                                    <label>Thương hiệu</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:field="*{brandId}" th:each="brand:${brand}"
                                                th:value="${brand.id}"/>
-<!--                                        <select disabled="disabled" class="form-control" th:field="*{brandId}">-->
-<!--                                            <option th:each="brand:${brand}" th:value="${brand.id}"-->
-<!--                                                    th:text="${brand.name}"></option>-->
-<!--                                        </select>-->
-<!--                                        <div id="openButton1" class="input-group-append">-->
-<!--                                            <a class="btn btn-primary" type="button" onclick="popupThuongHieu()">+-->
-<!--                                            </a>-->
-<!--                                        </div>-->
+                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{brandId}">-->
+                                        <!--                                            <option th:each="brand:${brand}" th:value="${brand.id}"-->
+                                        <!--                                                    th:text="${brand.name}"></option>-->
+                                        <!--                                        </select>-->
+                                        <!--                                        <div id="openButton1" class="input-group-append">-->
+                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupThuongHieu()">+-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
-<!--                                    <label>Chất liệu</label>-->
+                                    <!--                                    <label>Chất liệu</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:field="*{materialId}" th:each="material:${material}"
                                                th:value="${material.id}"/>
-<!--                                        <select disabled="disabled" class="form-control" th:field="*{materialId}">-->
-<!--                                            <option th:each="material:${material}" th:value="${material.id}"-->
-<!--                                                    th:text="${material.name}"></option>-->
-<!--                                        </select>-->
-<!--                                        <div id="openButton2" class="input-group-append">-->
-<!--                                            <a class="btn btn-primary" type="button" onclick="popupChatLieu()">+-->
-<!--                                            </a>-->
-<!--                                        </div>-->
+                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{materialId}">-->
+                                        <!--                                            <option th:each="material:${material}" th:value="${material.id}"-->
+                                        <!--                                                    th:text="${material.name}"></option>-->
+                                        <!--                                        </select>-->
+                                        <!--                                        <div id="openButton2" class="input-group-append">-->
+                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupChatLieu()">+-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
-<!--                                    <label>Đế giày</label>-->
+                                    <!--                                    <label>Đế giày</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:field="*{shoeSoleId}" th:each="shoeSole:${shoeSole}"
                                                th:value="${shoeSole.id}"/>
-<!--                                        <select disabled="disabled" class="form-control" th:field="*{shoeSoleId}">-->
-<!--                                            <option th:each="sole:${shoeSole}" th:value="${sole.id}"-->
-<!--                                                    th:text="${sole.name}"></option>-->
-<!--                                        </select>-->
-<!--                                        <div id="openButton3" class="input-group-append">-->
-<!--                                            <a class="btn btn-primary" type="button" onclick="popupDeGiay()">+-->
-<!--                                            </a>-->
-<!--                                        </div>-->
+                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{shoeSoleId}">-->
+                                        <!--                                            <option th:each="sole:${shoeSole}" th:value="${sole.id}"-->
+                                        <!--                                                    th:text="${sole.name}"></option>-->
+                                        <!--                                        </select>-->
+                                        <!--                                        <div id="openButton3" class="input-group-append">-->
+                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupDeGiay()">+-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
-<!--                                    <label>Size</label>-->
+                                    <!--                                    <label>Size</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:each="kt:${listSize}" th:value="${kt.id}"/>
-<!--                                        <label class="check" th:each="kt:${listSize}"-->
-<!--                                               style="margin-right: 15px;margin-top: 15px">-->
-<!--                                            <input disabled="disabled" type="checkbox" th:name="kichThuocs"-->
-<!--                                                   th:value="${kt.id}" th:checked="${selectedSizes.contains(kt.id)}"/>-->
-<!--                                            <span th:text="${kt.name}"></span>-->
-<!--                                        </label>-->
-<!--                                        <div id="openButton4" class="input-group-append">-->
-<!--                                            <button class="btn btn-primary" type="button" onclick="popupSize()">-->
-<!--                                                +-->
-<!--                                            </button>-->
-<!--                                        </div>-->
+                                        <!--                                        <label class="check" th:each="kt:${listSize}"-->
+                                        <!--                                               style="margin-right: 15px;margin-top: 15px">-->
+                                        <!--                                            <input disabled="disabled" type="checkbox" th:name="kichThuocs"-->
+                                        <!--                                                   th:value="${kt.id}" th:checked="${selectedSizes.contains(kt.id)}"/>-->
+                                        <!--                                            <span th:text="${kt.name}"></span>-->
+                                        <!--                                        </label>-->
+                                        <!--                                        <div id="openButton4" class="input-group-append">-->
+                                        <!--                                            <button class="btn btn-primary" type="button" onclick="popupSize()">-->
+                                        <!--                                                +-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
-<!--                                    <label>Màu sắc</label>-->
+                                    <!--                                    <label>Màu sắc</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:each="kt:${listColor}" th:value="${kt.id}"/>
-<!--                                        <label class="check" th:each="color:${listColor}"-->
-<!--                                               style="margin-right: 15px;margin-top: 15px">-->
-<!--                                            <input disabled="disabled" type="checkbox" th:name="colors"-->
-<!--                                                   th:value="${color.id}"-->
-<!--                                                   th:checked="${selectedColors.contains(color.id)}"/>-->
-<!--                                            <span th:text="${color.name}"></span>-->
-<!--                                        </label>-->
-<!--                                        <div class="input-group-append" id="openButton5">-->
-<!--                                            <button class="btn btn-primary" type="button" onclick="popupMauSac()">-->
-<!--                                                +-->
-<!--                                            </button>-->
-<!--                                        </div>-->
+                                        <!--                                        <label class="check" th:each="color:${listColor}"-->
+                                        <!--                                               style="margin-right: 15px;margin-top: 15px">-->
+                                        <!--                                            <input disabled="disabled" type="checkbox" th:name="colors"-->
+                                        <!--                                                   th:value="${color.id}"-->
+                                        <!--                                                   th:checked="${selectedColors.contains(color.id)}"/>-->
+                                        <!--                                            <span th:text="${color.name}"></span>-->
+                                        <!--                                        </label>-->
+                                        <!--                                        <div class="input-group-append" id="openButton5">-->
+                                        <!--                                            <button class="btn btn-primary" type="button" onclick="popupMauSac()">-->
+                                        <!--                                                +-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
-<!--                                    <label>Mô tả</label>-->
+                                    <!--                                    <label>Mô tả</label>-->
                                     <div class="input-group colorpickerinput">
                                         <input type="hidden" th:field="*{description}"/>
-<!--                                        <input disabled="disabled" type="text" class="form-control"-->
-<!--                                               placeholder="Nhập mô tả"-->
-<!--                                               th:field="*{description}">-->
-<!--                                        <span th:if="${#fields.hasErrors('description')}"-->
-<!--                                              style="color: red; font-size: 13px"-->
-<!--                                              th:errors="*{description}"></span>-->
+                                        <!--                                        <input disabled="disabled" type="text" class="form-control"-->
+                                        <!--                                               placeholder="Nhập mô tả"-->
+                                        <!--                                               th:field="*{description}">-->
+                                        <!--                                        <span th:if="${#fields.hasErrors('description')}"-->
+                                        <!--                                              style="color: red; font-size: 13px"-->
+                                        <!--                                              th:errors="*{description}"></span>-->
                                     </div>
                                 </div>
                                 <div class="form-group">

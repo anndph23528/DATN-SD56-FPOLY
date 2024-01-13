@@ -34,7 +34,7 @@ public class Voucher {
     private String description;
     @Column(name = "StartDate")
     private LocalDateTime startDate;
-    @Future(message = "chọn thời gian lớn hơn thời gian hiện tại")
+//    @Future(message = "chọn thời gian lớn hơn thời gian hiện tại")
     @Column(name = "ExpiryDate")
     private LocalDateTime expiryDateTime;
 //    @Max(value = 100, message = "Giảm giá không được lớn hơn 100%")
@@ -52,7 +52,7 @@ public class Voucher {
     @Column(name = "DiscountType")
     private DiscountType discountType;
     @NotNull(message = "Không được để trống !")
-    @Min(value = 100000,message = "đơn tối thiểu phải từ 100.000 vnd trở  lên")
+//    @Min(value = 100000,message = "đơn tối thiểu phải từ 100.000 vnd trở  lên")
     @Column(name = "minOrderAmount")
     private BigDecimal minOrderAmount;
     @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL)

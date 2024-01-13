@@ -459,7 +459,14 @@
         var discountType = document.getElementById("discountType").value;
         var quantityValue = parseInt(document.getElementById("quantity").value);
         var minOrderAmountValue = parseInt(document.getElementById("minOrderAmount").value);
-
+        var expiryDateTime = parseInt(document.getElementById("expiryDateTime").value);
+        // var currentDate = new Date();
+        // var selectedDate = new Date(expiryDateTime);
+        //
+        // if (selectedDate < currentDate) {
+        //     alert("Ngày hết hạn không thể là ngày quá khứ.");
+        //     return false;
+        // }
         if (discountType === "PERCENTAGE" && discountValue >= 80) {
             var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + "%?");
             if (!confirmed) {
@@ -479,10 +486,10 @@
         //     return false;
         // }
         //
-        // if (minOrderAmountValue < 50000) {
-        //     alert("Đơn tối thiểu phải là 50000 VND trở lên");
-        //     return false;
-        // }
+        if (minOrderAmountValue < 50000) {
+            alert("Đơn tối thiểu phải là 50000 VND trở lên");
+            return false;
+        }
 
         return true; // Nếu không có lỗi, cho phép submit form
     }

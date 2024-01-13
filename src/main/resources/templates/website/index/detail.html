@@ -67,9 +67,103 @@
             th:href="@{/website/css/slick-theme.css}"
     />
     <style>
-        /* Đặt kiểu cho biểu tượng giỏ hàng */
+        .button-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 40px;
+            border-radius: 5px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .button-check input[type="radio"] {
+            display: none;
+        }
+
+        .button-check label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+
+        .button-check label span {
+            z-index: 1;
+        }
+
+        .button-check.checked {
+            background-color: rgba(0, 128, 0, 0.1);
+        }
+
+        .button-check input[type="radio"]:checked + label:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 128, 0, 0.3);
+            border-radius: 5px;
+            z-index: 0;
+        }
+
+
+
+        .button-check1 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 40px;
+            border-radius: 5px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-check1 input[type="radio"] {
+            display: none;
+        }
+
+        .button-check1 label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+
+        .button-check1 label span {
+            z-index: 1;
+        }
+
+        .button-check1.checked {
+            background-color: rgba(0, 128, 0, 0.1);
+        }
+
+        .button-check1 input[type="radio"]:checked + label:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 128, 0, 0.3);
+            border-radius: 5px;
+            z-index: 0;
+        }
     </style>
+
 </head>
 
 <body>
@@ -351,18 +445,9 @@
                                 <li class="list-inline-item">
                                     <h6>Color :</h6>
                                 </li>
-                                <label
-                                        class="check"
-                                        th:each="ms:${listColor}"
-                                        style="margin-right: 15px; margin-top: 15px"
-                                >
-                                    <input
-                                            type="radio"
-                                            name="color"
-                                            id="color"
-                                            th:value="${ms.id}"
-                                            th:text="${ms.name}"
-                                    />
+                                <label class="button-check1" th:each="ms:${listColor}" style="margin-right: 15px; margin-top: 15px">
+                                    <input type="radio" name="color" id="color" th:value="${ms.id}" th:text="${ms.name}" onclick="updateColorBackground1(this)" />
+
                                 </label>
                             </ul>
 
@@ -370,18 +455,9 @@
                                 <li class="list-inline-item">
                                     <h6>Size :</h6>
                                 </li>
-                                <label
-                                        class="check"
-                                        th:each="kt:${listSize}"
-                                        style="margin-right: 15px; margin-top: 15px"
-                                >
-                                    <input
-                                            type="radio"
-                                            name="size"
-                                            id="size"
-                                            th:value="${kt.id}"
-                                            th:text="${kt.name}"
-                                    />
+                                <label class="button-check" th:each="kt:${listSize}" style="margin-right: 15px; margin-top: 15px">
+                                    <input type="radio" name="size" id="size" th:value="${kt.id}" th:text="${kt.name}" onclick="updateColorBackground(this)" />
+
                                 </label>
                             </ul>
                         </div>
@@ -554,8 +630,28 @@
 <script th:src="@{/website/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/website/js/templatemo.js}"></script>
 <!-- End Script -->
+<script>
+    function updateColorBackground(element) {
+        // Bỏ class "checked" từ tất cả các ô
+        document.querySelectorAll('.button-check').forEach(function (buttonCheck) {
+            buttonCheck.classList.remove('checked');
+        });
 
-<!-- Start Slider Script -->
+        // Thêm class "checked" cho ô được chọn
+        element.closest('.button-check').classList.add('checked');
+    }
+</script>
+<script>
+    function updateColorBackground1(element) {
+        // Bỏ class "checked" từ tất cả các ô
+        document.querySelectorAll('.button-check1').forEach(function (buttonCheck) {
+            buttonCheck.classList.remove('checked');
+        });
+
+        // Thêm class "checked" cho ô được chọn
+        element.closest('.button-check1').classList.add('checked');
+    }
+</script>
 <script th:src="@{/website/js/slick.min.js}"></script>
 <script>
     $("#carousel-related-product").slick({
@@ -625,7 +721,7 @@
 
                             var formattedTotal = new Intl.NumberFormat('en-US').format(parseFloat(response.sellPrice).toFixed(0));
 
-                            $("#product-price").text(formattedTotal + " " + "Đ");
+                            $("#product-price").text(formattedTotal + " " + "VNĐ");
                             $("#product-quantity11").text(response.quantity + " sản phẩm có sẵn");
                         }
                         console.log("Giá sản phẩm: " + response.sellPrice);
@@ -803,15 +899,17 @@
                             quantity: quantity
                         },
                         success: function (remainingQuantity) {
-                            if (remainingQuantity > quantity) {
+                            if (remainingQuantity >= 0) {
+                                // Nếu số lượng đủ, thực hiện thêm vào giỏ hàng
+                                addToCart(productId, sizeId, colorId, quantity);
+                            } else {
+                                // Nếu không đủ số lượng, hiển thị thông báo lỗi
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Sản phẩm không có đủ số lượng!',
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
-                            } else {
-                                addToCart(productId, sizeId, colorId, quantity);
                             }
                         },
                         error: function () {
@@ -860,7 +958,7 @@
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function () {
-                            window.location.href = '/product/detail/chi-tiet/' + productId;
+                            window.location.href = '/user/cart';
                         });
                     }
                 },

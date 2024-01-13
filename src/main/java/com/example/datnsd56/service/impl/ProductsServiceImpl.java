@@ -54,7 +54,7 @@ public class ProductsServiceImpl implements ProductsService {
     public List<Products> getAllPro() {
         return productRepository.findAll();
     }
-@Transactional
+    @Transactional
     @Override
     public List<Products> getAllPros() {
         return productRepository.getAllPros();
@@ -115,6 +115,7 @@ public class ProductsServiceImpl implements ProductsService {
                 if (productDetails.isPresent()) {
                     ProductDetails details = productDetails.get();
                     details.setStatus(true);
+                    details.getProductId().setStatus(1);
                     details.setQuantity(soLuongs);
                     details.setSellPrice(donGias);
                     details.setUpdateDate(LocalDate.now());
