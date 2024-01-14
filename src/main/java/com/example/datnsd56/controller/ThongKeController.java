@@ -32,6 +32,8 @@ public class ThongKeController {
         model.addAttribute("totalManey1", totalManey1);
         BigDecimal totalHuy = service.getToTalHuy();
         model.addAttribute("totalHuy", totalHuy);
+        BigDecimal totalHt = service.getToTalHt();
+        model.addAttribute("totalHt", totalHt);
         BigDecimal totalAll = service.getToTalAll();
         model.addAttribute("totalAll", totalAll);
         BigDecimal totalAllManey = service.getToTalAllManey();
@@ -84,7 +86,6 @@ public class ThongKeController {
         model.addAttribute("totalAll", totalAll);
         BigDecimal totalAllManey = service.getToTalAllManey();
         model.addAttribute("totalAllManey", totalAllManey);
-
         List<OrderItem> list = service.getAllhuy();
         model.addAttribute("list",list);
         return "/dashboard/thongke-hoadon/thong-ke";

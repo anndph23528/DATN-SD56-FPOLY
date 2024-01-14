@@ -37,6 +37,10 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 //            "WHERE v.quantity = ?1 or v.sellPrice= ?1")
     Page<ProductDetails> findProductDetailsBySellPrice(Double sellPrice, Pageable pageable);
 
+    Page<ProductDetails> findBySellPriceBetween(Double minPrice, Double maxPrice, Pageable pageable);
+
+    Page<ProductDetails> findByProductId_NameContainingIgnoreCase(String name, Pageable pageable);
+
 
     @Transactional
     @Modifying

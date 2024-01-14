@@ -24,7 +24,13 @@ List<OrderItem>getAllByStatusdanggiao();
         "\tO.customer_id,O.update_date,O.total,O.create_date,O.order_status,OI.product_details_id,OI.id,OI.price,OI.quantity,\n" +
         "\tOI.status,OI.rate_id,OI.order_id FROM order_items AS OI JOIN Orderss AS O ON O.id = OI.order_id WHERE  O.order_status = '0';",nativeQuery = true)
 List<OrderItem>getAllByStatushuy();
-@Query(value = "SELECT  O.fullname,O.account_id,O.phone,O.address,O.sale_method,O.email,O.voucher_id,O.Shipping_fee,O.code,\n" +
+    @Query(value = "SELECT  O.fullname,O.account_id,O.phone,O.address,O.sale_method,O.email,O.voucher_id,O.Shipping_fee,O.code,\n" +
+        "\tO.customer_id,O.update_date,O.total,O.create_date,O.order_status,OI.product_details_id,OI.id,OI.price,OI.quantity,\n" +
+        "\tOI.status,OI.rate_id,OI.order_id FROM order_items AS OI JOIN Orderss AS O ON O.id = OI.order_id WHERE  O.order_status = '0';",nativeQuery = true)
+    Page<Orders>getAllByStatushuy1(Pageable pageable);
+
+
+    @Query(value = "SELECT  O.fullname,O.account_id,O.phone,O.address,O.sale_method,O.email,O.voucher_id,O.Shipping_fee,O.code,\n" +
         "\tO.customer_id,O.update_date,O.total,O.create_date,O.order_status,OI.product_details_id,OI.id,OI.price,OI.quantity,\n" +
         "\tOI.status,OI.rate_id,OI.order_id FROM order_items AS OI JOIN Orderss AS O ON O.id = OI.order_id WHERE  O.order_status = '1';",nativeQuery = true)
 List<OrderItem>getAllByStatusdahoathanh();
@@ -96,7 +102,13 @@ BigDecimal getTotalManey();
             "WHERE\n" +
             "    order_status = '0';", nativeQuery = true)
     BigDecimal getTotalHuy();
-
+    @Query(value = "SELECT\n" +
+        "    COUNT(DISTINCT id) AS TotalCanceledOrders\n" +
+        "FROM\n" +
+        "    Orderss\n" +
+        "WHERE\n" +
+        "    order_status = '1';", nativeQuery = true)
+    BigDecimal getTotalHt();
     @Query(value = "SELECT\n" +
             "    COUNT(DISTINCT id) AS TotalOrders\n" +
             "FROM\n" +

@@ -307,7 +307,8 @@
 
                     <div th:text="${ ' MÃ :' +' ' + voucherUsage.voucher.code}">Enjoy free shipping on all orders.</div>
                     <div th:text="${ ' HSD :' +' ' +voucherUsage.voucher.expiryDateTime}">Expires on: 28/02/2024</div>
-                    <div th:text="${ ' Số lượng  :' +' ' +voucherUsage.voucher.quantity}">Expires on: 28/02/2024</div>
+                    <div th:text="${ ' Số lượng còn lại  :' +' ' +voucherUsage.voucher.quantity}">Expires on: 28/02/2024</div>
+                    <div th:text="${ ' Đơn tối thiểu  :' +' ' + #numbers.formatDecimal(voucherUsage.voucher.minOrderAmount, 0, 'COMMA', 0, 'POINT')} + 'VND'">Expires on: 28/02/2024</div>
                     <div th:unless="${voucherUsage.isUsed}" style="color: green;">Chưa sử dụng</div>
                 </div>
 

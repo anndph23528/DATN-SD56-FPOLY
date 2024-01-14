@@ -439,6 +439,34 @@
                                     </p>
                                 </li>
                             </ul>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Loại:</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p
+                                        class="text-muted"
+                                        th:each="detail:${product.categoryId}"
+                                        th:text="${detail.name}"
+                                    >
+                                        <strong></strong>
+                                    </p>
+                                </li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Chất Liệu:</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p
+                                        class="text-muted"
+                                        th:each="detail:${product.materialId}"
+                                        th:text="${detail.name}"
+                                    >
+                                        <strong></strong>
+                                    </p>
+                                </li>
+                            </ul>
                             <h6>Description:</h6>
                             <p th:text="${product.description}"></p>
                             <ul class="list-inline">

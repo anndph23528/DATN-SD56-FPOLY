@@ -49,7 +49,25 @@
     <!-- Template Stylesheet -->
     <!--    <link th:href="@{/../resources/dashboard/css/style.css}" rel="stylesheet" />-->
     <link th:href="@{/dashboard/css/style1.css}" rel="stylesheet"/>
+    <style>
+        .card-header-form {
+            display: flex;
+            align-items: center;
+        }
 
+        .input-group {
+            display: flex;
+            margin-right: 10px;
+        }
+
+        .form-select {
+            width: 150px; /* Điều chỉnh độ rộng theo ý muốn */
+        }
+
+        .btn-primary {
+            margin-left: 10px; /* Điều chỉnh khoảng cách giữa ô nhập liệu và nút */
+        }
+    </style>
 </head>
 <body>
 <!-- Spinner Start -->
@@ -196,6 +214,7 @@
 
 <!-- Products Start -->
 <div class="container-fluid product py-5">
+
     <div class="container py-5">
 <!--        <input type="color" style="text-align: right"> lọc-->
         <p class="fs-5 fw-medium fst-italic text-primary ">Voucher</p>
@@ -213,7 +232,7 @@
                                     Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')} "></span> VND
 
                                 </p>
-                                Đơn tối thiểu : <div th:text="${ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT')}"> VNĐ</div>
+                                <div style="font-size: 15px" th:text="${ ' Đơn tối thiểu :' + ' '+ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT') +'VNĐ'}"> </div>
 
                             </div>
                             <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
@@ -240,11 +259,48 @@
             <h1 class="display-6" STYLE="text-align: center">Our Products</h1>
 
         </div>
+    <div class="card-header-form">
+        <form action="/product/search" method="get">
+            <!-- Lọc theo giá -->
+            <div class="input-group">
+                <input type="text" name="minPrice" class="form-control" placeholder="Min Price">
+                <input type="text" name="maxPrice" class="form-control" placeholder="Max Price">
+            </div>
+
+            <!-- Lọc theo thể loại -->
+            <div class="input-group">
+                <select name="category" class="form-select">
+                    <option value="" selected disabled>Loại</option>
+                    <!-- Thêm các option từ danh sách thể loại -->
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+
+            <!-- Lọc theo thương hiệu -->
+            <div class="input-group">
+                <select name="brand" class="form-select">
+                    <option value="" selected disabled> Brand</option>
+                    <!-- Thêm các option từ danh sách thương hiệu -->
+                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                </select>
+            </div>
+
+            <!-- Nút để kích hoạt bộ lọc -->
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+
+
+        </form>
+        <a th:href="@{'/product/hien-thi'}">
+
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Tất cả sản phẩm</button>          </a>
+    </div>
 
 
 
-        <!--        &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;LV &ndash;&gt;-->
-        <div
+
+
+    <!--        &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;LV &ndash;&gt;-->
+        <div th:if="${productsByBrand != null}"
                 th:each="entry : ${productsByBrand.entrySet()}"
                 class="brand-container"
         >

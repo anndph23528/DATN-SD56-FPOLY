@@ -459,14 +459,15 @@
         var discountType = document.getElementById("discountType").value;
         var quantityValue = parseInt(document.getElementById("quantity").value);
         var minOrderAmountValue = parseInt(document.getElementById("minOrderAmount").value);
-        var expiryDateTime = parseInt(document.getElementById("expiryDateTime").value);
-        // var currentDate = new Date();
-        // var selectedDate = new Date(expiryDateTime);
-        //
-        // if (selectedDate < currentDate) {
-        //     alert("Ngày hết hạn không thể là ngày quá khứ.");
-        //     return false;
-        // }
+        // var expiryDateTime = parseInt(document.getElementById("expiryDateTime").value);
+        var expiryDateTimeInput = document.getElementById("expiryDateTime");
+        var expiryDateTime = new Date(expiryDateTimeInput.value);
+        var currentDate = new Date();
+
+        if (expiryDateTime < currentDate) {
+            alert("Ngày hết hạn không thể là ngày quá khứ.");
+            return false;
+        }
         if (discountType === "PERCENTAGE" && discountValue >= 80) {
             var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + "%?");
             if (!confirmed) {

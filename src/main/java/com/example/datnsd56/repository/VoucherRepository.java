@@ -23,6 +23,9 @@ public interface VoucherRepository extends JpaRepository<Voucher,Integer> {
     Optional<Voucher> findByCode(String code);
 @Query(value = "SELECT * FROM Voucher  WHERE Active = 1 AND quantity > 0 AND expiryDate > CURRENT_TIMESTAMP",nativeQuery = true)
     List<Voucher> getAllls();
-
+    @Query("SELECT v FROM Voucher v " +
+        "WHERE (:searchText IS NULL OR LOWER(v.code) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(v.description) LIKE LOWER(CONCAT('%', :searchText, '%'))) " +
+        "AND (:status IS NULL OR (:status = 'true' AND v.active = true) OR (:status = 'false' AND v.active = false))")
+    Page<Voucher> searchVouchers(@Param("searchText") String searchText, @Param("status") String status,Pageable pageable);
 //    Page<Voucher> findAll(Pageable pageable, Sort createDate);
 }

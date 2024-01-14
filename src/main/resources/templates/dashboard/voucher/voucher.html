@@ -500,89 +500,93 @@
             <!--            </div>-->
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Danh sách Voucher</h4>
-                            <div class="card-header-form">
-                                <form>
-                                    <div class="input-group">
-                                        <input
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Search"
-                                        />
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary">
-                                                <i class="fas fa-search"></i>
-                                            </button>
-                                        </div>
+                    <div class="card-header">
+                        <h4>Danh sách Voucher</h4>
+                        <div class="card-header-form">
+                            <form th:action="@{/admin/voucher/search}" method="get">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search" name="searchText" />
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                        </button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="statusFilter">Trạng thái:</label>
+                                    <select class="form-control" id="statusFilter" name="status">
+                                        <option value="true">Mới</option>
+                                        <option value="false">Hết hạn</option>
+                                    </select>
+                                </div>
+                            </form>
+
                         </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <tr>
-                                        <!--                                        <th class="text-center">-->
-                                        <!--&lt;!&ndash;                                            <div class="custom-checkbox custom-checkbox-table custom-control">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                                <input type="checkbox" data-checkboxes="mygroup"&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                                       data-checkbox-role="dad"&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                                       class="custom-control-input" id="checkbox-all">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                            </div>&ndash;&gt;-->
-                                        <!--                                        </th>-->
-                                        <th>Mã voucher</th>
-                                        <th>Mô Tả</th>
-                                        <th> Số lượng</th>
-                                        <th>Ngày Bắt Đầu</th>
-                                        <th>Ngày Hết Han</th>
-                                        <th>Giá Trị Giảm</th>
-                                        <th>Hình thức giảm</th>
-                                        <th>Đơn tối thiểu</th>
-                                        <th>Trạng thái</th>
-                                        <th>Hành động</th>
-                                    </tr>
-                                    <tr th:each="vouchers : ${vouchers.content}">
-                                        <!--                                        <td th:text="${voucher.id}"></td>-->
-                                        <td th:text="${vouchers.code}"></td>
-                                        <td th:text="${vouchers.description}"></td>
-                                        <td th:text="${vouchers.quantity}"></td>
-                                        <td th:text="${ #temporals.format(vouchers.startDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                        <td th:text="${ #temporals.format(vouchers.expiryDateTime, 'dd/MM/yyyy HH:mm')}"></td>
-                                        <td th:text="${#numbers.formatDecimal(vouchers.discount, 0, 'COMMA', 0, 'POINT')}"></td>
-                                        <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</td>
-                                        <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</td>
-                                        <td th:text="${ #numbers.formatDecimal(vouchers.minOrderAmount, 0, 'COMMA', 0, 'POINT')}"></td>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <!--                                        <th class="text-center">-->
+                                    <!--&lt;!&ndash;                                            <div class="custom-checkbox custom-checkbox-table custom-control">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                                <input type="checkbox" data-checkboxes="mygroup"&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                                       data-checkbox-role="dad"&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                                       class="custom-control-input" id="checkbox-all">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;                                            </div>&ndash;&gt;-->
+                                    <!--                                        </th>-->
+                                    <th>Mã voucher</th>
+                                    <th>Mô Tả</th>
+                                    <th> Số lượng</th>
+                                    <th>Ngày Bắt Đầu</th>
+                                    <th>Ngày Hết Han</th>
+                                    <th>Giá Trị Giảm</th>
+                                    <th>Hình thức giảm</th>
+                                    <th>Đơn tối thiểu</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                <tr th:each="vouchers : ${vouchers.content}">
+                                    <!--                                        <td th:text="${voucher.id}"></td>-->
+                                    <td th:text="${vouchers.code}"></td>
+                                    <td th:text="${vouchers.description}"></td>
+                                    <td th:text="${vouchers.quantity}"></td>
+                                    <td th:text="${ #temporals.format(vouchers.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${ #temporals.format(vouchers.expiryDateTime, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(vouchers.discount, 0, 'COMMA', 0, 'POINT')}"></td>
+                                    <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">%</td>
+                                    <td th:if="${vouchers.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">VND</td>
+                                    <td th:text="${ #numbers.formatDecimal(vouchers.minOrderAmount, 0, 'COMMA', 0, 'POINT')}"></td>
 
-                                        <td
-                                                style="color: red"
-                                                th:text="${vouchers.active} ? 'New' : 'Hết hạn'"
-                                        ></td>
+                                    <td
+                                        style="color: red"
+                                        th:text="${vouchers.active} ? 'New' : 'Hết hạn'"
+                                    ></td>
 
-                                        <!--                                        <td th:text="${list.status  ? 'Hoạt động' : 'Không hoạt động'}"></td>-->
-                                        <td>
-                                            <a
-                                                    th:href="@{'/admin/voucher/delete/'+${vouchers.id}}"
+                                    <!--                                        <td th:text="${list.status  ? 'Hoạt động' : 'Không hoạt động'}"></td>-->
+                                    <td>
+                                        <a
+                                            th:href="@{'/admin/voucher/delete/'+${vouchers.id}}"
+                                        >
+                                            <button
+                                                type="submit"
+                                                class="btn btn-danger"
+                                                onchange="return  confirm('Bạn có xoá không?')"
                                             >
-                                                <button
-                                                        type="submit"
-                                                        class="btn btn-danger"
-                                                        onchange="return  confirm('Bạn có xoá không?')"
-                                                >
-                                                    Xoá
-                                                </button>
-                                            </a>
-                                            <a th:href="@{'/admin/voucher/'+${vouchers.id}} ">
-                                                <button type="submit" class="btn btn-success">
-                                                    Cập nhật
-                                                </button>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                                                Xoá
+                                            </button>
+                                        </a>
+                                        <a th:href="@{'/admin/voucher/'+${vouchers.id}} ">
+                                            <button type="submit" class="btn btn-success">
+                                                Cập nhật
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
+                    </div>         <div class="card">
+
                         <!--                        <div class="card-footer text-right">-->
                         <!--                            <nav class="d-inline-block">-->
                         <!--                                <ul class="pagination mb-0">-->
