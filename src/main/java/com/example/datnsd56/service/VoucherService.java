@@ -20,5 +20,5 @@ List<Voucher> get();
     void update(Voucher voucher);
     void delete(Integer id);
     List<Voucher> getAllls();
-
+    Page<Voucher> searchVouchers(String searchText, String status);
 }

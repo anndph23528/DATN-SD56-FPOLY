@@ -313,6 +313,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-sm-6 col-xl-3">
                                             <div
                                                 class="bg-light rounded d-flex align-items-center justify-content-between p-4"
@@ -355,6 +356,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-6 col-xl-3">
+                                            <div
+                                                class="bg-light rounded d-flex align-items-center justify-content-between p-4"
+                                            >
+                                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                                <div class="ms-3">
+                                                    <p class="mb-2">Tổng Đơn Hoàn Thành </p>
+                                                    <h6 class="mb-0" th:text="${totalHt != null ? totalHt : 0}"></h6>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-6 col-xl-6">
                                             <div class="card-header-form">
                                                 <form action="/admin/thong-ke/hien-thi/thoi-gian" method="get">
@@ -387,8 +399,8 @@
                                 <div class="filter-buttons" style="text-align: right">
                                     <button class="btn btn-success">
                                         <a href="/admin/thong-ke/hien-thi" style="color: black">All</a></button>
-                                    <button class="btn btn-primary">
-                                        <a href="/admin/thong-ke/hien-thi/top5" style="color: black">TOP5</a></button>
+<!--                                    <button class="btn btn-primary">-->
+<!--                                        <a href="/admin/thong-ke/hien-thi/top5" style="color: black">TOP5</a></button>-->
                                     <button class="btn btn-primary">
                                         <a href="/admin/thong-ke/hien-thi/dang-giao" style="color: black">ĐangGiao</a>
                                     </button>

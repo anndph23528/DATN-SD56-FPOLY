@@ -257,7 +257,7 @@
         <div class="invoice-title">
             <!--                            <h4 class="float-end font-size-15"><span class="badge bg-success font-size-12 ms-2" th:text="${billdetail.trangThaiDonHang}"></span></h4>-->
             <div class="mb-4">
-                <h2 class="mb-1 text-muted" th:text="'Mã hoá đơn: ' + ${bill.id}">
+                <h2 class="mb-1 text-muted" th:text="'Mã hoá đơn: ' + ${bill.code}">
                 </h2>
                 <div th:if="${bill.orderStatus == 0}"
                      class="text-danger font-weight-bold border rounded p-2 border-danger">
@@ -277,12 +277,12 @@
 
                     <th:block class="mb-1" th:with="addressParts=${bill.splitAddress(bill.address)}">
                         <h6 class="font-size-15 mb-2 font-italic"
-                            th:text="'Tên người nhận : ' + ${addressParts[6].substring(addressParts[6].indexOf('=') + 1)}">
+                            th:text="'Tên người nhận : ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
                         </h6>
                         <p class="mb-1"
-                           th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[4].substring(addressParts[4].indexOf('=') + 1)}"></p>
+                           th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[3].substring(addressParts[3].indexOf('=') + 1)}"></p>
                         <p class="mb-1"
-                           th:text="'SĐT: ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
+                           th:text="'SĐT: ' + ${addressParts[4].substring(addressParts[4].indexOf('=') + 1)}">
                         </p>
                     </th:block>
 
@@ -371,7 +371,7 @@
             <tr>
                 <th scope="col">Ảnh</th>
                 <th scope="col">Tên sản phẩm</th>
-<!--                <th scope="col">Ngày Đặt</th>-->
+                <th scope="col">Ngày Đặt</th>
                 <th scope="col">Màu sắc</th>
                 <th scope="col">Size</th>
                 <th scope="col">Brand</th>
@@ -398,7 +398,7 @@
                 </td>
 
                 <td th:text="${sl.productDetails.productId.name}"></td>
-<!--                <td th:text="${ #temporals.format(sl.orders.createDate, 'dd/MM/yyyy HH:mm')}"></td>-->
+                <td th:text="${ #temporals.format(sl.orders.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                 <td th:text="${sl.productDetails.colorId.name}"></td>
                 <td th:text="${sl.productDetails.sizeId.name}"></td>
                 <td th:text="${sl.productDetails.productId.brandId.name}"></td>

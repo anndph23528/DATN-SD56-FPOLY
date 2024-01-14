@@ -18,6 +18,7 @@ import java.util.Optional;
 
 public interface ProductsService {
     Page<Products> getAll(Integer pageNo);
+  List<Products> searchProducts(Double minPrice, Double maxPrice, Integer categoryId, Integer brandId) ;
 
     List<Products> getAllPro();
     List<Products> getAllPros();

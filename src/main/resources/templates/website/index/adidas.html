@@ -208,7 +208,7 @@
                           Aliqu diam amet diam et eos. Clita erat ipsum lorem erat ipsum
                           lorem sit sed
                         </p> -->
-<!--                        <h4 class="text-primary" >1000</h4>-->
+                        <span style="color: #0D0A0A; font-weight: bold" class="text-body" th:text="${ #numbers.formatDecimal(product.productDetails[0].sellPrice, 0, 'COMMA', 0, 'POINT')} +' '+'VNĐ'">10000</span>
                     </div>
                     <div class="store-overlay">
                         <a th:href="@{'/product/detail/chi-tiet/' + ${product.id}}" class="btn btn-primary rounded-pill py-2 px-4 m-2"

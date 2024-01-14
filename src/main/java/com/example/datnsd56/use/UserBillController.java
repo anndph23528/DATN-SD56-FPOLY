@@ -175,6 +175,7 @@ UserBillController {
                         transaction.setCustomerId(order.getCustomerId());
                         transaction.setOrderId(order);
                         transaction.setAccountId(account.getCart().getAccountId());
+                        session.removeAttribute("appliedVoucherTotal");
 
                         // Lưu giao dịch tạm thời vào cơ sở dữ liệu và giữ ID
                         Transactions savedTransaction = transactionService.saveTransaction(transaction);
@@ -290,6 +291,7 @@ UserBillController {
                             orderServiceImplV21.reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 
                         }
+                        orderServiceImplV21.saveVoucherUsageHistorys(transactionOptional.get().getAccountId(),transactionOptional.get().getOrderId().getVoucher());
                         cartServicel.deleteCartById(cart.getId());
                         model.addAttribute("tr", pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
@@ -575,7 +577,9 @@ UserBillController {
         Optional<Account> account = accountService.finByName(name);
         if (bill != null) {
             ordersService.cancelOrder(id, account.get());
-            orderServiceImplV21.cancalevoucher(bill,bill.getVoucher());
+            if(bill.getVoucher() != null) {
+                orderServiceImplV21.cancalevoucher(bill, bill.getVoucher());
+            }
             attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         }
         return "redirect:/user/orders";

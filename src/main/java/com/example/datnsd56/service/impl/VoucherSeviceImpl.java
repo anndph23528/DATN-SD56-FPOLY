@@ -32,7 +32,13 @@ public class VoucherSeviceImpl implements VoucherService  {
     public List<Voucher> getAllVouchers() {
         return voucherRepository.findAll();
     }
-
+    public Page<Voucher> searchVouchers(String searchText, String status) {
+        // Chuyển đổi giá trị String thành
+        Pageable pageable=PageRequest.of(0,10);
+        boolean parsedStatus = Boolean.parseBoolean(status);
+        // Gọi repository để thực hiện truy vấn dựa trên điều kiện
+        return voucherRepository.searchVouchers(searchText, String.valueOf(parsedStatus),pageable);
+    }
     public Voucher getVoucherById(Integer id) {
         return voucherRepository.findById(id).orElse(null);
     }
@@ -55,6 +61,7 @@ public class VoucherSeviceImpl implements VoucherService  {
             existingVoucher.setDiscount(voucher.getDiscount());
             existingVoucher.setDiscountType(voucher.getDiscountType());
             existingVoucher.setQuantity(voucher.getQuantity());
+            existingVoucher.setMinOrderAmount(voucher.getMinOrderAmount());
 
             voucherRepository.save(existingVoucher);
         }

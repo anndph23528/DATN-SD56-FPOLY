@@ -5,6 +5,7 @@ import com.example.datnsd56.entity.Products;
 import com.example.datnsd56.entity.Size;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,11 @@ public interface ProductDetailsService {
    boolean isQuantityAvailable(Integer productId, Integer sizeId, Integer colorId, Integer requestedQuantity) ;
 
     Page<ProductDetails> search(  Double sellPrice);
-
+    Page<ProductDetails> getAllProductDetails(Pageable pageable);
+    Page<ProductDetails> searchByPriceRange(Double minPrice, Double maxPrice, Pageable pageable);
+    Page<ProductDetails> searchByName(String productName, Pageable pageable);
+    // Tìm kiếm theo tên
+//    Page<ProductDetails> findByProductNameContainingIgnoreCase(String productName, Pageable pageable);
     ProductDetails add(ProductDetails productDetails, MultipartFile[] files) throws IOException, SQLException;
     ProductDetails getByIds(Integer id);
     Optional<ProductDetails> findBySanPhamId(Integer idSanPham);

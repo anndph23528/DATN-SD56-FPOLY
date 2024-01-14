@@ -323,7 +323,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4> Ảnh Sản phẩm</h4>
+                            <h4> Cập Nhật Sản phẩm</h4>
                         </div>
                         <form th:action="@{'/admin/san-pham-test/update-san-pham/'+${id}}" method="post"
                               th:object="${product}"
@@ -346,91 +346,82 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <!--                                    <label>Tên sản phẩm</label>-->
-                                    <input type="text" th:field="*{name}"/>
-                                    <!--                                    <input disabled="disabled" type="text" class="form-control"-->
-                                    <!--                                           placeholder="Nhập tên sản phẩm"-->
-                                    <!--                                           th:field="*{name}">-->
-                                    <!--                                    <span th:if="${#fields.hasErrors('name')}" style="color: red; font-size: 13px"-->
-                                    <!--                                          th:errors="*{name}"></span>-->
+                                                                        <label>Tên sản phẩm</label>
+<!--                                    <input type="text" th:field="*{name}"/>-->
+                                                                        <input  type="text" class="form-control"
+                                                                               placeholder="Nhập tên sản phẩm"
+                                                                               th:field="*{name}">
+                                                                        <span th:if="${#fields.hasErrors('name')}" style="color: red; font-size: 13px"
+                                                                              th:errors="*{name}"></span>
                                 </div>
 
                                 <div class="form-group">
-                                    <!--                                    <label>Loại giày</label>-->
+                                                                        <label>Loại giày</label>
                                     <div class="input-group">
-                                        <input type="hidden" th:field="*{categoryId}" th:each="category:${category}"
-                                               th:value="${category.id}"/>
-                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{categoryId}">-->
-                                        <!--                                            <option th:each="category:${category}" th:value="${category.id}"-->
-                                        <!--                                                    th:text="${category.name}"></option>-->
-                                        <!--                                        </select>-->
-                                        <!--                                        <div id="openButton" class="input-group-append">-->
-                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupLoaiGiay()">+-->
-                                        <!--                                            </a>-->
-                                        <!--                                        </div>-->
+<!--                                        <input type="hidden" th:field="*{categoryId}" th:each="category:${category}"-->
+<!--                                               th:value="${category.id}"/>-->
+                                                                                <select  class="form-control" th:field="*{categoryId}">
+                                                                                    <option th:each="category:${category}" th:value="${category.id}"
+                                                                                            th:text="${category.name}"></option>
+                                                                                </select>
+                                                                                <div id="openButton" class="input-group-append">
+                                                                                    <a class="btn btn-primary" type="button" onclick="popupLoaiGiay()">+
+                                                                                    </a>
+                                                                                </div>
                                     </div>
                                 </div>
                                 <!-- Trang chi tiết sản phẩm -->
-                                <div id="image-preview" th:each="products: ${product}" class="image-container">
-                                    <div th:each="image : ${products.images}" class="image-item">
-                                        <img th:src="@{${'/admin/san-pham-test/display?id=' + image.productId.id + '&imageId=' + image.id}}"
-                                             class="d-block w-70"
-                                             alt="Product Image"
-                                             style="width: 200px; height: auto; border-radius: 10%; object-fit: cover"
-                                        >
-                                        <span class="delete-icon" th:attr="data-imageId=${image.id}" onclick="deleteImage(this)">x</span>
-                                    </div>
-                                </div>
+
 
 
 
                                 <div class="form-group">
-                                    <!--                                    <label>Thương hiệu</label>-->
+                                                                        <label>Thương hiệu</label>
                                     <div class="input-group">
-                                        <input type="hidden" th:field="*{brandId}" th:each="brand:${brand}"
-                                               th:value="${brand.id}"/>
-                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{brandId}">-->
-                                        <!--                                            <option th:each="brand:${brand}" th:value="${brand.id}"-->
-                                        <!--                                                    th:text="${brand.name}"></option>-->
-                                        <!--                                        </select>-->
-                                        <!--                                        <div id="openButton1" class="input-group-append">-->
-                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupThuongHieu()">+-->
-                                        <!--                                            </a>-->
-                                        <!--                                        </div>-->
+<!--                                        <input type="hidden" th:field="*{brandId}" th:each="brand:${brand}"-->
+<!--                                               th:value="${brand.id}"/>-->
+                                                                                <select  class="form-control" th:field="*{brandId}">
+                                                                                    <option th:each="brand:${brand}" th:value="${brand.id}"
+                                                                                            th:text="${brand.name}"></option>
+                                                                                </select>
+                                                                                <div id="openButton1" class="input-group-append">
+                                                                                    <a class="btn btn-primary" type="button" onclick="popupThuongHieu()">+
+                                                                                    </a>
+                                                                                </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <!--                                    <label>Chất liệu</label>-->
+                                                                        <label>Chất liệu</label>
                                     <div class="input-group">
-                                        <input type="hidden" th:field="*{materialId}" th:each="material:${material}"
-                                               th:value="${material.id}"/>
-                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{materialId}">-->
-                                        <!--                                            <option th:each="material:${material}" th:value="${material.id}"-->
-                                        <!--                                                    th:text="${material.name}"></option>-->
-                                        <!--                                        </select>-->
-                                        <!--                                        <div id="openButton2" class="input-group-append">-->
-                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupChatLieu()">+-->
-                                        <!--                                            </a>-->
-                                        <!--                                        </div>-->
+<!--                                        <input type="hidden" th:field="*{materialId}" th:each="material:${material}"-->
+<!--                                               th:value="${material.id}"/>-->
+                                                                                <select  class="form-control" th:field="*{materialId}">
+                                                                                    <option th:each="material:${material}" th:value="${material.id}"
+                                                                                            th:text="${material.name}"></option>
+                                                                                </select>
+                                                                                <div id="openButton2" class="input-group-append">
+                                                                                    <a class="btn btn-primary" type="button" onclick="popupChatLieu()">+
+                                                                                    </a>
+                                                                                </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <!--                                    <label>Đế giày</label>-->
+                                                                        <label>Đế giày</label>
                                     <div class="input-group">
-                                        <input type="hidden" th:field="*{shoeSoleId}" th:each="shoeSole:${shoeSole}"
-                                               th:value="${shoeSole.id}"/>
-                                        <!--                                        <select disabled="disabled" class="form-control" th:field="*{shoeSoleId}">-->
-                                        <!--                                            <option th:each="sole:${shoeSole}" th:value="${sole.id}"-->
-                                        <!--                                                    th:text="${sole.name}"></option>-->
-                                        <!--                                        </select>-->
-                                        <!--                                        <div id="openButton3" class="input-group-append">-->
-                                        <!--                                            <a class="btn btn-primary" type="button" onclick="popupDeGiay()">+-->
-                                        <!--                                            </a>-->
-                                        <!--                                        </div>-->
+<!--                                        <input type="hidden" th:field="*{shoeSoleId}" th:each="shoeSole:${shoeSole}"-->
+<!--                                               th:value="${shoeSole.id}"/>-->
+                                                                                <select  class="form-control" th:field="*{shoeSoleId}">
+                                                                                    <option th:each="sole:${shoeSole}" th:value="${sole.id}"
+                                                                                            th:text="${sole.name}"></option>
+                                                                                </select>
+                                                                                <div id="openButton3" class="input-group-append">
+                                                                                    <a class="btn btn-primary" type="button" onclick="popupDeGiay()">+
+                                                                                    </a>
+                                                                                </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <!--                                    <label>Size</label>-->
+<!--                                                                        <label>Size</label>-->
                                     <div class="input-group">
                                         <input type="hidden" th:each="kt:${listSize}" th:value="${kt.id}"/>
                                         <!--                                        <label class="check" th:each="kt:${listSize}"-->
@@ -474,6 +465,16 @@
                                         <!--                                        <span th:if="${#fields.hasErrors('description')}"-->
                                         <!--                                              style="color: red; font-size: 13px"-->
                                         <!--                                              th:errors="*{description}"></span>-->
+                                    </div>
+                                </div>
+                                <div id="image-preview" th:each="products: ${product}" class="image-container">
+                                    <div th:each="image : ${products.images}" class="image-item">
+                                        <img th:src="@{${'/admin/san-pham-test/display?id=' + image.productId.id + '&imageId=' + image.id}}"
+                                             class="d-block w-70"
+                                             alt="Product Image"
+                                             style="width: 200px; height: auto; border-radius: 10%; object-fit: cover"
+                                        >
+                                        <span class="delete-icon" th:attr="data-imageId=${image.id}" onclick="deleteImage(this)">x</span>
                                     </div>
                                 </div>
                                 <div class="form-group">

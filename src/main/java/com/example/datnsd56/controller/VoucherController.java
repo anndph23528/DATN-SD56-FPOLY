@@ -45,7 +45,7 @@ public class VoucherController {
     public String getAllByPage(Model model,@RequestParam(defaultValue = "0") Integer page){
         voucherService.checkAndDeactivateExpiredVouchers();
 //        model.addAttribute("voucher", new Voucher());
-        Page<Voucher> page1 = voucherService.getAll(PageRequest.of(page,5));
+        Page<Voucher> page1 = voucherService.getAll(PageRequest.of(page,10));
         model.addAttribute("vouchers", page1);
         return "dashboard/voucher/voucher";
 
@@ -167,5 +167,15 @@ public class VoucherController {
     }
 
 
+    @GetMapping("/search")
+    public String searchVouchers(
+        @RequestParam(name = "searchText", required = false) String searchText,
+        @RequestParam(name = "status", required = false) String status,
+        Model model) {
+        // Xử lý lọc và trả về kết quả
+        Page<Voucher> filteredVouchers = voucherService.searchVouchers(searchText, status);
+        model.addAttribute("vouchers", filteredVouchers);
+        return "/dashboard/voucher/voucher";
+    }
 
 }

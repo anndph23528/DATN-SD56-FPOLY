@@ -292,9 +292,9 @@
     </thead>
     <tbody class="align-middle">
     <tr th:each="order : ${orders}">
-        <td class="align-middle" th:text="${order.id}"></td>
+        <td class="align-middle" th:text="${order.code}"></td>
         <td class="align-middle"
-            th:text="${(order.fullname)}"></td>
+            th:text="${ #temporals.format(order.createDate, 'dd/MM/yyyy HH:mm')}"></td>
         <td class="align-middle"
             th:text="${(order.phone)}"></td>
         <td class="align-middle"

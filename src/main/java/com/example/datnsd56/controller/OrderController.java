@@ -3,6 +3,7 @@ package com.example.datnsd56.controller;
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,9 @@ public class OrderController {
     TransactionService transactionService;
     @Autowired
     ThongKeService thongKeService;
-
+    @Qualifier("thongKeServiceImpl")
+    @Autowired
+    private ThongKeService service1;
     @GetMapping("/hien-thi")
     public String viewHoaDon(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
         Page<Orders> page = ordersService.getAllOrders(pageNo);
@@ -136,4 +139,89 @@ public class OrderController {
 //        redirectAttributes.addAttribute("phone", phone);
         return "/dashboard/thongke-hoadon/hoa-don";
     }
+
+    @GetMapping("hien-thi/dang-giao")
+    public String viewHoaDonDangGiao(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+
+
+        Page<Orders> list = service1.getAllhuy4();
+
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", 0);
+//        model.addAttribute("list",list);
+        model.addAttribute("list",list);    model.addAttribute("list",list);
+        return "/dashboard/thongke-hoadon/hoa-don";
+    }
+
+    @GetMapping("hien-thi/cho-giao-hang")
+    public String viewHoaDonDangGiao1(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+
+        Page<Orders> list = service1.getAllhuy5();
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", 0);
+//        model.addAttribute("list",list);
+        model.addAttribute("list",list);    model.addAttribute("list",list);
+        return "/dashboard/thongke-hoadon/hoa-don";
+    }
+    @GetMapping("hien-thi/hoan-thanh")
+    public String viewHoaDonHoanThanh(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+
+        Page<Orders> list = service1.getAllhuy3();
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", 0);
+//        model.addAttribute("list",list);
+        model.addAttribute("list",list);
+        return "/dashboard/thongke-hoadon/hoa-don";
+    }  @GetMapping("hien-thi/huy")
+    public String viewHoaDonHuy(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+//        BigDecimal total1 = service1.getToTal1();
+//        model.addAttribute("total1",total1);
+//        BigDecimal totalManey1 = service1.getToTalManey1();
+//        model.addAttribute("totalManey1", totalManey1);
+//        BigDecimal totalHuy = service1.getToTalHuy();
+//        model.addAttribute("totalHuy", totalHuy);
+//        BigDecimal totalAll = service1.getToTalAll();
+//        model.addAttribute("totalAll", totalAll);
+//        BigDecimal totalAllManey = service1.getToTalAllManey();
+//        model.addAttribute("totalAllManey", totalAllManey);
+
+        Page<Orders> list = service1.getAllhuy1();
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", 0);
+        model.addAttribute("list",list);
+         return "/dashboard/thongke-hoadon/hoa-don";
+
+    }  @GetMapping("hien-thi/cho-xac-nhan")
+    public String viewHoaTop5(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+
+
+        Page<Orders> list = service1.getAllhuy2();
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", 0);
+//        model.addAttribute("list",list);
+        model.addAttribute("list",list);
+         return "/dashboard/thongke-hoadon/hoa-don";
+
+    }
+
+    @GetMapping("hien-thi/thoi-gian")
+    public String viewHoaDonTime(@RequestParam("tuNgay")String tuNgay, @RequestParam("denNgay") String denNgay, Model model) {
+        BigDecimal total1 = service1.getToTal1();
+        model.addAttribute("total1", total1);
+        BigDecimal totalManey1 = service1.getToTalManey1();
+        model.addAttribute("totalManey1", totalManey1);
+        BigDecimal totalHuy = service1.getToTalHuy();
+        model.addAttribute("totalHuy", totalHuy);
+        BigDecimal totalAll = service1.getToTalAll();
+        model.addAttribute("totalAll", totalAll);
+        BigDecimal totalAllManey = service1.getToTalAllManey();
+        model.addAttribute("totalAllManey", totalAllManey);
+
+        List<OrderItem> list = service1.getAllByTime(tuNgay,denNgay);
+        model.addAttribute("list", list);
+            return "/dashboard/thongke-hoadon/hoa-don";
+
+    }
+
+
 }

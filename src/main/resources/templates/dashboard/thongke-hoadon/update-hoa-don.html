@@ -25,6 +25,68 @@
         .modal fade {
             z-index: auto;
         }
+
+        /* Style for the table */
+        #orderTable {
+            margin-top: 20px;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #orderTable caption {
+            text-align: left;
+            font-size: 1.5em;
+            color: #4caf50;
+            padding: 10px 20px;
+        }
+
+        #orderTable th,
+        #orderTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #orderTable th {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        #orderTable img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        /* Style for the footer */
+        .footer {
+            color: #fff;
+        }
+
+        /* Style for the back-to-top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .back-to-top:hover {
+            background-color: #45a049;
+        }
+
+        #orderTable caption {
+            caption-side: top;
+        }
+
     </style>
 </head>
 
@@ -59,7 +121,7 @@
             <ul class="navbar-nav navbar-right">
                 <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
                                                              class="nav-link nav-link-lg message-toggle"><i
-                        data-feather="mail"></i>
+                    data-feather="mail"></i>
                     <span class="badge headerBadge1">
                             6 </span> </a>
                     <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
@@ -128,7 +190,7 @@
                 </li>
                 <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
                                                              class="nav-link notification-toggle nav-link-lg"><i
-                        data-feather="bell" class="bell"></i>
+                    data-feather="bell" class="bell"></i>
                 </a>
                     <div class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
                         <div class="dropdown-header">
@@ -139,21 +201,21 @@
                         </div>
                         <div class="dropdown-list-content dropdown-list-icons">
                             <a href="#" class="dropdown-item dropdown-item-unread"> <span
-                                    class="dropdown-item-icon bg-primary text-white"> <i class="fas
+                                class="dropdown-item-icon bg-primary text-white"> <i class="fas
             												fa-code"></i>
                               </span> <span class="dropdown-item-desc"> Template update is
                                 available now! <span class="time">2 Min
                                   Ago</span>
                               </span>
                             </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-info text-white"> <i
-                                class="far
+                            class="far
             												fa-user"></i>
                               </span> <span class="dropdown-item-desc"> <b>You</b> and <b>Dedik
                                   Sugiharto</b> are now friends <span class="time">10 Hours
                                   Ago</span>
                               </span>
                         </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-success text-white"> <i
-                                class="fas
+                            class="fas
             												fa-check"></i>
                               </span> <span class="dropdown-item-desc"> <b>Kusnaedi</b> has
                                 moved task <b>Fix bug header</b> to <b>Done</b> <span class="time">12
@@ -161,13 +223,13 @@
                                   Ago</span>
                               </span>
                         </a> <a href="#" class="dropdown-item"> <span
-                                class="dropdown-item-icon bg-danger text-white"> <i
-                                class="fas fa-exclamation-triangle"></i>
+                            class="dropdown-item-icon bg-danger text-white"> <i
+                            class="fas fa-exclamation-triangle"></i>
                               </span> <span class="dropdown-item-desc"> Low disk space. Let's
                                 clean it! <span class="time">17 Hours Ago</span>
                               </span>
                         </a> <a href="#" class="dropdown-item"> <span class="dropdown-item-icon bg-info text-white"> <i
-                                class="fas
+                            class="fas
             												fa-bell"></i>
                               </span> <span class="dropdown-item-desc"> Welcome to Otika
                                 template! <span class="time">Yesterday</span>
@@ -196,7 +258,7 @@
                         <!--                    </a>-->
                         <div class="dropdown-divider"></div>
                         <a th:href="@{/logout}" class="dropdown-item has-icon text-danger"> <i
-                                class="fas fa-sign-out-alt"></i>
+                            class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
                     </div>
@@ -209,7 +271,7 @@
                     <a th:href="@{/product/hien-thi}">
                         <img alt="image" th:src="@{/website/img/logo1.png}"
                              class="header-logo"/> <span
-                            class="logo-name">SneakerBeer</span>
+                        class="logo-name">SneakerBeer</span>
                     </a>
                 </div>
                 <ul class="sidebar-menu">
@@ -218,7 +280,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
+                            data-feather="briefcase"></i><span>Quản lý sản phẩm</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/san-pham-test/create}">Sản phẩm</a></li>
                             <li><a class="nav-link" th:href="@{/admin/mau-sac/hien-thi}">Màu sắc</a></li>
@@ -233,7 +295,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="layout"></i><span>Hoá đơn</span></a>
+                            data-feather="layout"></i><span>Hoá đơn</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/ban-hang}">Bán hàng</a></li>
                             <li><a class="nav-link" th:href="@{/admin/hoa-don/hien-thi}">Hoá đơn</a></li>
@@ -241,14 +303,14 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="image"></i><span>Account</span></a>
+                            data-feather="image"></i><span>Account</span></a>
                         <ul class="dropdown-menu">
                             <li><a class="nav-link" th:href="@{/admin/account/hien-thi}">Account</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Tài khoản</span></a>
+                            data-feather="map"></i><span>Tài khoản</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/roles/hien-thi}">Chức vụ</a></li>
                             <li><a th:href="@{/admin/nhan-vien/hien-thi}">Nhân viên</a></li>
@@ -257,7 +319,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Voucher</span></a>
+                            data-feather="map"></i><span>Voucher</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/voucher/hien-thi}">Danh sách</a></li>
                             <li><a th:href="@{/admin/voucher/lich-su-dung-voucher}">Lịch Sử Dùng Voucher</a></li>
@@ -267,7 +329,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                                data-feather="map"></i><span>Thống Kê</span></a>
+                            data-feather="map"></i><span>Thống Kê</span></a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/admin/thong-ke/hien-thi}">Thống Kê</a></li>
                         </ul>
@@ -289,7 +351,7 @@
                                     <div class="invoice-title">
                                         <!--                            <h4 class="float-end font-size-15"><span class="badge bg-success font-size-12 ms-2" th:text="${billdetail.trangThaiDonHang}"></span></h4>-->
                                         <div class="mb-4">
-                                            <h2 class="mb-1 text-muted" th:text="'Mã hoá đơn: ' + ${bill.id}">
+                                            <h2 class="mb-1 text-muted" th:text="'Mã hoá đơn: ' + ${bill.code}">
                                             </h2>
                                             <div th:if="${bill.orderStatus == 0}"
                                                  class="text-danger font-weight-bold border rounded p-2 border-danger">
@@ -307,7 +369,8 @@
                                                     th:text="'Khách hàng: ' + ${bill.accountId.name}">
                                                 </h6>
 
-                                                <th:block class="mb-1" th:with="addressParts=${bill.splitAddress(bill.address)}">
+                                                <th:block class="mb-1"
+                                                          th:with="addressParts=${bill.splitAddress(bill.address)}">
                                                     <h6 class="font-size-15 mb-2 font-italic"
                                                         th:text="'Tên người nhận : ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
                                                     </h6>
@@ -358,7 +421,7 @@
                                                         </div>
                                                     </td>
                                                     <td
-                                                            th:text="'₫' + ${#numbers.formatDecimal(paymentMethod.amount, 0, 'POINT', 0, 'COMMA')}">
+                                                        th:text="'₫' + ${#numbers.formatDecimal(paymentMethod.amount, 0, 'POINT', 0, 'COMMA')}">
                                                     </td>
                                                     <td>
 
@@ -393,6 +456,7 @@
                                                 <tr>
                                                     <th scope="col">Ảnh</th>
                                                     <th scope="col">Tên sản phẩm</th>
+                                                    <th scope="col">Ngày Đặt</th>
                                                     <th scope="col">Màu sắc</th>
                                                     <th scope="col">Size</th>
                                                     <th scope="col">Brand</th>
@@ -404,53 +468,60 @@
                                                 <tbody class="align-middle">
                                                 <tr th:each="sl : ${lstBillDetails}">
                                                     <input
-                                                            type="hidden"
-                                                            value="Activewear" th:value="${sl.productDetails.id}"
-                                                            th:name="id"
-                                                            id="productId"
-                                                            name="id"
+                                                        type="hidden"
+                                                        value="Activewear" th:value="${sl.productDetails.id}"
+                                                        th:name="id"
+                                                        id="productId"
+                                                        name="id"
                                                     />
                                                     <td>
                                                         <img
-                                                                th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
-                                                                th:src="@{'/user/display?id=' + ${sl.productDetails.productId.id} + '&imageId=' + ${sl.productDetails.productId.images[0].id}}"
-                                                                alt="Sản phẩm 1"
-                                                                style="max-width: 80px; max-height: 80px"
+                                                            th:if="${sl.productDetails.productId.images != null and not #lists.isEmpty(sl.productDetails.productId.images)}"
+                                                            th:src="@{'/user/display?id=' + ${sl.productDetails.productId.id} + '&imageId=' + ${sl.productDetails.productId.images[0].id}}"
+                                                            alt="Sản phẩm 1"
+                                                            style="max-width: 80px; max-height: 80px"
                                                         />
                                                     </td>
 
                                                     <td th:text="${sl.productDetails.productId.name}"></td>
+                                                    <td th:text="${ #temporals.format(sl.orders.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                                                     <td th:text="${sl.productDetails.colorId.name}"></td>
                                                     <td th:text="${sl.productDetails.sizeId.name}"></td>
                                                     <td th:text="${sl.productDetails.productId.brandId.name}"></td>
                                                     <td
-                                                            th:text="'₫' + ${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                                                        th:text="'₫' + ${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')}"></td>
                                                     <td class="align-middle">
-                                                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                        <div class="input-group quantity mx-auto"
+                                                             style="width: 100px;background-color: #f1a535;">
                                                             <input type="text" readonly
                                                                    class="form-control form-control-sm bg-secondary text-center"
                                                                    name="quantity" th:value="${sl.quantity}">
                                                         </div>
                                                     </td>
-                                                    <td class="align-middle" th:text="${sl.price * sl.quantity}"></td>
+                                                    <td class="align-middle"
+                                                        th:text="${'₫' +  #numbers.formatDecimal(sl.price * sl.quantity, 0, 'COMMA', 0, 'POINT')}"></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row" colspan="7" class="border-0"
                                                         style="text-align: right">
                                                         Voucher :
                                                     </th>
-                                                    <div  th:if="${bill.voucher != null}">
-                                                    <td class="border-0" style="text-align: right"
-                                                        th:text="'₫' + ${bill.voucher.discount}">
-                                                        - $25.50
-                                                    </td>
-                                                    <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
-                                                        %
-                                                    </td>
-                                                    <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
-                                                        VND
-                                                    </td>
-                                                    </div>
+                                                    <div th:if="${bill.voucher != null}">
+                                                        <td class="border-0"
+                                                            style="text-align: right; margin-left: 500px"
+                                                            th:text=" ${ '-'+ #numbers.formatDecimal(bill.voucher.discount , 0, 'POINT', 0, 'COMMA')}">
+                                                            - $25.50
+                                                        </td>
+                                                        <div th:if="${bill.voucher != null}">
+
+                                                            <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
+                                                                %
+                                                            </td>
+                                                            <td th:if="${bill.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
+                                                                VND
+                                                            </td>
+                                                        </div>
+
                                                 </tr>
                                                 <!-- end tr -->
                                                 <tr>
@@ -500,11 +571,10 @@
                                             <div style="text-align: right">
                                                 <!--                                    <a th:href="@{'/nova/bill/export-pdf/'+${bill.id}}"-->
                                                 <!--                                       class="btn btn-success me-1"><i class="fa fa-print"></i></a>-->
-                                                <a th:href="@{'/admin/hoa-don/hien-thi'}">
-                                                    <button type="submit" class="btn btn-secondary w-md"
-                                                            data-dismiss="modal">
+                                                <a style="text-decoration: none; font-size: 15px" th:href="@{'/admin/hoa-don/hien-thi'}">
+
                                                         Đóng
-                                                    </button>
+
                                                 </a>
                                             </div>
                                         </div>
@@ -589,20 +659,20 @@
                             <div class="selectgroup layout-color w-50">
                                 <label class="selectgroup-item">
                                     <input
-                                            type="radio"
-                                            name="value"
-                                            value="1"
-                                            class="selectgroup-input-radio select-layout"
-                                            checked
+                                        type="radio"
+                                        name="value"
+                                        value="1"
+                                        class="selectgroup-input-radio select-layout"
+                                        checked
                                     />
                                     <span class="selectgroup-button">Light</span>
                                 </label>
                                 <label class="selectgroup-item">
                                     <input
-                                            type="radio"
-                                            name="value"
-                                            value="2"
-                                            class="selectgroup-input-radio select-layout"
+                                        type="radio"
+                                        name="value"
+                                        value="2"
+                                        class="selectgroup-input-radio select-layout"
                                     />
                                     <span class="selectgroup-button">Dark</span>
                                 </label>
@@ -613,30 +683,30 @@
                             <div class="selectgroup selectgroup-pills sidebar-color">
                                 <label class="selectgroup-item">
                                     <input
-                                            type="radio"
-                                            name="icon-input"
-                                            value="1"
-                                            class="selectgroup-input select-sidebar"
+                                        type="radio"
+                                        name="icon-input"
+                                        value="1"
+                                        class="selectgroup-input select-sidebar"
                                     />
                                     <span
-                                            class="selectgroup-button selectgroup-button-icon"
-                                            data-toggle="tooltip"
-                                            data-original-title="Light Sidebar"
+                                        class="selectgroup-button selectgroup-button-icon"
+                                        data-toggle="tooltip"
+                                        data-original-title="Light Sidebar"
                                     ><i class="fas fa-sun"></i
                                     ></span>
                                 </label>
                                 <label class="selectgroup-item">
                                     <input
-                                            type="radio"
-                                            name="icon-input"
-                                            value="2"
-                                            class="selectgroup-input select-sidebar"
-                                            checked
+                                        type="radio"
+                                        name="icon-input"
+                                        value="2"
+                                        class="selectgroup-input select-sidebar"
+                                        checked
                                     />
                                     <span
-                                            class="selectgroup-button selectgroup-button-icon"
-                                            data-toggle="tooltip"
-                                            data-original-title="Dark Sidebar"
+                                        class="selectgroup-button selectgroup-button-icon"
+                                        data-toggle="tooltip"
+                                        data-original-title="Dark Sidebar"
                                     ><i class="fas fa-moon"></i
                                     ></span>
                                 </label>
@@ -674,10 +744,10 @@
                             <div class="theme-setting-options">
                                 <label class="m-b-0">
                                     <input
-                                            type="checkbox"
-                                            name="custom-switch-checkbox"
-                                            class="custom-switch-input"
-                                            id="mini_sidebar_setting"
+                                        type="checkbox"
+                                        name="custom-switch-checkbox"
+                                        class="custom-switch-input"
+                                        id="mini_sidebar_setting"
                                     />
                                     <span class="custom-switch-indicator"></span>
                                     <span class="control-label p-l-10">Mini Sidebar</span>
@@ -688,10 +758,10 @@
                             <div class="theme-setting-options">
                                 <label class="m-b-0">
                                     <input
-                                            type="checkbox"
-                                            name="custom-switch-checkbox"
-                                            class="custom-switch-input"
-                                            id="sticky_header_setting"
+                                        type="checkbox"
+                                        name="custom-switch-checkbox"
+                                        class="custom-switch-input"
+                                        id="sticky_header_setting"
                                     />
                                     <span class="custom-switch-indicator"></span>
                                     <span class="control-label p-l-10">Sticky Header</span>
@@ -700,8 +770,8 @@
                         </div>
                         <div class="mt-4 mb-4 p-3 align-center rt-sidebar-last-ele">
                             <a
-                                    href=""
-                                    class="btn btn-icon icon-left btn-primary btn-restore-theme"
+                                href=""
+                                class="btn btn-icon icon-left btn-primary btn-restore-theme"
                             >
                                 <i class="fas fa-undo"></i> Restore Default
                             </a>
