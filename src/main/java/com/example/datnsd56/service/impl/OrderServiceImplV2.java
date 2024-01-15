@@ -418,6 +418,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             if (voucherUsage.getIsUsed()) {
                 voucherUsage.setIsUsed(false);
                 voucherUsage.setIsVisible(true);
+                voucherUsage.setUsedDate(null);
                 voucherUsageRepository.save(voucherUsage);
 
 
@@ -427,9 +428,12 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
     public void cancalevoucher(Orders order, Voucher voucher) {
-        refundVoucherQuantity(voucher);
-        markVoucherAsUsedfalse(order.getAccountId(), voucher);
-        order.setVoucher(null);
+        if (voucher != null) {
+            refundVoucherQuantity(voucher);
+            markVoucherAsUsedfalse(order.getAccountId(), voucher);
+            order.setVoucher(null);
+        }
+
     }
 
     private void markVoucherAsUsed(Account account, Voucher voucher) {
@@ -439,6 +443,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             if (!voucherUsage.getIsUsed()) {
                 voucherUsage.setIsUsed(true);
                 voucherUsage.setIsVisible(false);
+                voucherUsage.setUsedDate(LocalDateTime.now());
                 voucherUsageRepository.save(voucherUsage);
 
 

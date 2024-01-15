@@ -28,5 +28,7 @@ Page<Account> findAccountByPhone(String phone, Pageable pageable);
 @Query(value="select*from account where fullname = ?1",nativeQuery = true)
     Optional<Account> findByName(String username);
 Account findByEmail (String email);
+    @Query(value="select*from account where fullname = ?1",nativeQuery = true)
+Account findByName1 (String username);
 }
 

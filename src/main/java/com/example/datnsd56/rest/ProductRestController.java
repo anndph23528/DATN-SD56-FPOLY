@@ -80,8 +80,8 @@ public ResponseEntity<Integer> checkQuantity(
             ProductDetails productDetails = productDetailsOptional.get();
 
             // Kiểm tra xem số lượng nhập vào có lớn hơn số lượng tồn kho không
-            if (quantity > productDetails.getQuantity() || quantity <=0) {
-                return ResponseEntity.status(400).body("Số lượng nhập vào vượt quá số lượng tồn kho");
+            if (quantity > productDetails.getQuantity() || quantity <= 0) {
+                return ResponseEntity.status(400).body("Số lượng nhập vào không hợp lệ");
             }
 
             // Kiểm tra và cập nhật số lượng trong giỏ hàng
@@ -103,6 +103,7 @@ public ResponseEntity<Integer> checkQuantity(
             return ResponseEntity.status(500).body("Cập nhật số lượng thất bại");
         }
     }
+
     @GetMapping("/product/check-login-status")
     @Transactional
     @ResponseBody

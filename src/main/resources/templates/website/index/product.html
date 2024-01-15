@@ -52,6 +52,13 @@
     <style>
         .card-header-form {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Điều chỉnh khoảng cách dưới cùng của card-header-form */
+        }
+
+        .filter-form {
+            display: flex;
             align-items: center;
         }
 
@@ -60,13 +67,19 @@
             margin-right: 10px;
         }
 
+        .form-control,
         .form-select {
-            width: 150px; /* Điều chỉnh độ rộng theo ý muốn */
+            width: 150px; /* Điều chỉnh chiều rộng của các input và select */
+            margin-right: 10px; /* Điều chỉnh khoảng cách giữa các input và select trong mỗi input-group */
         }
 
         .btn-primary {
-            margin-left: 10px; /* Điều chỉnh khoảng cách giữa ô nhập liệu và nút */
+            margin-left: 10px; /* Điều chỉnh khoảng cách giữa nút Filter và nút Tất cả sản phẩm */
         }
+
+
+
+
     </style>
 </head>
 <body>
@@ -260,7 +273,7 @@
 
         </div>
     <div class="card-header-form">
-        <form action="/product/search" method="get">
+        <form action="/product/search" method="get" class="filter-form">
             <!-- Lọc theo giá -->
             <div class="input-group">
                 <input type="text" name="minPrice" class="form-control" placeholder="Min Price">
@@ -279,7 +292,7 @@
             <!-- Lọc theo thương hiệu -->
             <div class="input-group">
                 <select name="brand" class="form-select">
-                    <option value="" selected disabled> Brand</option>
+                    <option value="" selected disabled>Brand</option>
                     <!-- Thêm các option từ danh sách thương hiệu -->
                     <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
                 </select>
@@ -287,13 +300,12 @@
 
             <!-- Nút để kích hoạt bộ lọc -->
             <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
-
-
         </form>
         <a th:href="@{'/product/hien-thi'}">
-
-            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Tất cả sản phẩm</button>          </a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Tất cả sản phẩm</button>
+        </a>
     </div>
+
 
 
 

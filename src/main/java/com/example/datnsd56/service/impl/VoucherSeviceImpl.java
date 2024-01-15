@@ -1,25 +1,21 @@
 package com.example.datnsd56.service.impl;
 
+import com.example.datnsd56.dto.MostUsedVoucherDTO;
 import com.example.datnsd56.entity.Account;
-import com.example.datnsd56.entity.Cart;
 import com.example.datnsd56.entity.Voucher;
 import com.example.datnsd56.entity.VoucherUsage;
 import com.example.datnsd56.repository.VoucherRepository;
 import com.example.datnsd56.service.VoucherService;
 import jakarta.transaction.Transactional;
-import org.hibernate.type.descriptor.java.LocalDateTimeJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,6 +35,12 @@ public class VoucherSeviceImpl implements VoucherService  {
         // Gọi repository để thực hiện truy vấn dựa trên điều kiện
         return voucherRepository.searchVouchers(searchText, String.valueOf(parsedStatus),pageable);
     }
+
+    @Override
+    public List<Voucher> findByCode1(String code) {
+        return voucherRepository.findByCode1(code);
+    }
+
     public Voucher getVoucherById(Integer id) {
         return voucherRepository.findById(id).orElse(null);
     }
@@ -46,6 +48,14 @@ public class VoucherSeviceImpl implements VoucherService  {
     public void saveVoucher(Voucher voucher) {
         voucher.setDiscount(voucher.getDiscount().setScale(2, RoundingMode.HALF_UP));
         voucherRepository.save(voucher);
+    }
+    public MostUsedVoucherDTO getMostUsedVoucher() {
+        List<Object[]> result = voucherRepository.findMostUsedVoucher();
+        if (!result.isEmpty()) {
+            Object[] data = result.get(0);
+            return new MostUsedVoucherDTO((Integer) data[0], (String) data[1], (Integer) data[2]);
+        }
+        return null;
     }
     public void updateVoucher(Voucher voucher) {
         Optional<Voucher> existingVoucherOptional = voucherRepository.findById(voucher.getId());
@@ -116,6 +126,17 @@ public class VoucherSeviceImpl implements VoucherService  {
 
         return voucherRepository.findAll(sortedPageable);
     }
+
+    @Override
+    public Optional<Voucher> findByCode(String code) {
+        return voucherRepository.findByCode(code);
+    }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return voucherRepository.existsByCode(code);
+    }
+
     public boolean canUseVoucher(Account account, Voucher voucher) {
         // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
         Set<VoucherUsage> voucherUsages = voucher.getVoucherUsages();
@@ -126,10 +147,7 @@ public class VoucherSeviceImpl implements VoucherService  {
         }
         return true; // Tài khoản chưa sử dụng voucher này
     }
-    @Override
-    public Optional<Voucher> findByCode(String code) {
-        return voucherRepository.findByCode(code);
-    }
+
     public Optional<Voucher> findByid(Integer id) {
         return voucherRepository.findById(id);
     }

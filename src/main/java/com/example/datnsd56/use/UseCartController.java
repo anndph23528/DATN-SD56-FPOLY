@@ -39,7 +39,7 @@ public class UseCartController {
     private ImageService imageService;
     @Autowired
     private ProductDetailsServiceImpl productDetailsServices;
-@Transactional
+    @Transactional
     @GetMapping("/cart")
     public String cart(Model model, Principal principal, HttpSession session) {
         if (principal == null) {
@@ -72,7 +72,7 @@ public class UseCartController {
         }
         return "website/index/giohang";
     }
-
+//@Transactional
     @PostMapping("/add-to-cart")
     @ResponseBody
     public ResponseEntity<String> addToCart(

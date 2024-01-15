@@ -275,13 +275,12 @@
                         <div class="card-header">
                             <h4>Voucher</h4>
                         </div>
+                        <div th:if="${errorMessage}" class="alert alert-danger">
+                            <p th:text="${errorMessage}"></p>
+                        </div>
                         <form th:action="@{/admin/voucher/new}" method="post" th:object="${voucher}"
                               onsubmit="return validateForm()">
-                            <div th:if="${errorMessage}" class="alert alert-danger">
-                                <p th:text="${errorMessage}"></p>
-                            </div><div th:if="${Message}" class="alert alert-success">
-                            <p th:text="${Message}"></p>
-                        </div>
+
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Mã Voucher</label>
@@ -459,7 +458,6 @@
         var discountType = document.getElementById("discountType").value;
         var quantityValue = parseInt(document.getElementById("quantity").value);
         var minOrderAmountValue = parseInt(document.getElementById("minOrderAmount").value);
-        // var expiryDateTime = parseInt(document.getElementById("expiryDateTime").value);
         var expiryDateTimeInput = document.getElementById("expiryDateTime");
         var expiryDateTime = new Date(expiryDateTimeInput.value);
         var currentDate = new Date();
@@ -468,6 +466,7 @@
             alert("Ngày hết hạn không thể là ngày quá khứ.");
             return false;
         }
+
         if (discountType === "PERCENTAGE" && discountValue >= 80) {
             var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + "%?");
             if (!confirmed) {
@@ -480,13 +479,14 @@
             if (!confirmed) {
                 return false;
             }
+
+            // Kiểm tra nếu kiểu giảm giá là "AMOUNT" và giá giảm lớn hơn đơn tối thiểu
+            if (discountValue >= minOrderAmountValue) {
+                alert("Giảm giá phải nhỏ hơn đơn tối thiểu.");
+                return false;
+            }
         }
 
-        // if (quantityValue > 100) {
-        //     alert("Số lượng không được lớn hơn 100");
-        //     return false;
-        // }
-        //
         if (minOrderAmountValue < 50000) {
             alert("Đơn tối thiểu phải là 50000 VND trở lên");
             return false;
@@ -495,6 +495,7 @@
         return true; // Nếu không có lỗi, cho phép submit form
     }
 </script>
+
 
 
 </body>
