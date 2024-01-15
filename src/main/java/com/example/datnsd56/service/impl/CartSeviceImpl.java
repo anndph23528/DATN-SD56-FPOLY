@@ -6,6 +6,7 @@ import com.example.datnsd56.repository.CartRepository;
 import com.example.datnsd56.service.AccountService;
 import com.example.datnsd56.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,9 +147,9 @@ public class CartSeviceImpl implements CartService {
     public Cart findByNguoiDungId(Integer id) {
         return cartRepository.findByAccountId(id);
     }
-
-    @Override
+   @Modifying
     @Transactional
+    @Override
     public Cart addToCart(ProductDetails productDetail, Integer quantity, String name) {
         Optional<Account> accountOptional = accountService.finByName(name);
 

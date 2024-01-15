@@ -78,6 +78,7 @@ public class ProductsServiceImpl implements ProductsService {
 
         return productRepository.findAll(spec);
     }
+    @Transactional
     @Override
     public List<Products> getAllPro() {
         return productRepository.findAll();

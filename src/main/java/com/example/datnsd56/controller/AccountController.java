@@ -104,11 +104,12 @@ public String add(@Valid @ModelAttribute("account") Account account, BindingResu
         return "/dashboard/account/account";
     }
   //   Kiểm tra xem email đã tồn tại hay chưa
-    if (accountService.findByEmail(account.getEmail()) != null) {
+    if (accountService.findByEmail(account.getEmail()) != null ) {
         // Email đã tồn tại, xử lý lỗi và trả về trang tạo tài khoản
         redirectAttributes.addFlashAttribute("errorMessage", "Email đã tồn tại");
         return "redirect:/admin/account/hien-thi";
     }
+
 
     // Hash the password using BCryptPasswordEncoder
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
