@@ -25,6 +25,66 @@
         .modal fade {
             z-index: auto;
         }
+             /* Style for the table */
+         #orderTable {
+             margin-top: 20px;
+             width: 100%;
+             background-color: #fff;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+             border-radius: 8px;
+             overflow: hidden;
+         }
+
+        #orderTable caption {
+            text-align: left;
+            font-size: 1.5em;
+            color: #4caf50;
+            padding: 10px 20px;
+        }
+
+        #orderTable th,
+        #orderTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #orderTable th {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        #orderTable img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        /* Style for the footer */
+        .footer {
+            color: #fff;
+        }
+
+        /* Style for the back-to-top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .back-to-top:hover {
+            background-color: #45a049;
+        }
+
+        #orderTable caption {
+            caption-side: top;
+        }
     </style>
 </head>
 
@@ -306,24 +366,28 @@
                                                 <h6 class="font-size-15 mb-2" th:if="${bill.accountId != null}"
                                                     th:text="'Khách hàng: ' + ${bill.accountId.name}">
                                                 </h6>
-                                                <h6 class="font-size-15 mb-2 font-italic"
-                                                    th:text="'Tên người nhận: ' + ${bill.fullname}">
-                                                </h6>
-                                                <p class="mb-1"
-                                                   th:text="'Địa chỉ nhận: ' + ${bill.address}">
-                                                </p>
-                                                <p th:if="${bill.phone != null}"
-                                                   th:text="'SĐT: ' + ${bill.phone}">
-                                                </p>
+
+                                                <th:block class="mb-1" th:with="addressParts=${bill.splitAddress(bill.address)}">
+                                                    <h6 class="font-size-15 mb-2 font-italic"
+                                                        th:text="'Tên người nhận : ' + ${addressParts[5].substring(addressParts[5].indexOf('=') + 1)}">
+                                                    </h6>
+                                                    <p class="mb-1"
+                                                       th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[3].substring(addressParts[3].indexOf('=') + 1)}"></p>
+                                                    <p class="mb-1"
+                                                       th:text="'SĐT: ' + ${addressParts[4].substring(addressParts[4].indexOf('=') + 1)}">
+                                                    </p>
+                                                </th:block>
+
                                             </div>
                                         </div>
+                                        <!-- end col -->
                                         <!-- end col -->
                                         <div class="col-sm-6">
                                             <div class="text-muted" style="text-align: right">
                                                 <div>
                                                     <h5 class="font-size-15 mb-1">Ngày mua hàng:</h5>
                                                     <p
-                                                            th:text="${bill.createDate}">
+                                                            th:text="${#temporals.format(bill.createDate, 'dd/MM/yyyy HH:mm')}">
                                                     </p>
                                                 </div>
                                             </div>

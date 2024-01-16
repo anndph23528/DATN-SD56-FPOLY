@@ -7,6 +7,7 @@ import com.example.datnsd56.service.VoucherUsageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class VoucherUsageHistoryServiceImpl implements VoucherUsageHistoryServic
     @Override
     public Page<VoucherUsageHistory> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable) {
         Page<VoucherUsageHistory> historyList = voucherUsageHistoryRepository.findAll(pageable);
+
 
         // Lọc theo ngày
         if (startDate != null && endDate != null) {
