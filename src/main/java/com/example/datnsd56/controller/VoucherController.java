@@ -133,7 +133,7 @@ public class VoucherController {
 
     @GetMapping("/delete/{id}")
     public String deleteVoucher(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        voucherService.deleteVoucher(id);
+        voucherService.deletess(id);
         redirectAttributes.addFlashAttribute("successMessage", "Voucher deleted successfully!");
         return "redirect:/admin/voucher/hien-thi";
     }

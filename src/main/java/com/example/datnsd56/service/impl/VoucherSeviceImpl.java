@@ -35,7 +35,9 @@ public class VoucherSeviceImpl implements VoucherService  {
         // Gọi repository để thực hiện truy vấn dựa trên điều kiện
         return voucherRepository.searchVouchers(searchText, String.valueOf(parsedStatus),pageable);
     }
-
+    public void deletess(Integer id) {
+        voucherRepository.deletects(id);
+    }
     @Override
     public List<Voucher> findByCode1(String code) {
         return voucherRepository.findByCode1(code);
