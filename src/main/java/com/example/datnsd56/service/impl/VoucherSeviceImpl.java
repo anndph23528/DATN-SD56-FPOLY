@@ -76,7 +76,7 @@ public class VoucherSeviceImpl implements VoucherService  {
             voucherRepository.save(existingVoucher);
         }
     }
-
+@Transactional
     public void deleteVoucher(Integer id) {
         voucherRepository.deleteById(id);
     }

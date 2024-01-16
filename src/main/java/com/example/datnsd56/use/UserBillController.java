@@ -180,11 +180,20 @@ UserBillController {
             Cart cart = account.getCart();
             for (CartItem cartItem : cart.getCartItems()) {
                 int productQuantity = cartItem.getProductDetails().getQuantity();
+                int productQuantity1 = cartItem.getQuantity();
 
                 // Kiểm tra số lượng sản phẩm
-                if (productQuantity == 0) {
+                if (productQuantity == 0 || productQuantity1 > productQuantity) {
                     return "redirect:/user/cart";
                 }
+//                if () {
+//                    // Trả về trang giỏ hàng và báo số lượng còn lại
+//                    model.addAttribute("outOfStockMessage", "Sản phẩm " + cartItem.getProductDetails().getProductId().getName() + " chỉ còn " + productQuantity + " sản phẩm.");
+//                    model.addAttribute("cart", cart);
+//                    model.addAttribute("grandTotal", cart.getTotalPrice());
+//
+//                    return "website/index/giohang";
+//                }
             }
             // Kiểm tra xem người dùng đã chọn địa chỉ từ danh sách hay không
             Address address;

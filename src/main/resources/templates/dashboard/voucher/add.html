@@ -467,34 +467,48 @@
             return false;
         }
 
-        if (discountType === "PERCENTAGE" && discountValue >= 80) {
-            var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + "%?");
-            if (!confirmed) {
+        if (discountType === "PERCENTAGE") {
+            if (discountValue >= 80) {
+                var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + "%?");
+                if (!confirmed) {
+                    return false;
+                }
+            }
+            if (discountValue > 100) {
+                alert("Chiết khấu không được lớn hơn 100%.");
                 return false;
             }
         }
 
-        if (discountType === "AMOUNT" && discountValue >= 1000000) {
-            var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + " VND?");
-            if (!confirmed) {
-                return false;
+        if (discountType === "AMOUNT") {
+            if (discountValue >= 1000000) {
+                var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + " VND?");
+                if (!confirmed) {
+                    return false;
+                }
             }
-
-            // Kiểm tra nếu kiểu giảm giá là "AMOUNT" và giá giảm lớn hơn đơn tối thiểu
-            if (discountValue >= minOrderAmountValue) {
-                alert("Giảm giá phải nhỏ hơn đơn tối thiểu.");
+            if (discountValue > minOrderAmountValue) {
+                alert("Chiết khấu không được lớn hơn giá trị đơn tối thiểu.");
                 return false;
             }
         }
 
-        if (minOrderAmountValue < 50000) {
-            alert("Đơn tối thiểu phải là 50000 VND trở lên");
+        if (quantityValue > 100) {
+            alert("Số lượng không được lớn hơn 100");
+            return false;
+        }
+
+        if (minOrderAmountValue < 500000) {
+            alert("Đơn tối thiểu phải là 500000 VND trở lên");
             return false;
         }
 
         return true; // Nếu không có lỗi, cho phép submit form
     }
 </script>
+
+
+
 
 
 
