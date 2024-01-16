@@ -555,7 +555,7 @@
                                         <th>Số lượng</th>
                                         <th>Đơn giá</th>
                                         <th>Ảnh</th>
-                                        <th>Trạng thai</th>
+<!--                                        <th>Trạng thai</th>-->
                                         <th>Hành động</th>
                                     </tr>
                                     <tr th:each="list:${list.content}">
@@ -580,7 +580,7 @@
                                             </div>
                                         </td>
 
-                                        <td th:text="${list.status ? 'Hoạt động' : 'Không hoạt động'}"></td>
+<!--                                        <td th:text="${list.status ? 'Hoạt động' : 'Không hoạt động'}"></td>-->
                                         <td>
                                             <a th:href="@{'/admin/chi-tiet-san-pham/delete/' + ${list.id}}">
                                                 <button type="button" class="btn btn-danger" onsubmit="return  confirm('Bạn có xoá không?')">Xoá</button>

@@ -1,6 +1,7 @@
 package com.example.datnsd56.repository;
 
 import com.example.datnsd56.entity.Voucher;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,10 @@ public interface VoucherRepository extends JpaRepository<Voucher,Integer> {
         "AND (:status IS NULL OR (:status = 'true' AND v.active = true) OR (:status = 'false' AND v.active = false))")
     Page<Voucher> searchVouchers(@Param("searchText") String searchText, @Param("status") String status,Pageable pageable);
 //    Page<Voucher> findAll(Pageable pageable, Sort createDate);
-
+@Transactional
+@Modifying
+@Query(value = "update [Voucher] set Active = 0 where id = ?", nativeQuery = true)
+void deletects(@Param("id") Integer id);
 @Query(value = "SELECT TOP 1 v.id, v.code, COUNT(vu.id) AS usageCount\n" +
     "FROM Voucher v\n" +
     "JOIN VoucherUsage vu ON v.id = vu.voucher_id\n" +

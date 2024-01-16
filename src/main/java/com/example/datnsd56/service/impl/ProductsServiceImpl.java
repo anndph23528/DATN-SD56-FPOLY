@@ -76,7 +76,7 @@ public class ProductsServiceImpl implements ProductsService {
             return builder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return productRepository.getAllPros1(spec);
+        return productRepository.findAll(spec);
     }
     @Transactional
     @Override
@@ -238,6 +238,7 @@ public class ProductsServiceImpl implements ProductsService {
         currentProduct.setUpdateDate(LocalDate.now());
         currentProduct.setMaterialId(products.getMaterialId());
         currentProduct.setShoeSoleId(products.getShoeSoleId());
+        currentProduct.setDescription(products.getDescription());
 
         // Nếu có ảnh mới được cung cấp
         // Trong hàm updateProduct
