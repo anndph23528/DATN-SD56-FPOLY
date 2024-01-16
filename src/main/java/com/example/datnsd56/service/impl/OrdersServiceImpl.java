@@ -369,7 +369,7 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, Integer page) {
+    public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate,String searchInput, Integer page) {
         // Create a Pageable object for the repository query
         Pageable pageable = PageRequest.of(page, 30, Sort.by(Sort.Direction.DESC, "createDate"));
 
@@ -381,7 +381,7 @@ public class OrdersServiceImpl implements OrdersService {
             List<Orders> filteredList = historyList.getContent()
                     .stream()
                     .filter(history -> !history.getCreateDate().isBefore(startDate.atStartOfDay())
-                            && !history.getCreateDate().isAfter(endDate.atTime(23, 59, 59)))
+                            && !history.getCreateDate().isAfter(endDate.atStartOfDay().plusDays(1)))
                     .collect(Collectors.toList());
 
             // Create a new PageImpl with the filtered list
