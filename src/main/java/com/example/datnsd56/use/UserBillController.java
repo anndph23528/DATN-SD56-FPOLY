@@ -129,7 +129,16 @@ UserBillController {
                     return "website/index/giohang";
                 }
             }
+            List<Voucher> allVouchers = voucherService.getAllls();
 
+            // Lấy danh sách voucher đã lưu cho tài khoản
+            List<VoucherUsage> voucherUsages = voucherUsageService.findVisibleVoucherUsagesByAccount(accountOptional.get().getId());
+
+            // Loại bỏ những voucher đã lưu khỏi danh sách tất cả voucher
+            allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
+
+//        model.addAttribute("allVouchers", allVouchers);
+            model.addAttribute("voucherUsages", voucherUsages);
             // Nếu có sản phẩm trong giỏ hàng và số lượng lớn hơn 0, chuyển hướng đến trang giohang1 hoặc checkout tùy thuộc vào logic của bạn
             List<Address> addressList = addressService.findAccountAddresses(account.getId());
             if (addressList.isEmpty()) {
