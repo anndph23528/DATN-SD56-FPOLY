@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -108,7 +109,7 @@ public class ThongKeController {
     }
 
     @GetMapping("hien-thi/thoi-gian")
-    public String viewHoaDonTime(@RequestParam("tuNgay")String tuNgay, @RequestParam("denNgay") String denNgay, Model model) {
+    public String viewHoaDonTime(@RequestParam(name = "tuNgay",required = false) LocalDate tuNgay, @RequestParam(name = "denNgay",required = false) LocalDate denNgay, Model model) {
         BigDecimal total1 = service.getToTal1();
         model.addAttribute("total1", total1);
         BigDecimal totalManey1 = service.getToTalManey1();

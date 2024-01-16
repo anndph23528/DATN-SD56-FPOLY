@@ -39,10 +39,10 @@ public class AccountSeviceImpl implements AccountService {
     }
 
     @Override
-    public void update(Account account) {
+    public Account update(Account account) {
         account.setCreateDate(new Date());
         account.setUpdateDate(new Date());
-        accountRepository.save(account);
+       return accountRepository.save(account);
 
     }
 

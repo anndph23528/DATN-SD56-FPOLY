@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -132,7 +133,7 @@ BigDecimal getTotalManey();
             "    Orderss AS O ON O.id = OI.order_id\n" +
             "WHERE \n" +
             "    O.create_date BETWEEN :tuNgay AND :denNgay", nativeQuery = true)
-    List<OrderItem> getAllByTime(@Param("tuNgay") String tuNgay, @Param("denNgay") String denNgay);
+    List<OrderItem> getAllByTime(@Param("tuNgay") LocalDate tuNgay, @Param("denNgay") LocalDate denNgay);
 
 
 

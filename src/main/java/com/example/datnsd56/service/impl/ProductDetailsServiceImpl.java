@@ -8,6 +8,7 @@ import com.example.datnsd56.repository.ImageRepository;
 import com.example.datnsd56.repository.ProductDetailsRepository;
 import com.example.datnsd56.repository.ProductsRepository;
 import com.example.datnsd56.service.ProductDetailsService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -225,7 +226,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     public Integer getQuantity(Integer id, Integer colorId, Integer sizeId) {
         return productDetailsRepository.getQuantity(id,colorId,sizeId);
     }
-
+@Transactional
     @Override
     public void update(ProductDetails productDetails) {
 

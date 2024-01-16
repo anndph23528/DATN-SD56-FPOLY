@@ -106,9 +106,9 @@ public class ProductsController {
 
     @PostMapping("/add-product")
     @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
-    public String addProduct(@Valid @ModelAttribute("sanPham") Products products, BindingResult result, Model model,@RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files) throws SQLException, IOException {
+    public String addProduct(@Valid @ModelAttribute("product") Products products, BindingResult result, Model model,@RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files) throws SQLException, IOException {
         if (result.hasErrors()) {
-            model.addAttribute("product", new Products());
+//            model.addAttribute("product", new Products());
             List<Brand> brands = brand.getAllBrand();
             model.addAttribute("brand", brands);
             model.addAttribute("brands", new Brand());
@@ -126,14 +126,25 @@ public class ProductsController {
             model.addAttribute("listPending", productDetailsService.listPending());
             model.addAttribute("listColor", colorService.getAllColor());
             model.addAttribute("listSize", sizeService.getAllSZ());
-//            return "dashboard/san-pham/add-san-pham";
+//            return "/dashboard/san-pham/add-san-pham";
+//            return "redirect:/admin/san-pham-test/create";
+
+
         }
+        if (productService.existsByName(products.getName())) {
+            model.addAttribute("errorMessage", "tên sản phẩm đã tồn tại đã tồn tại");
+            return "/dashboard/san-pham/add-san-pham";
+        }
+
 
         String code = "SP0" + new Random().nextInt(100000);
         products.setCode(code);
         products.setStatus(0);
         productService.addProduct(products, colorList, kichThuocList, files);
-        return "redirect:/admin/san-pham-test/create";
+//        model.addAttribute("listPending", productDetailsService.listPending());
+
+                    return "redirect:/admin/san-pham-test/create";
+
     }
 
     @PostMapping("/update-pending")

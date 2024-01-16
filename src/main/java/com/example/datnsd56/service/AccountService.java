@@ -11,7 +11,7 @@ public interface AccountService {
     Page<Account> getAll(Pageable pageable);
     Account detail(Integer id);
     Account add(Account account);
-    void update(Account account);
+    Account update(Account account);
     void delete(Integer id);
     Page<Account> findByPhone(String phone);
     List<Account> get();

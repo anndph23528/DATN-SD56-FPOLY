@@ -111,7 +111,7 @@ public class Config {
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write("Access Denied! You do not have permission to access this resource.");
-
+                    response.sendRedirect(request.getContextPath() + "/login/custom-login");
                 })
                 .and()
             .logout()

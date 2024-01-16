@@ -27,7 +27,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/address")
-@PreAuthorize("hasAuthority('admin')")
+//@PreAuthorize("hasAuthority('admin')")
 public class AddressController {
     @Autowired
     private AddressService addressService;
@@ -67,7 +67,7 @@ public class AddressController {
 
     }
     @GetMapping("/view-update/{id}")
-//    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('user')")
     public String detail(@PathVariable("id") Integer id,Model model){
 //        model.addAttribute("address",new Address());
         Address address= addressService.detail(id);
@@ -122,7 +122,7 @@ public class AddressController {
 //    }
 
     @PostMapping("/update/{id}")
-//    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('user')")
     public String update( @Valid @ModelAttribute("address") Address address,Principal principal, BindingResult result,@PathVariable("id") Integer id , Model model, HttpSession session) {
         if (result.hasErrors()) {
             model.addAttribute("address",address);
