@@ -24,6 +24,8 @@ public interface OrdersService {
 
     Page<Orders> getAllOrders(Integer page);
 
+    Page<Orders> getAllOrders1(Pageable pageable);
+
     Orders getOneBill(Integer id);
 
     void delete(Integer id);
@@ -54,7 +56,7 @@ Optional<Orders> getOrderId(Integer id);
     Orders completeOrder(Integer id,Account account);
 
 //    Page<Orders> search(LocalDateTime createDate, LocalDateTime updateDate);
-    Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable);
+    Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate,Integer page);
 
     Page<Orders> findByPhone(String phone);
 
