@@ -371,7 +371,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate,String searchInput, Integer page) {
         // Create a Pageable object for the repository query
-        Pageable pageable = PageRequest.of(page, 50, Sort.by(Sort.Direction.DESC, "createDate"));
+        Pageable pageable = PageRequest.of(page, 90, Sort.by(Sort.Direction.DESC, "createDate"));
 
         // Get the unfiltered page from the repository
         Page<Orders> historyList = ordersRepository.findAll(pageable);
