@@ -116,14 +116,13 @@ public class OrderController {
     public String getVoucherHistory(
             @RequestParam(name = "startDate", required = false) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) LocalDate endDate,
-            @RequestParam(name = "searchInput", required = false) String searchInput,
-            @PageableDefault(size = 10, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable,
-            Model model) {
-
-        Page<Orders> filteredHistory = ordersService.filterAndSearch(startDate, endDate, searchInput, pageable);
+//            @PageableDefault(size = 25, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model,@RequestParam(value = "page",defaultValue = "0") Integer page) {
+        Page<Orders> filteredHistory = ordersService.filterAndSearch(startDate, endDate, page);
         model.addAttribute("totalPages", filteredHistory.getTotalPages());
         model.addAttribute("currentPage", 0);
         model.addAttribute("list", filteredHistory);
+
         return "/dashboard/thongke-hoadon/hoa-don";
     }
 

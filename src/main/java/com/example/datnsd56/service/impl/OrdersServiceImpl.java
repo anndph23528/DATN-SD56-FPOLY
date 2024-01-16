@@ -80,6 +80,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public Page<Orders> getAllOrders1(Pageable pageable) {
+        return ordersRepository.findAll(pageable);
+    }
+
+    @Override
     public Orders getOneBill(Integer id) {
         return ordersRepository.findById(id).orElse(null);
     }
@@ -364,19 +369,30 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable) {
+    public Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate, Integer page) {
+        // Create a Pageable object for the repository query
+        Pageable pageable = PageRequest.of(page, 30, Sort.by(Sort.Direction.DESC, "createDate"));
+
+        // Get the unfiltered page from the repository
         Page<Orders> historyList = ordersRepository.findAll(pageable);
 
         // Lọc theo ngày
         if (startDate != null && endDate != null) {
-            historyList = historyList
+            List<Orders> filteredList = historyList.getContent()
                     .stream()
                     .filter(history -> !history.getCreateDate().isBefore(startDate.atStartOfDay())
                             && !history.getCreateDate().isAfter(endDate.atTime(23, 59, 59)))
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
+                    .collect(Collectors.toList());
+
+            // Create a new PageImpl with the filtered list
+            return new PageImpl<>(filteredList, pageable, filteredList.size());
         }
+
+        // If no date filtering is needed, return the unfiltered page
         return historyList;
     }
+
+
 
     @Override
     public Page<Orders> findByPhone(String phone) {

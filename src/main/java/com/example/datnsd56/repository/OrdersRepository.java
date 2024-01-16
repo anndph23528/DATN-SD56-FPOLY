@@ -1,10 +1,7 @@
 
 package com.example.datnsd56.repository;
 
-import com.example.datnsd56.entity.Account;
-import com.example.datnsd56.entity.OrderItem;
-import com.example.datnsd56.entity.Orders;
-import com.example.datnsd56.entity.Voucher;
+import com.example.datnsd56.entity.*;
 import com.example.datnsd56.responsi.OrdersCustomer;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
@@ -33,7 +30,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     Page<Orders> findByOrderStatus(int orderStatus,Pageable pageable);
 
     @Query(value = "select o.id,o.total,o.Shipping_fee,o.create_date,o.update_date,o.address,o.fullname,o.email,o.phone,o.sale_method,o.order_status,o.account_id,o.voucher_id,o.customer_id,o.code from Orderss o\n" +
-            "where o.phone = ?1 or o.fullname =?1",
+            "where o.phone = ?1 or o.fullname =?1 ",
             nativeQuery = true)
 
     Page<Orders> findOrdersByPhone(String phone, Pageable pageable);
@@ -52,6 +49,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
 
     @Query(value = "SELECT * FROM Orderss b WHERE b.account_id = ?1 ORDER BY b.create_date DESC",nativeQuery = true)
     List<Orders> getAllOrders(@Param("accountId") Integer accountId);
+
+    Page<Orders> findAll(Pageable pageable);
 
 //    List<Orders> findByAccountIdOrderByCreateDateDesc(Integer accountId);
 //@Query(value = "select * from  Orderss o where o.create_date BETWEEN :createDate AND :updateDate", nativeQuery = true)

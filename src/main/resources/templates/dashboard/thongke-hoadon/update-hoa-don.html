@@ -26,6 +26,17 @@
             z-index: auto;
         }
 
+             /* Style for the table */
+         #orderTable {
+             margin-top: 20px;
+             width: 100%;
+             background-color: #fff;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+             border-radius: 8px;
+             overflow: hidden;
+         }
+
+
         /* Style for the table */
         #orderTable {
             margin-top: 20px;
@@ -35,6 +46,7 @@
             border-radius: 8px;
             overflow: hidden;
         }
+
 
         #orderTable caption {
             text-align: left;
@@ -378,6 +390,19 @@
                                                        th:text="'Địa chỉ nhận : ' + ${addressParts[1].substring(addressParts[1].indexOf('=') + 1) +','+ addressParts[2].substring(addressParts[2].indexOf('=') + 1)+','+ addressParts[3].substring(addressParts[3].indexOf('=') + 1)}"></p>
                                                     <p class="mb-1"
                                                        th:text="'SĐT: ' + ${addressParts[4].substring(addressParts[4].indexOf('=') + 1)}">
+                                                    </p>
+                                                </th:block>
+
+                                            </div>
+                                        </div>
+                                        <!-- end col -->
+                                        <!-- end col -->
+                                        <div class="col-sm-6">
+                                            <div class="text-muted" style="text-align: right">
+                                                <div>
+                                                    <h5 class="font-size-15 mb-1">Ngày mua hàng:</h5>
+                                                    <p
+                                                            th:text="${#temporals.format(bill.createDate, 'dd/MM/yyyy HH:mm')}">
                                                     </p>
                                                 </th:block>
 
