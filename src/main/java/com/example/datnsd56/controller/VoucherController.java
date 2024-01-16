@@ -172,7 +172,7 @@ public class VoucherController {
         @PageableDefault(size = 10, sort = "usedDate", direction = Sort.Direction.DESC) Pageable pageable,
         Model model) {
 
-        List<VoucherUsageHistory> filteredHistory = voucherUsageHistoryService.filterAndSearch(startDate, endDate, searchInput);
+        List<VoucherUsage> filteredHistory = voucherUsageHistoryService.filterAndSearch(startDate, endDate, searchInput);
         model.addAttribute("history", filteredHistory);
         return "dashboard/voucher/lich-su-dung-voucher";
     }

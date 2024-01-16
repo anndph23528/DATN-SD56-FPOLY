@@ -14,5 +14,5 @@ public interface VoucherUsageHistoryService {
     Page<VoucherUsageHistory> getall(Pageable pageable);
     List<VoucherUsage> getALLhistory();
 
-    List<VoucherUsageHistory> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput);
+    List<VoucherUsage> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput);
 }

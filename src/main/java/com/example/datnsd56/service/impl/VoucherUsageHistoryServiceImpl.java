@@ -39,8 +39,8 @@ public class VoucherUsageHistoryServiceImpl implements VoucherUsageHistoryServic
     }
 
     @Override
-    public List<VoucherUsageHistory> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput) {
-        List<VoucherUsageHistory> historyList = voucherUsageHistoryRepository.findAllOrderByUsedDateDesc();
+    public List<VoucherUsage> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput) {
+        List<VoucherUsage> historyList = voucherUsageRepository.getALLhistory();
 
         // Filter by date
         if (startDate != null && endDate != null) {
