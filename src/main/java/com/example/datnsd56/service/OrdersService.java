@@ -56,7 +56,7 @@ Optional<Orders> getOrderId(Integer id);
     Orders completeOrder(Integer id,Account account);
 
 //    Page<Orders> search(LocalDateTime createDate, LocalDateTime updateDate);
-    Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate,Integer page);
+    Page<Orders> filterAndSearch(LocalDate startDate, LocalDate endDate,String searchInput,Integer page);
 
     Page<Orders> findByPhone(String phone);
 
