@@ -164,7 +164,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     public ProductDetails getById(Integer id) {
         return productDetailsRepository.findById(id).orElse(null);
     }
-
+    @Transactional
+    public void deleteAllProductDetails() {
+        productsRepository.deleteAll();
+    }
     @Override
     public Optional<ProductDetails> findById(Integer id) {
         Optional<ProductDetails> chiTietSanPham = productDetailsRepository.findById(id);

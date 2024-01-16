@@ -188,6 +188,7 @@ public class ViewProductController {
     }
 
     // Hàm để tạo Map nhóm sản phẩm theo brand
+    @Transactional
     private Map<String, List<Products>> createProductsByBrandMap(List<Products> products) {
         Map<String, List<Products>> productsByBrand = new HashMap<>();
         List<Products> productList;

@@ -116,14 +116,7 @@
           >Contact</a
           >
         </div>
-        <form action="">
-          <div class="border-start ps-4 d-none d-lg-block">
-            <input type="text" />
-            <button type="button" class="btn btn-sm p-0">
-              <i class="fa fa-search" style="margin-left: 5px"></i>
-            </button>
-          </div>
-        </form>
+
        <a th:href="@{/user/cart}">
           <button type="button" class="btn btn-sm p-0">
               <div id="cartIcon" th:if="${totalItems > 0}">
@@ -229,7 +222,7 @@
               Aliqu diam amet diam et eos. Clita erat ipsum lorem erat ipsum
               lorem sit sed
             </p> -->
-              <span style="color: #0D0A0A; font-weight: bold" class="text-body" th:text="${ #numbers.formatDecimal(product.productDetails[0].sellPrice, 0, 'COMMA', 0, 'POINT')} +' '+'VNĐ'">10000</span>
+              <span style="color: #0D0A0A; font-weight: bold" class="text-body" th:if="${product.productDetails.size() > 0}" th:text="${ #numbers.formatDecimal(product.productDetails[0].sellPrice, 0, 'COMMA', 0, 'POINT')} +' '+'VNĐ'">10000</span>
 
           </div>
           <div class="store-overlay">

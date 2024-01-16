@@ -37,7 +37,7 @@ private AccountService accountService;
     public String productView(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+        List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("nike"))
@@ -71,7 +71,7 @@ private AccountService accountService;
     public String viewMlb(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+         List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("mlb"))
@@ -105,7 +105,7 @@ private AccountService accountService;
     public String viewadidas(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+         List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("adidas"))
@@ -138,7 +138,7 @@ private AccountService accountService;
     public String viewlv(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+         List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("lv"))
@@ -172,7 +172,7 @@ private AccountService accountService;
     public String viewconvers(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+         List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("converse"))
@@ -205,7 +205,7 @@ private AccountService accountService;
     public String viewvans(Model model, Principal principal, HttpSession session) {
 //List<Products>lists=productsService.getAllPro();
         List<ProductDetails> list = productDetailsService.getAllCTSP();
-        List<Products> lists = productsService.getAllPro();
+         List<Products> lists = productsService.getAllPros();
         // Sắp xếp sản phẩm theo brand
         List<Products> nikeProducts = lists.stream()
             .filter(product -> product.getBrandId().getName().equalsIgnoreCase("vans"))
