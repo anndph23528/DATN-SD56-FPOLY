@@ -272,10 +272,10 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             orderDetails.setStatus(1);
 
             // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
-//            orderItemRepository.save(orderDetails);
+            orderItemRepository.save(orderDetails);
 
             // Giảm số lượng sản phẩm trong kho
-            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
+//            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
         }
     }
     // Trong OrderServiceImplV2

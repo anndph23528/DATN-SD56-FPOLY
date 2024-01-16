@@ -1,21 +1,24 @@
 package com.example.datnsd56.rest;
 
-import com.example.datnsd56.entity.Cart;
-import com.example.datnsd56.entity.ProductDetails;
-import com.example.datnsd56.entity.SessionCart;
+import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.CartService;
 import com.example.datnsd56.service.impl.CartSeviceImpl;
 import com.example.datnsd56.service.impl.ImageServiceImpl;
 import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
+import com.example.datnsd56.service.impl.VoucherSeviceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,20 +33,50 @@ private CartSeviceImpl cartSevice;
     private CartService cartServices;
     @Autowired
     private ImageServiceImpl imageService;
+    @Autowired
+    private VoucherSeviceImpl voucherService;
 //    @Autowired
 //    private RateService rateService;
-    @GetMapping("/product/detail/check-quantity")
+@GetMapping("/product/detail/check-quantity")
+@ResponseBody
+public ResponseEntity<Integer> checkQuantity(
+    @RequestParam("productId") Integer productId,
+    @RequestParam("size") Integer sizeId,
+    @RequestParam("color") Integer colorId,
+    @RequestParam("quantity") Integer quantity) {
+
+    // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
+    int remainingQuantity = productDetailsService.checkQuantity(productId, colorId, sizeId, quantity);
+
+    return new ResponseEntity<>(remainingQuantity, HttpStatus.OK);
+}
+    @PostMapping("/admin/voucher/new")
     @ResponseBody
-    public ResponseEntity<Integer> checkQuantity(
-            @RequestParam("productId") Integer productId,
-            @RequestParam("size") Integer sizeId,
-            @RequestParam("color") Integer colorId) {
+    public ResponseEntity<String> newVoucherSubmit(@ModelAttribute Voucher voucher, Model model, HttpSession session) {
+        BigDecimal discount = voucher.getDiscount();
 
-        // Thực hiện kiểm tra số lượng và trả về số lượng còn lại
-        int remainingQuantity = productDetailsService.checkQuantity(productId, colorId, sizeId);
-
-        return new ResponseEntity<>(remainingQuantity, HttpStatus.OK);
+        if (discount != null) {
+            if (voucher.getDiscountType() == DiscountType.PERCENTAGE &&
+                (discount.compareTo(BigDecimal.valueOf(80)) >= 0 &&
+                    discount.compareTo(BigDecimal.valueOf(100)) <= 0)) {
+                // Trả về thông báo yêu cầu xác nhận
+                return ResponseEntity.ok("confirm");
+            } else {
+                // Thực hiện lưu voucher
+                voucher.setStartDate(LocalDateTime.now());
+                voucher.setActive(true);
+                voucher.setDiscount(discount.setScale(2, RoundingMode.HALF_UP)); // Set scale cho giá trị discount
+                voucherService.saveVoucher(voucher);
+                session.setAttribute("successMessage", "Voucher created successfully!");
+                return ResponseEntity.ok("success");
+            }
+        } else {
+            // Xử lý khi discount là null, có thể trả về thông báo lỗi hoặc thực hiện các xử lý khác
+            return ResponseEntity.ok("error");
+        }
     }
+
+
 
     @GetMapping("/product/cart-total-items")
     @ResponseBody

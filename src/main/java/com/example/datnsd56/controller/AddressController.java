@@ -27,6 +27,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/address")
+@PreAuthorize("hasAuthority('admin')")
 public class AddressController {
     @Autowired
     private AddressService addressService;

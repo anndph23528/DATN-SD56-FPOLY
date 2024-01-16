@@ -25,7 +25,8 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/loai-giay")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class CategoryController {
     @Autowired
     private CategoryService service;

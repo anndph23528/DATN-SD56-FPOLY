@@ -31,7 +31,8 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/chi-tiet-san-pham/")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class ProductDetailsController {
     @Autowired
     private ProductDetailsService productDetailsService;
@@ -49,7 +50,8 @@ public class ProductDetailsController {
     private ImageService imageService;
 
     @GetMapping("hien-thi")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public String getAllBypage(Model model, @RequestParam(value = "page", defaultValue = "0") Integer pageNo) {
         Page<ProductDetails> page = productDetailsService.getAll(pageNo);
@@ -99,7 +101,8 @@ public class ProductDetailsController {
     }
 
     @GetMapping("/display")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public ResponseEntity<byte[]> getImage(@RequestParam("id") Integer productId,@RequestParam("imageId") Integer imageId,Model model) throws SQLException {
         List<Image> imageList = imageService.getImagesForProducts(productId,imageId);
@@ -116,7 +119,8 @@ public class ProductDetailsController {
     }
 
     @GetMapping("view-update/{id}")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 
     public String detail(@PathVariable("id") Integer id, Model model) {
         ProductDetails productDetails = productDetailsService.getById(id);

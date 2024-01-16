@@ -26,7 +26,8 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/de-giay")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
 public class ShoeSoleController {
     @Qualifier("shoeSoleServiceImpl")
     @Autowired
@@ -115,7 +116,8 @@ public class ShoeSoleController {
 
     }
     @GetMapping("/search")
-//    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
+
     public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
         model.addAttribute("shoeSole", new ShoeSole());
         Page<ShoeSole> page = service.findByName(name);

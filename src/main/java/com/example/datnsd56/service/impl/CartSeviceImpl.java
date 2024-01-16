@@ -180,8 +180,16 @@ public class CartSeviceImpl implements CartService {
                 // Lưu cartItem ngay sau khi thêm vào cartItems
                 cartItemRepository.save(cartItem);
             } else {
-                // Nếu cartItem đã tồn tại, cập nhật quantity
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                // Nếu cartItem đã tồn tại, kiểm tra xem có đủ số lượng không
+                int newQuantity = cartItem.getQuantity() + quantity;
+
+                if (newQuantity <= productDetail.getQuantity()) {
+                    // Nếu đủ số lượng, cập nhật quantity
+                    cartItem.setQuantity(newQuantity);
+                } else {
+                    // Nếu không đủ số lượng, throw exception
+                    throw new RuntimeException("Sản phẩm không có đủ số lượng!");
+                }
             }
 
             BigDecimal totalPrice = totalPrice(cartItems);
@@ -200,6 +208,7 @@ public class CartSeviceImpl implements CartService {
             throw new RuntimeException("Account not found for name: " + name);
         }
     }
+
 
 
 

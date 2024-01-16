@@ -746,7 +746,7 @@
 
         updateQuantityDisplay();
 
-        $("#addToCartButton").click(function (e) {
+        $("#addToCartButton1").click(function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
@@ -799,10 +799,11 @@
                         data: {
                             productId: productId,
                             size: sizeId,
-                            color: colorId
+                            color: colorId,
+                            quantity: quantity
                         },
                         success: function (remainingQuantity) {
-                            if (remainingQuantity < quantity) {
+                            if (remainingQuantity > quantity) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Sản phẩm không có đủ số lượng!',
@@ -916,7 +917,7 @@
 
         updateQuantityDisplay();
 
-        $("#addToCartButton1").click(function (e) {
+        $("#addToCartButton").click(function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
@@ -969,18 +970,21 @@
                         data: {
                             productId: productId,
                             size: sizeId,
-                            color: colorId
+                            color: colorId,
+                            quantity: quantity
                         },
                         success: function (remainingQuantity) {
-                            if (remainingQuantity < quantity) {
+                            if (remainingQuantity >= 0) {
+                                // Nếu số lượng đủ, thực hiện thêm vào giỏ hàng
+                                addToCart(productId, sizeId, colorId, quantity);
+                            } else {
+                                // Nếu không đủ số lượng, hiển thị thông báo lỗi
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Sản phẩm không có đủ số lượng!',
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
-                            } else {
-                                addToCart(productId, sizeId, colorId, quantity);
                             }
                         },
                         error: function () {
@@ -1029,7 +1033,7 @@
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function () {
-                            window.location.href = '/user/cart';
+                            window.location.href = '/product/detail/chi-tiet/' + productId;
                         });
                     }
                 },
@@ -1055,6 +1059,13 @@
         }
     });
 </script>
+
+
+
+
+
+
+
 
 <!--<script th:inline="javascript">-->
 <!--    /*<![CDATA[*/-->

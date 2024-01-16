@@ -23,14 +23,14 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/thuong-hieu")
-@PreAuthorize("hasAuthority('admin')")
+@PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
 public class BrandController {
     @Qualifier("brandServiceImpl")
     @Autowired
     private BrandService service;
 
     @GetMapping("/hien-thi")
-    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin')")
     public String viewChatLieu(@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
         model.addAttribute("brand", new Brand());
         Page<Brand> page = service.getAll(pageNo);
