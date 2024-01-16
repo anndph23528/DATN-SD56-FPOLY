@@ -205,7 +205,7 @@ public class OrderController {
     }
 
     @GetMapping("hien-thi/thoi-gian")
-    public String viewHoaDonTime(@RequestParam("tuNgay")String tuNgay, @RequestParam("denNgay") String denNgay, Model model) {
+    public String viewHoaDonTime(@RequestParam("tuNgay")LocalDate tuNgay, @RequestParam("denNgay") LocalDate denNgay, Model model) {
         BigDecimal total1 = service1.getToTal1();
         model.addAttribute("total1", total1);
         BigDecimal totalManey1 = service1.getToTalManey1();

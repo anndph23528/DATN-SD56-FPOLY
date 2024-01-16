@@ -6,6 +6,7 @@ import com.example.datnsd56.entity.Size;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ThongKeService {
@@ -20,7 +21,7 @@ public interface ThongKeService {
     List<OrderItem> getAllhoanthanh();
     List<OrderItem> getAlldanggiao();
     List<OrderItem> getAllTop5();
-    List<OrderItem> getAllByTime(String tuNgay, String DenNgay);
+    List<OrderItem> getAllByTime(LocalDate tuNgay, LocalDate DenNgay);
     BigDecimal getToTal1();
     BigDecimal getToTalManey1();
     BigDecimal getToTalHuy();

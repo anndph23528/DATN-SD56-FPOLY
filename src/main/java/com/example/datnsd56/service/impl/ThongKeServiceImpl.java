@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ThongKeServiceImpl implements ThongKeService {
@@ -74,8 +76,17 @@ public class ThongKeServiceImpl implements ThongKeService {
     }
 
     @Override
-    public List<OrderItem> getAllByTime(String tuNgay, String DenNgay) {
-        return repository.getAllByTime(tuNgay,DenNgay);
+    public List<OrderItem> getAllByTime(LocalDate tuNgay, LocalDate DenNgay) {
+List<OrderItem> orderItemList=repository.getAllQ();
+        if (tuNgay != null && DenNgay != null) {
+            orderItemList = orderItemList
+                .stream()
+                .filter(history ->
+                    !history.getOrders().getCreateDate().isBefore(tuNgay.atStartOfDay()) &&
+                        !history.getOrders().getCreateDate().isAfter(DenNgay.atStartOfDay().plusDays(1)))
+                .collect(Collectors.toList());
+        }
+        return orderItemList;
     }
 
     @Override

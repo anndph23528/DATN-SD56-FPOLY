@@ -481,16 +481,17 @@
         }
 
         if (discountType === "AMOUNT") {
+            if (discountValue > minOrderAmountValue) {
+                alert("Chiết khấu không được lớn hơn giá trị đơn tối thiểu.");
+                return false;
+            }
             if (discountValue >= 1000000) {
                 var confirmed = confirm("Bạn có chắc chắn muốn thêm voucher với chiết khấu " + discountValue + " VND?");
                 if (!confirmed) {
                     return false;
                 }
             }
-            if (discountValue > minOrderAmountValue) {
-                alert("Chiết khấu không được lớn hơn giá trị đơn tối thiểu.");
-                return false;
-            }
+
         }
 
         if (quantityValue > 100) {
