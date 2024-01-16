@@ -27,6 +27,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     public Page<OrdersCustomer> hienThiPageHD(Pageable pageable);
 
     List<Orders> findAllByOrderStatus(Integer orderStatus);
+    Page<Orders> findByOrderStatus(int orderStatus,Pageable pageable);
 
     @Query(value = "select o.id,o.total,o.Shipping_fee,o.create_date,o.update_date,o.address,o.fullname,o.email,o.phone,o.sale_method,o.order_status,o.account_id,o.voucher_id,o.customer_id,o.code from Orderss o\n" +
             "where o.phone = ?1 or o.fullname =?1 ",

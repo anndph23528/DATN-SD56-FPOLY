@@ -299,15 +299,15 @@
                                 <p th:text="${errorMessage}"></p>
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label>Mã sản phẩm</label>
-                                    <div class="input-group colorpickerinput">
-                                        <input type="text" class="form-control" placeholder="Nhập mã sản phẩm"
-                                               th:field="*{code}">
-                                        <span th:if="${#fields.hasErrors('code')}" style="color: red; font-size: 13px"
-                                              th:errors="*{code}"></span>
-                                    </div>
-                                </div>
+<!--                                <div class="form-group">-->
+<!--                                    <label>Mã sản phẩm</label>-->
+<!--                                    <div class="input-group colorpickerinput">-->
+<!--                                        <input type="text" class="form-control" placeholder="Nhập mã sản phẩm"-->
+<!--                                               th:field="*{code}">-->
+<!--                                        <span th:if="${#fields.hasErrors('code')}" style="color: red; font-size: 13px"-->
+<!--                                              th:errors="*{code}"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <div class="form-group">
                                     <label>Tên sản phẩm</label>
                                     <input type="text" class="form-control" placeholder="Nhập tên sản phẩm"
@@ -761,7 +761,7 @@
                                                        th:value="${ctsp.sellPrice}" style="height: 35px"/>
                                             </td>
                                             <td>
-                                                <a th:href="@{/admin/san-pham/delete-chi-tiet-san-pham/{id}(id=${ctsp.id})}"
+                                                <a th:href="@{'/admin/san-pham-test/delete-chi-tiet-san-pham/'+ ${ctsp.id}}"
                                                    class="btn waves-effect waves-light btn-rounded btn-danger">Xóa</a>
                                             </td>
                                         </tr>

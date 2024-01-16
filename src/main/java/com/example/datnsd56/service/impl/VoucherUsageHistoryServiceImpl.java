@@ -1,7 +1,9 @@
 package com.example.datnsd56.service.impl;
 
+import com.example.datnsd56.entity.VoucherUsage;
 import com.example.datnsd56.entity.VoucherUsageHistory;
 import com.example.datnsd56.repository.VoucherUsageHistoryRepository;
+import com.example.datnsd56.repository.VoucherUsageRepository;
 import com.example.datnsd56.service.VoucherUsageHistoryService;
 import com.example.datnsd56.service.VoucherUsageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,8 @@ import java.util.stream.Collectors;
 public class VoucherUsageHistoryServiceImpl implements VoucherUsageHistoryService {
     @Autowired
     private VoucherUsageHistoryRepository voucherUsageHistoryRepository;
-
+    @Autowired
+    private VoucherUsageRepository voucherUsageRepository;
     @Override
     public List<VoucherUsageHistory> findAllOrderByUsedDateDesc() {
         return voucherUsageHistoryRepository.findAllOrderByUsedDateDesc();
@@ -31,32 +34,43 @@ public class VoucherUsageHistoryServiceImpl implements VoucherUsageHistoryServic
     }
 
     @Override
-    public Page<VoucherUsageHistory> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput, Pageable pageable) {
-        Page<VoucherUsageHistory> historyList = voucherUsageHistoryRepository.findAll(pageable);
+    public List<VoucherUsage> getALLhistory() {
+        return voucherUsageRepository.getALLhistory();
+    }
+
 
 
         // Lọc theo ngày
+
+    @Override
+    public List<VoucherUsage> filterAndSearch(LocalDate startDate, LocalDate endDate, String searchInput) {
+        List<VoucherUsage> historyList = voucherUsageRepository.getALLhistory();
+
+        // Filter by date
+
         if (startDate != null && endDate != null) {
             historyList = historyList
                 .stream()
-                .filter(history -> !history.getUsedDate().isBefore(startDate.atStartOfDay())
-                    && !history.getUsedDate().isAfter(endDate.atTime(23, 59, 59)))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
+                .filter(history ->
+                    !history.getUsedDate().isBefore(startDate.atStartOfDay()) &&
+                        !history.getUsedDate().isAfter(endDate.atStartOfDay().plusDays(1)))
+                .collect(Collectors.toList());
         }
 
-        // Tìm kiếm theo mã voucher hoặc tên người dùng
+        // Search by voucher code or account name
         if (searchInput != null && !searchInput.isEmpty()) {
             String lowerCaseSearchInput = searchInput.toLowerCase();
             historyList = historyList
                 .stream()
                 .filter(history ->
-                    history.getVoucher().getCode().toLowerCase().contains(lowerCaseSearchInput)
-                        || history.getAccount().getName().toLowerCase().contains(lowerCaseSearchInput))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
+                    history.getVoucher().getCode().toLowerCase().contains(lowerCaseSearchInput) ||
+                        history.getAccount().getName().toLowerCase().contains(lowerCaseSearchInput))
+                .collect(Collectors.toList());
         }
 
         return historyList;
     }
+
 
     public Page<VoucherUsageHistory> getAll(Pageable pageable) {
         return voucherUsageHistoryRepository.findAll(pageable);

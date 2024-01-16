@@ -321,6 +321,11 @@
                                           th:errors="*{quantity}"></span>
                                 </div>
                                 <div class="form-group">
+                                    <label>Đơn tối thiểu</label>
+                                    <input type="number" class="form-control" name="minOrderAmount" placeholder="Nhập đơn tối thiểu " id="minOrderAmount" th:field="*{minOrderAmount}" required>
+                                    <span th:if="${#fields.hasErrors('minOrderAmount')}" style="color: red; font-size: 13px" th:errors="*{minOrderAmount}"></span>
+                                </div>
+                                <div class="form-group">
                                     <a th:href="@{/admin/voucher/update}">
                                         <button class="btn btn-primary mr-1" type="submit">sửa</button>
                                     </a>

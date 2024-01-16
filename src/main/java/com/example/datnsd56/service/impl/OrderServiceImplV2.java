@@ -47,8 +47,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     @Autowired
     private VoucherUsageService voucherUsageService;
     @Autowired
-    private  VoucherUsageHistoryRepository voucherUsageHistoryRepository;
-
+    private VoucherUsageHistoryRepository voucherUsageHistoryRepository;
 
 
     @Transactional
@@ -115,7 +114,6 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
 
-
     @Override
     public BigDecimal calculateTotalWithVoucher(Cart cart, String selectedVoucherCode, String username) {
         // Lấy thông tin giỏ hàng
@@ -168,14 +166,10 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
 
-
-
-
     @Override
     public List<VoucherUsage> findByIsVisibleTrue() {
         return voucherUsageRepository.findByIsVisibleTrue();
     }
-
 
 
     public Orders placeOrderss(Cart cart, String address, String voucherCode, String selectedVoucherCode) {
@@ -188,7 +182,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         processOrderDetailss(cart, order);
 
         // Áp dụng voucher nếu có
-        applyVoucher(order, voucherCode, selectedVoucherCode);
+        applyVouchers(order, voucherCode, selectedVoucherCode);
 
         return order;
     }
@@ -213,6 +207,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     public Orders createOrder(Cart cart, String address) {
         // Tạo mới đối tượng Orders và thiết lập thông tin cần thiết
         Orders order = new Orders();
+        String code = "HD0" + new Random().nextInt(100000);
+        order.setCode(code);
         order.setAddress(address);
         order.setPhone(cart.getAccountId().getPhone());
         order.setEmail(cart.getAccountId().getEmail());
@@ -226,6 +222,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         return order;
     }
+
     public void updateOrderStatusToCancelled(Orders order) {
         // Kiểm tra xem đơn hàng có tồn tại không
         if (order != null) {
@@ -278,6 +275,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 //            reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
         }
     }
+
     // Trong OrderServiceImplV2
     public void saveOrderAfterVnpaySuccess(Orders order, Cart cart) {
         // Lưu đơn hàng và chi tiết đơn hàng vào cơ sở dữ liệu sau khi thanh toán VNPAY thành công
@@ -286,6 +284,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 
         // Các bước xử lý khác sau khi thanh toán VNPAY thành công (nếu có)
     }
+
     public void saveOrderAfterSuccess(Orders order, Cart cart) {
         // Lưu đơn hàng vào cơ sở dữ liệu
         order = ordersRepository.save(order);
@@ -311,8 +310,8 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 if (canUseVoucher && voucher.getQuantity() > 0) {
                     // Áp dụng voucher từ mã
                     applyVoucherByCode(order, voucher);
-                }else {
-                    return ;
+                } else {
+                    return;
                 }
             }
         } else if (selectedVoucherCode != null && !selectedVoucherCode.isEmpty()) {
@@ -321,7 +320,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
                 Voucher selectedVoucher = selectedVoucherOptional.get();
                 boolean canUseVouchers = canUseVoucher(order.getAccountId(), selectedVoucher);
 
-                if (canUseVouchers && selectedVoucher.getQuantity() >0) {
+                if (canUseVouchers && selectedVoucher.getQuantity() > 0)  {
                     // Áp dụng voucher từ danh sách
                     applyVoucherFromList(order, selectedVoucher);
                 }
@@ -356,13 +355,86 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
         saveVoucherUsageHistorys(order.getAccountId(), voucher);
         order.setVoucher(voucher);
     }
+
+    public void applyVouchers(Orders order, String voucherCode, String selectedVoucherCode) {
+        if ((voucherCode != null && !voucherCode.isEmpty()) && (selectedVoucherCode != null && !selectedVoucherCode.isEmpty())) {
+            // Xử lý trường hợp cả hai điều kiện đều đúng
+            // Ứng với tài khoản, bạn cần xác định thứ tự ưu tiên hoặc xử lý sao nếu cả hai voucher đều có thể áp dụng.
+        } else if (voucherCode != null && !voucherCode.isEmpty()) {
+            Optional<Voucher> voucherOptional = voucherService.findByCode(voucherCode);
+            if (voucherOptional.isPresent()) {
+                Voucher voucher = voucherOptional.get();
+                boolean canUseVoucher = canUseVoucher(order.getAccountId(), voucher);
+
+                if (canUseVoucher && voucher.getQuantity() > 0) {
+                    // Áp dụng voucher từ mã
+                    applyVoucherByCode(order, voucher);
+                } else {
+                    return;
+                }
+            }
+        } else if (selectedVoucherCode != null && !selectedVoucherCode.isEmpty()) {
+            Optional<Voucher> selectedVoucherOptional = voucherService.findByCode(selectedVoucherCode);
+            if (selectedVoucherOptional.isPresent()) {
+                Voucher selectedVoucher = selectedVoucherOptional.get();
+                boolean canUseVouchers = canUseVoucher(order.getAccountId(), selectedVoucher);
+
+                if (canUseVouchers && selectedVoucher.getQuantity() > 0) {
+                    // Áp dụng voucher từ danh sách
+                    applyVoucherFromLists(order, selectedVoucher);
+                }
+            }
+        }
+    }
+    private void applyVoucherFromLists(Orders order, Voucher voucher) {
+        BigDecimal discountValue = calculateDiscountValue(voucher, order.getTotal());
+        BigDecimal discountedTotal = order.getTotal().subtract(discountValue);
+        order.setTotal(discountedTotal);
+// Giảm số lượng voucher sau khi áp dụng
+        reduceVoucherQuantity(voucher);
+
+        // Đánh dấu voucher là đã sử dụng
+        markVoucherAsUsed(order.getAccountId(), voucher);
+//        saveVoucherUsageHistorys(order.getAccountId(), voucher);
+        order.setVoucher(voucher);
+    }
     private void reduceVoucherQuantity(Voucher voucher) {
         int remainingQuantity = voucher.getQuantity() - 1;
         voucher.setQuantity(remainingQuantity);
         voucherService.saveVoucher(voucher);
     }
 
+    private void refundVoucherQuantity(Voucher voucher) {
+        int remainingQuantity = voucher.getQuantity() + 1;
+        voucher.setQuantity(remainingQuantity);
+        voucherService.saveVoucher(voucher);
+    }
+
     // ...
+    private void markVoucherAsUsedfalse(Account account, Voucher voucher) {
+        // Đánh dấu voucher là đã sử dụng trong bảng VoucherUsage
+        List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVoucher(account, voucher);
+        for (VoucherUsage voucherUsage : voucherUsages) {
+            if (voucherUsage.getIsUsed()) {
+                voucherUsage.setIsUsed(false);
+                voucherUsage.setIsVisible(true);
+                voucherUsage.setUsedDate(null);
+                voucherUsageRepository.save(voucherUsage);
+
+
+                return;  // Nếu tìm thấy và đánh dấu, thoát khỏi hàm để tránh đánh dấu nhiều lần.
+            }
+        }
+    }
+
+    public void cancalevoucher(Orders order, Voucher voucher) {
+        if (voucher != null) {
+            refundVoucherQuantity(voucher);
+            markVoucherAsUsedfalse(order.getAccountId(), voucher);
+            order.setVoucher(null);
+        }
+
+    }
 
     private void markVoucherAsUsed(Account account, Voucher voucher) {
         // Đánh dấu voucher là đã sử dụng trong bảng VoucherUsage
@@ -371,6 +443,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
             if (!voucherUsage.getIsUsed()) {
                 voucherUsage.setIsUsed(true);
                 voucherUsage.setIsVisible(false);
+                voucherUsage.setUsedDate(LocalDateTime.now());
                 voucherUsageRepository.save(voucherUsage);
 
 
@@ -380,7 +453,7 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     }
 
 
-    private void saveVoucherUsageHistorys(Account account, Voucher voucher) {
+    public void saveVoucherUsageHistorys(Account account, Voucher voucher) {
         // Lưu lịch sử sử dụng voucher vào bảng VoucherUsageHistory
         VoucherUsageHistory voucherUsageHistory = new VoucherUsageHistory();
         voucherUsageHistory.setAccount(account);
@@ -392,19 +465,18 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
     // ...
 
 
-
-
     private boolean canUseVoucher(Account account, Voucher voucher) {
         // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
         List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVoucher(account, voucher);
         for (VoucherUsage usage : voucherUsages) {
-            if (!usage.getIsUsed() && !isVoucherExpired(voucher) && voucher.getQuantity() >0 ) {
+            if (!usage.getIsUsed() && !isVoucherExpired(voucher) && voucher.getQuantity() > 0 && account.getCart().getTotalPrice().compareTo(voucher.getMinOrderAmount()) >= 0) {
                 return true; // Tài khoản có thể sử dụng voucher này
             }
         }
         return false; // Tài khoản không thể sử dụng voucher này
     }
-//    private boolean canUseVouchers(Account account, String selectedVoucherCode ) {
+
+    //    private boolean canUseVouchers(Account account, String selectedVoucherCode ) {
 //        // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
 //        List<VoucherUsage> voucherUsages = voucherUsageRepository.findByAccountAndVouchers(account, selectedVoucherCode);
 //        for (VoucherUsage usage : voucherUsages) {
@@ -425,28 +497,18 @@ public class OrderServiceImplV2 implements OrderSeriveV2 {
 //        return voucher.getExpiryDateTime() != null && currentDateTime.isAfter(selectedVoucherCode.getExpiryDateTime());
 //    }
 
-        private boolean canUseVouchers(Account account, Voucher voucher) {
-            // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
-            Set<VoucherUsage> voucherUsages = voucher.getVoucherUsages();
+    private boolean canUseVouchers(Account account, Voucher voucher) {
+        // Kiểm tra xem voucher có được sử dụng bởi tài khoản hay không
+        Set<VoucherUsage> voucherUsages = voucher.getVoucherUsages();
 
-            for (VoucherUsage usage : voucherUsages) {
-                if (usage.getAccount().equals(account) && !usage.getIsUsed()) {
-                    return true; // Nếu tìm thấy voucher chưa sử dụng của tài khoản
-                }
+        for (VoucherUsage usage : voucherUsages) {
+            if (usage.getAccount().equals(account) && !usage.getIsUsed()) {
+                return true; // Nếu tìm thấy voucher chưa sử dụng của tài khoản
             }
-
-            return false; // Tài khoản không thể sử dụng voucher này
         }
 
-
-
-
-
-
-
-
-
-
+        return false; // Tài khoản không thể sử dụng voucher này
+    }
 
 
     @Override

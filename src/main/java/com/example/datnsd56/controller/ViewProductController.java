@@ -11,6 +11,7 @@ import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,10 @@ public class ViewProductController {
     private VoucherUsageService voucherUsageService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private BrandService brandService;
 //    @Autowired
 //    private VoucherSeviceImpl voucherService;
     @GetMapping("/trang-chu")
@@ -64,10 +69,30 @@ public class ViewProductController {
         model.addAttribute("totalItems", totalCartItems);
         return "/website/index/index";
     }
+
+    @GetMapping("/list")
+    public String productList(Model model) {
+        List<Products> allProducts = productsService.getAllPro();
+        List<Category> allCategories = categoryService.getAllCate();
+        List<Brand> allBrands = brandService.getAllBrand();
+
+        model.addAttribute("products", allProducts);
+        model.addAttribute("categories", allCategories);
+        model.addAttribute("brands", allBrands);
+
+        return "website/index/product";
+    }
+    @Transactional
     @GetMapping("/hien-thi")
     public String productView(Model model, Principal principal, HttpSession session) {
         List<Products> lists = productsService.getAllPros();
+        List<Products> allProducts = productsService.getAllPro();
+        List<Category> allCategories = categoryService.getAllCate();
+        List<Brand> allBrands = brandService.getAllBrand();
 
+        model.addAttribute("products", allProducts);
+        model.addAttribute("categories", allCategories);
+        model.addAttribute("brands", allBrands);
         // Lấy danh sách tất cả voucher
         List<Voucher> allVouchers = voucherSeviceImpl.getAllls();
 
@@ -138,6 +163,44 @@ public class ViewProductController {
     }
 
 
+    @GetMapping("/search")
+    public String searchProducts(
+        @RequestParam(name = "minPrice", required = false) Double minPrice,
+        @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+        @RequestParam(name = "category", required = false) Integer categoryId,
+        @RequestParam(name = "brand", required = false) Integer brandId,
+        Model model
+    ) {
+        List<Products> filteredProducts = productsService.searchProducts(minPrice, maxPrice, categoryId, brandId);
+        List<Category> allCategories = categoryService.getAllCate();
+        List<Brand> allBrands = brandService.getAllBrand();
+
+        model.addAttribute("products", filteredProducts);
+        model.addAttribute("categories", allCategories);
+        model.addAttribute("brands", allBrands);
+
+        // Tạo một Map để nhóm sản phẩm theo brand
+        Map<String, List<Products>> productsByBrand = createProductsByBrandMap(filteredProducts);
+
+        model.addAttribute("productsByBrand", productsByBrand);
+
+        return "website/index/product";
+    }
+
+    // Hàm để tạo Map nhóm sản phẩm theo brand
+    private Map<String, List<Products>> createProductsByBrandMap(List<Products> products) {
+        Map<String, List<Products>> productsByBrand = new HashMap<>();
+        List<Products> productList;
+
+        for (Products product : products) {
+            String brandName = product.getBrandId().getName();
+            productList = productsByBrand.getOrDefault(brandName, new ArrayList<>());
+            productList.add(product);
+            productsByBrand.put(brandName, productList);
+        }
+
+        return productsByBrand;
+    }
     @GetMapping("/display")
     public ResponseEntity<byte[]> getImage(@RequestParam("id") Integer productId,@RequestParam("imageId") Integer imageId) throws SQLException {
         List<Image> imageList= imageService.getImagesForProducts(productId,imageId);

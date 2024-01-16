@@ -289,6 +289,19 @@
 
                                     <button type="submit">Lọc</button>
                                 </form>
+                                <!-- Trong HTML template (mostUsedVoucher.html) -->
+                                <!-- Trong HTML template (mostUsedVoucher.html) -->
+                                <h2>Voucher được sử dụng nhiều nhất</h2>
+
+                                <div th:if="${mostUsedVoucher != null}">
+<!--                                    <p>ID: <span th:text="${mostUsedVoucher.id}"></span></p>-->
+                                    <p>Code: <span th:text="${mostUsedVoucher.code}"></span></p>
+                                    <p>Lượt đã dùng: <span th:text="${mostUsedVoucher.usageCount}"></span></p>
+                                </div>
+                                <div th:if="${mostUsedVoucher == null}">
+                                    <p>No voucher has been used yet.</p>
+                                </div>
+
 
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -308,17 +321,18 @@
                                             </thead>
                                             <tbody>
                                             <tr th:each="ht : ${history}">
-                                                <td th:text="${ht.voucher.code}"></td>
+                                                <td th:if="${ht.voucher!= null}" th:text="${ht.voucher.code}"></td>
                                                 <td th:text="${ht.account.name}"></td>
                                                 <td th:text="${#temporals.format(ht.usedDate, 'dd/MM/yyyy HH:mm')}"></td>
-                                                <td th:text="${#numbers.formatDecimal(ht.voucher.discount, 0, 'COMMA', 0, 'POINT')}"></td>
+                                                <td th:if="${ht.voucher!= null}" th:text="${#numbers.formatDecimal(ht.voucher.discount, 0, 'COMMA', 0, 'POINT')}"></td>
+                                               <div th:if="${ht.voucher!= null}">
                                                 <td th:if="${ht.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
                                                     %
                                                 </td>
                                                 <td th:if="${ht.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
                                                     VND
                                                 </td>
-
+                                               </div>
                                             </tr>
                                             </tbody>
                                         </table>

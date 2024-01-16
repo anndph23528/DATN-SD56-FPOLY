@@ -37,9 +37,15 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 //            "WHERE v.quantity = ?1 or v.sellPrice= ?1")
     Page<ProductDetails> findProductDetailsBySellPrice(Double sellPrice, Pageable pageable);
 
-//    List<ProductDetails> findByProductId(Integer productId);
+    Page<ProductDetails> findBySellPriceBetween(Double minPrice, Double maxPrice, Pageable pageable);
+
+    Page<ProductDetails> findByProductId_NameContainingIgnoreCase(String name, Pageable pageable);
 
 
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM Product_details  WHERE id =?1",nativeQuery = true)
+    void deleteByProductId( Integer id);
     @Query(value = "select * from Product_details where status = 0", nativeQuery = true)
     List<ProductDetails> listPending();
 

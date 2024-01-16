@@ -298,6 +298,23 @@
 
                                     <button type="submit">Lọc</button>
                                 </form>
+                                <div class="filter-buttons" style="text-align: right">
+                                    <button class="btn btn-success">
+                                        <a  href="/admin/hoa-don/hien-thi" style="color: black;text-decoration: none">All</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/hoa-don/hien-thi/cho-xac-nhan" style="color: black;text-decoration: none">Chờ xác nhận</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/hoa-don/hien-thi/cho-giao-hang" style="color: black;text-decoration: none">Chờ giao hàng</a></button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/hoa-don/hien-thi/dang-giao" style="color: black;text-decoration: none">Đang Giao</a>
+                                    </button>
+                                    <button class="btn btn-primary">
+                                        <a href="/admin/hoa-don/hien-thi/hoan-thanh" style="color: black;text-decoration: none">Hoàn
+                                            Thành</a></button>
+                                    <button class="btn btn-danger">
+                                        <a href="/admin/hoa-don/hien-thi/huy" style="color: black;text-decoration: none">Hủy</a></button>
+
+                                </div>
                                 <div class="card-body">
                                     <div class="card-header">
                                             <form action="/admin/hoa-don/search " method="get">
@@ -315,7 +332,7 @@
                                     <div class="table-responsive">
                                         <table class="table text-center">
                                             <tr>
-                                                <th scope="col">Id</th>
+                                                <th scope="col">Mã Hóa Đơn</th>
                                                 <th scope="col">Khách Hàng</th>
                                                 <th scope="col">Ngày đặt</th>
                                                 <th scope="col">Số điện thoại</th>
@@ -325,9 +342,9 @@
                                             </tr>
                                             <tbody>
                                             <tr th:each="bill : ${list.content}">
-                                                <td th:text="${bill.id}"></td>
+                                                <td th:text="${bill.code}"></td>
                                                 <td th:text="${bill.accountId.name}"></td>
-                                                <td th:text="${(bill.createDate)}"></td>
+                                                <td th:text="${ #temporals.format(bill.createDate, 'dd/MM/yyyy HH:mm')}"></td>
                                                 <td th:text="${(bill.phone)}"></td>
                                                 <td th:text="'₫' + ${#numbers.formatDecimal(bill.total, 0, 'COMMA', 0, 'POINT')}"></td>
 <!--                                                <td th:text="${bill.getStatusName()}">-->

@@ -10,9 +10,7 @@ import com.example.datnsd56.repository.ProductsRepository;
 import com.example.datnsd56.service.ProductDetailsService;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +22,8 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,9 +39,30 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Override
     public Page<ProductDetails> getAll(Integer pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, 5);
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, "id"));
         return productDetailsRepository.findAll(pageable);
     }
+    @Override
+    public Page<ProductDetails> searchByPriceRange(Double minPrice, Double maxPrice, Pageable pageable) {
+        return productDetailsRepository.findBySellPriceBetween(minPrice, maxPrice, pageable);
+    }
+
+    // Phương thức tìm kiếm theo tên
+    @Override
+    public Page<ProductDetails> searchByName(String productName, Pageable pageable) {
+        return productDetailsRepository.findByProductId_NameContainingIgnoreCase(productName, pageable);
+    }
+
+    // Phương thức lấy tất cả sản phẩm chi tiết
+//    @Override
+//    public Page<ProductDetails> getAllProductDetails(Pageable pageable) {
+//        return productDetailsRepository.findAll(pageable);
+//    }
+    @Override
+    public Page<ProductDetails> getAllProductDetails(Pageable pageable) {
+        return productDetailsRepository.findAll(pageable);
+    }
+
     @Override
     // Trong ProductService hoặc ProductRepository
     public boolean isQuantityAvailable(Integer productId, Integer sizeId, Integer colorId, Integer requestedQuantity) {
@@ -89,9 +110,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Override
     public Page<ProductDetails> search( Double sellPrice) {
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 10);
         return productDetailsRepository.findProductDetailsBySellPrice( sellPrice, pageable);
     }
+
 
     @Override
     public ProductDetails add(ProductDetails productDetails, MultipartFile[] files) throws IOException, SQLException {
@@ -175,6 +197,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     @Override
     public void delete(Integer id) {
         productDetailsRepository.deletects(id);
+    }
+
+    @Override
+    public void deletess(Integer id) {
+        productDetailsRepository.deleteById(id);
     }
 
     @Override

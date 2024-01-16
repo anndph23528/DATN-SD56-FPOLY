@@ -93,5 +93,10 @@ public class AccountSeviceImpl implements AccountService {
         return accountRepository.findByEmail(Email);
     }
 
+    @Override
+    public Account findByName1(String username) {
+        return accountRepository.findByName1(username);
+    }
+
 
 }

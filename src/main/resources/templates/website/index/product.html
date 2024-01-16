@@ -49,7 +49,38 @@
     <!-- Template Stylesheet -->
     <!--    <link th:href="@{/../resources/dashboard/css/style.css}" rel="stylesheet" />-->
     <link th:href="@{/dashboard/css/style1.css}" rel="stylesheet"/>
+    <style>
+        .card-header-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Điều chỉnh khoảng cách dưới cùng của card-header-form */
+        }
 
+        .filter-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            margin-right: 10px;
+        }
+
+        .form-control,
+        .form-select {
+            width: 150px; /* Điều chỉnh chiều rộng của các input và select */
+            margin-right: 10px; /* Điều chỉnh khoảng cách giữa các input và select trong mỗi input-group */
+        }
+
+        .btn-primary {
+            margin-left: 10px; /* Điều chỉnh khoảng cách giữa nút Filter và nút Tất cả sản phẩm */
+        }
+
+
+
+
+    </style>
 </head>
 <body>
 <!-- Spinner Start -->
@@ -196,6 +227,7 @@
 
 <!-- Products Start -->
 <div class="container-fluid product py-5">
+
     <div class="container py-5">
 <!--        <input type="color" style="text-align: right"> lọc-->
         <p class="fs-5 fw-medium fst-italic text-primary ">Voucher</p>
@@ -210,18 +242,23 @@
                         <div class="voucher-discount" >
                             <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).AMOUNT}">
                                 <p>
-                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> VND
+                                    Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')} "></span> VND
+
                                 </p>
+                                <div style="font-size: 15px" th:text="${ ' Đơn tối thiểu :' + ' '+ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT') +'VNĐ'}"> </div>
+
                             </div>
                             <div th:if="${voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE}">
                                 <p>
                                     Giảm <span style="color: red" th:text="${#numbers.formatDecimal(voucher.discount, 0, 'COMMA', 0, 'POINT')}"></span> %
                                 </p>
+                                <div style="font-size: 15px" th:text="${ ' Đơn tối thiểu :' + ' '+ #numbers.formatDecimal(voucher.minOrderAmount , 0, 'COMMA', 0, 'POINT') +'VNĐ'}"> </div>
+
                             </div>
                         </div>
                         <div class="voucher-content" th:text="${voucher.description}">cho những sản phẩm của của like, adidas</div>
                         <div class="voucher-hsd" th:text="${'HSD :'+' ' + voucher.expiryDateTime}">HSD: 23/23/2023</div>
-                        <div class="voucher-hsd" th:text="${'Số Lượng  :'+' ' + voucher.quantity}">HSD: 23/23/2023</div>
+                        <div class="voucher-hsd" th:text="${'Số Lượng còn lại  :'+' ' + voucher.quantity}">HSD: 23/23/2023</div>
                         <form th:action="@{/product/saveVoucher/{voucherId}(voucherId=${voucher.id})}" method="get">
                             <button type="submit" class="save-button">  Lưu
                             </button>
@@ -235,11 +272,47 @@
             <h1 class="display-6" STYLE="text-align: center">Our Products</h1>
 
         </div>
+    <div class="card-header-form">
+        <form action="/product/search" method="get" class="filter-form">
+            <!-- Lọc theo giá -->
+            <div class="input-group">
+                <input type="text" name="minPrice" class="form-control" placeholder="Min Price">
+                <input type="text" name="maxPrice" class="form-control" placeholder="Max Price">
+            </div>
+
+            <!-- Lọc theo thể loại -->
+            <div class="input-group">
+                <select name="category" class="form-select">
+                    <option value="" selected disabled>Loại</option>
+                    <!-- Thêm các option từ danh sách thể loại -->
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+
+            <!-- Lọc theo thương hiệu -->
+            <div class="input-group">
+                <select name="brand" class="form-select">
+                    <option value="" selected disabled>Brand</option>
+                    <!-- Thêm các option từ danh sách thương hiệu -->
+                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                </select>
+            </div>
+
+            <!-- Nút để kích hoạt bộ lọc -->
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+        </form>
+        <a th:href="@{'/product/hien-thi'}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Tất cả sản phẩm</button>
+        </a>
+    </div>
 
 
 
-        <!--        &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;LV &ndash;&gt;-->
-        <div
+
+
+
+    <!--        &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;LV &ndash;&gt;-->
+        <div th:if="${productsByBrand != null}"
                 th:each="entry : ${productsByBrand.entrySet()}"
                 class="brand-container"
         >

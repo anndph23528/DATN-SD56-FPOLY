@@ -3,6 +3,7 @@ package com.example.datnsd56.service.impl;
 import com.example.datnsd56.entity.OrderItem;
 import com.example.datnsd56.entity.Orders;
 import com.example.datnsd56.entity.Size;
+import com.example.datnsd56.repository.OrdersRepository;
 import com.example.datnsd56.repository.ThongKeRepository;
 import com.example.datnsd56.service.ThongKeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ import java.util.List;
 public class ThongKeServiceImpl implements ThongKeService {
     @Autowired
     private ThongKeRepository repository;
-
+    @Autowired
+    private OrdersRepository ordersRepository;
     @Override
     public List<OrderItem> getAll() {
         return repository.getAllQ();
@@ -27,6 +29,33 @@ public class ThongKeServiceImpl implements ThongKeService {
     @Override
     public List<OrderItem> getAllhuy() {
         return repository.getAllByStatushuy();
+    }
+
+    @Override
+    public Page<Orders> getAllhuy1() {
+        Pageable pageable=PageRequest.of(0,10);
+        return ordersRepository.findByOrderStatus(0,pageable);
+    }
+    @Override
+    public Page<Orders> getAllhuy2() {
+        Pageable pageable=PageRequest.of(0,10);
+        return ordersRepository.findByOrderStatus(10,pageable);
+    }
+    @Override
+    public Page<Orders> getAllhuy3() {
+        Pageable pageable=PageRequest.of(0,10);
+        return ordersRepository.findByOrderStatus(1,pageable);
+    }
+    @Override
+    public Page<Orders> getAllhuy4() {
+        Pageable pageable=PageRequest.of(0,10);
+        return ordersRepository.findByOrderStatus(2,pageable);
+    }
+
+    @Override
+    public Page<Orders> getAllhuy5() {
+        Pageable pageable=PageRequest.of(0,10);
+        return ordersRepository.findByOrderStatus(3,pageable);
     }
 
     @Override
@@ -62,6 +91,11 @@ public class ThongKeServiceImpl implements ThongKeService {
     @Override
     public BigDecimal getToTalHuy() {
         return repository.getTotalHuy();
+    }
+
+    @Override
+    public BigDecimal getToTalHt() {
+        return repository.getTotalHt();
     }
 
     @Override

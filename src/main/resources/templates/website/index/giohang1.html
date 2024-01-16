@@ -217,7 +217,8 @@ https://templatemo.com/tm-559-zay-shop
             <span th:text="${mess}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <form id="orderForm" th:action="@{/user/add-order}" method="post">
+        <form id="orderForm" th:action="@{/user/add-order}" method="post"
+        onsubmit="return confirm('Bạn chắc chắn đặt hàng hay không ?')">
             <!-- Nút thêm sản phẩm mới -->
             <div>
                 <a th:href="@{/product/hien-thi}">
@@ -392,7 +393,7 @@ https://templatemo.com/tm-559-zay-shop
                             <option value="">-- Chọn voucher --</option>
                             <th:block th:each="voucherUsage : ${voucherUsages}">
                                 <option style="color: red" th:value="${voucherUsage.voucher.code}"
-                                        th:text="${voucherUsage.voucher.code} + ' || '+' Giảm :' + (${voucherUsage.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE ? #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + '%' : #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + ' VND'}) +' || ' + 'HSD:' +${#temporals.format(voucherUsage.voucher.expiryDateTime, 'dd/MM/yyyy HH:mm')} + ''+  'Số lượng:' + ${voucherUsage.voucher.quantity} "></option>
+                                        th:text="${voucherUsage.voucher.code} + ' / '+' Giảm :' + (${voucherUsage.voucher.discountType == T(com.example.datnsd56.entity.DiscountType).PERCENTAGE ? #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + '%' : #numbers.formatDecimal(voucherUsage.voucher.discount, 0, 'COMMA', 0, 'POINT') + ' VND'}) +' / ' + 'HSD:' +${#temporals.format(voucherUsage.voucher.expiryDateTime, 'dd/MM/yyyy HH:mm')} + '/'+  'Số lượng:' + ${voucherUsage.voucher.quantity}  + '/' +'Đơn tối thiểu' +${  #numbers.formatDecimal(voucherUsage.voucher.minOrderAmount, 0, 'COMMA', 0, 'POINT')} +'VND'  "></option>
 
                             </th:block>
                         </select>

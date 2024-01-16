@@ -1,5 +1,6 @@
 package com.example.datnsd56.controller;
 
+import com.example.datnsd56.dto.MostUsedVoucherDTO;
 import com.example.datnsd56.entity.*;
 import com.example.datnsd56.service.VoucherService;
 import com.example.datnsd56.service.VoucherUsageHistoryService;
@@ -31,6 +32,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/voucher")
@@ -45,7 +47,7 @@ public class VoucherController {
     public String getAllByPage(Model model,@RequestParam(defaultValue = "0") Integer page){
         voucherService.checkAndDeactivateExpiredVouchers();
 //        model.addAttribute("voucher", new Voucher());
-        Page<Voucher> page1 = voucherService.getAll(PageRequest.of(page,5));
+        Page<Voucher> page1 = voucherService.getAll(PageRequest.of(page,10));
         model.addAttribute("vouchers", page1);
         return "dashboard/voucher/voucher";
 
@@ -64,7 +66,29 @@ public class VoucherController {
         return "dashboard/voucher/voucher";
 
     }
+    @PostMapping("/new")
+    public String newVoucherSubmit(@Valid @ModelAttribute("voucher") Voucher voucher, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            // Nếu có lỗi validation, điều hướng trở lại form với thông báo lỗi
+            Page<Voucher> page1 = voucherService.getAll(Pageable.ofSize(5));
+            model.addAttribute("vouchers", page1);
+            return "dashboard/voucher/add";
+        }
 
+        // Kiểm tra xem mã voucher đã tồn tại hay không
+        if (voucherService.existsByCode(voucher.getCode())) {
+            model.addAttribute("errorMessage", "Mã voucher đã tồn tại");
+            return "dashboard/voucher/add";
+        }
+
+        // Email không tồn tại, tiếp tục xử lý
+        voucher.setStartDate(LocalDateTime.now());
+        voucher.setActive(true);
+        voucherService.saveVoucher(voucher);
+        redirectAttributes.addFlashAttribute("successMessage", "Voucher created successfully!");
+
+        return "redirect:/admin/voucher/hien-thi";
+    }
 
 
 
@@ -111,7 +135,7 @@ public class VoucherController {
     public String deleteVoucher(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         voucherService.deleteVoucher(id);
         redirectAttributes.addFlashAttribute("successMessage", "Voucher deleted successfully!");
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/voucher/hien-thi";
     }
 //    @GetMapping("/lich-su-dung-voucher")
 //    public String lSVoucher(Model model,@RequestParam(defaultValue = "0") Integer page){
@@ -124,7 +148,11 @@ public class VoucherController {
 
     @GetMapping("/lich-su-dung-voucher")
     public String lSVoucher1(Model model){
-        List<VoucherUsageHistory> voucherUsageHistories = voucherUsageHistoryService.findAllOrderByUsedDateDesc();
+        List<VoucherUsage> voucherUsageHistories = voucherUsageHistoryService.getALLhistory();
+        MostUsedVoucherDTO mostUsedVoucher = voucherService.getMostUsedVoucher();
+
+        // Thêm thông tin vào model để hiển thị trên trang HTML
+        model.addAttribute("mostUsedVoucher", mostUsedVoucher);
 
         model.addAttribute("history",voucherUsageHistories);
         return "dashboard/voucher/lich-su-dung-voucher";
@@ -144,11 +172,29 @@ public class VoucherController {
         @PageableDefault(size = 10, sort = "usedDate", direction = Sort.Direction.DESC) Pageable pageable,
         Model model) {
 
-        Page<VoucherUsageHistory> filteredHistory = voucherUsageHistoryService.filterAndSearch(startDate, endDate, searchInput, pageable);
+        List<VoucherUsage> filteredHistory = voucherUsageHistoryService.filterAndSearch(startDate, endDate, searchInput);
         model.addAttribute("history", filteredHistory);
         return "dashboard/voucher/lich-su-dung-voucher";
     }
+//    @GetMapping("/most-used-voucher")
+//    public String getMostUsedVoucher(Model model) {
+//        Object[] mostUsedVoucher = voucherService.findMostUsedVoucher();
+//        // Truyền dữ liệu tới view thông qua model
+//        model.addAttribute("mostUsedVoucher", mostUsedVoucher);
+//
+//        // Trả về tên view (HTML template) để hiển thị kết quả
+//        return "mostUsedVoucher";
+//    }
 
-
+    @GetMapping("/search")
+    public String searchVouchers(
+        @RequestParam(name = "searchText", required = false) String searchText,
+        @RequestParam(name = "status", required = false) String status,
+        Model model) {
+        // Xử lý lọc và trả về kết quả
+        Page<Voucher> filteredVouchers = voucherService.searchVouchers(searchText, status);
+        model.addAttribute("vouchers", filteredVouchers);
+        return "/dashboard/voucher/voucher";
+    }
 
 }

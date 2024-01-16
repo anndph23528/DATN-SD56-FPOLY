@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/product/")
-@PreAuthorize("hasAuthority('admin')")
+//@PreAuthorize("hasAuthority('admin')")
 public class VoucherContrller2 {
 
     @Autowired
@@ -77,23 +77,4 @@ private VoucherSeviceImpl voucherSevice;
         return "website/index/user-voucher";
     }
 
-//    @GetMapping("/vouchers1")
-//    public String getVouchers1(Model model, Principal principal) {
-//        // Lấy thông tin tài khoản đang đăng nhập
-//        Optional<Account> account = accountService.finByName(principal.getName());
-//
-//
-//        // Lấy danh sách tất cả voucher
-//        List<Voucher> allVouchers = voucherSeviceImpl.getAllVouchers();
-//
-//        // Lấy danh sách voucher đã lưu cho tài khoản
-//        List<VoucherUsage> voucherUsages = voucherUsageService.findVoucherUsagesByAccount(account.get().getId());
-//
-//        // Loại bỏ những voucher đã lưu khỏi danh sách tất cả voucher
-//        allVouchers.removeAll(voucherUsages.stream().map(VoucherUsage::getVoucher).collect(Collectors.toList()));
-//
-//        model.addAttribute("allVouchers", allVouchers);
-////        model.addAttribute("voucherUsages", voucherUsages);
-//        return "website/index/vc1";
-//    }
 }

@@ -37,6 +37,9 @@ public interface VoucherUsageRepository extends JpaRepository<VoucherUsage, Inte
         "AND v.expiryDateTime > CURRENT_TIMESTAMP" +
         " AND v.quantity > 0 ")
     List<VoucherUsage> findVisibleVoucherUsagesByAccount(Integer accountId);
+    @Query(value = "select * from VoucherUsage where is_used=1",nativeQuery = true)
+    List<VoucherUsage> getALLhistory();
+
 
     @Query(value = "SELECT * FROM VoucherUsage WHERE account_id = ?1", nativeQuery = true)
     List<VoucherUsage> findVoucherUsagesByAccount(Integer accountId);

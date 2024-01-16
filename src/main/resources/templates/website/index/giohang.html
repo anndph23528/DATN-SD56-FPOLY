@@ -60,10 +60,30 @@ https://templatemo.com/tm-559-zay-shop
 
 -->
     <style>
-        .hidden {
-            display: none;
+        .quantity-container {
+            position: relative;
         }
 
+        .quantity-text {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            font-size: 12px;
+            color: #FF0000; /* Màu chữ */
+            margin-top: 4px; /* Khoảng cách giữa input và chữ */
+        }
+
+        .quantity-error{
+            top: 100%;
+            left: 0;
+            font-size: 12px;
+            color: #FF0000; /* Màu chữ */
+            margin-top: 4px;
+        }
+        .quantity-error p1{
+            font-size: 5px;
+
+        }
     </style>
     <!-- ... (Các khai báo khác như trong mã HTML trước) ... -->
 </head>
@@ -103,8 +123,13 @@ https://templatemo.com/tm-559-zay-shop
             <!--                        </div>-->
             <!--                    </div>-->
             <!--                </label>-->
-            <!--            </div>-->
+            <!--
+                       </div>-->
+<!--            <div th:if="${outOfStockMessage}" class="alert alert-warning" role="alert">-->
+<!--                <span th:text="${outOfStockMessage}"></span>-->
+<!--            </div>-->
             <table class="table" th:if="${grandTotal}">
+
                 <thead>
                 <tr>
                     <th scope="col">Ảnh</th>
@@ -149,10 +174,22 @@ https://templatemo.com/tm-559-zay-shop
                                 min="0"
                                 th:name="quantity"
                                 name="quantity"
-                                oninput="updateQuantity(this)"
+                                onchange="updateQuantity(this)"
                                 id="quantity"
-                            />
+                                th:class="${sl.quantity == 0 ? 'quantity-error' : ''}"
+                            /> <br>
+                            <span class="quantity-error" th:if="${sl.quantity > sl.productDetails.quantity}" th:text=" 'Số lượng không đủ. Sản phẩm hiện có:' +' ' + ${sl.productDetails.quantity}">
+
+    </span>
+
                         </td>
+
+
+
+
+
+
+
 
                         <td class="" th:text="${#numbers.formatDecimal(sl.price, 0, 'COMMA', 0, 'POINT')} + 'VND'"></td>
                         <td class="" th:text="${#numbers.formatDecimal(sl.price * sl.quantity, 0, 'COMMA', 0, 'POINT')} + 'VND '"></td>
@@ -339,8 +376,7 @@ https://templatemo.com/tm-559-zay-shop
 <script th:inline="javascript">
     function updateQuantity(inputElement) {
         try {
-            var productId = $("input[name='productId']").val();
-
+            var productId = $(inputElement).closest('tr').find("input[name='productId']").val();
             var quantity = inputElement.value;
 
             // Gửi yêu cầu Ajax để cập nhật số lượng
@@ -362,8 +398,10 @@ https://templatemo.com/tm-559-zay-shop
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // Thực hiện bất kỳ hành động nào sau khi người dùng nhấp vào OK
-                                // Ví dụ: Làm mới trang
+                                // Ví dụ: Không cần load lại trang nữa
+                                $(".quantity-error").hide();
                                 location.reload();
+
                             }
                         });
                     } else {
@@ -373,6 +411,11 @@ https://templatemo.com/tm-559-zay-shop
                             title: 'Lỗi!',
                             text: response,
                             confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Load lại trang nếu người dùng nhấp vào OK
+                                location.reload();
+                            }
                         });
                     }
                 },
@@ -383,8 +426,13 @@ https://templatemo.com/tm-559-zay-shop
                     Swal.fire({
                         icon: 'error',
                         title: 'Lỗi!',
-                        text: 'số lượng vượt quá số lượng còn lại!.',
+                        text: 'Số lượng vượt quá số lượng còn lại!.',
                         confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Load lại trang nếu người dùng nhấp vào OK
+                            location.reload();
+                        }
                     });
                 }
             });
@@ -398,9 +446,13 @@ https://templatemo.com/tm-559-zay-shop
                 text: 'Có lỗi xảy ra trong quá trình xử lý yêu cầu.',
                 confirmButtonText: 'OK'
             });
+            // Load lại trang nếu có lỗi
+            location.reload();
         }
     }
 </script>
+
+
 
 
 

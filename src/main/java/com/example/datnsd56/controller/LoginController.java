@@ -112,7 +112,12 @@ public String add(@Valid @ModelAttribute("account") Account account, BindingResu
 
         return "redirect:/login/register";
     }
+    if (accountService.findByName1(account.getName()) != null ) {
+        // Email đã tồn tại, xử lý lỗi và trả về trang tạo tài khoản
+        redirectAttributes.addFlashAttribute("errorMessage1", "tên user  đã tồn tại");
+        return "redirect:/login/register";
 
+    }
     // Hash mật khẩu bằng BCryptPasswordEncoder
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     String hashedPassword = encoder.encode(account.getPassword());

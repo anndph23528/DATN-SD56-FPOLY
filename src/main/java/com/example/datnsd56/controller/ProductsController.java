@@ -1,6 +1,7 @@
 package com.example.datnsd56.controller;
 
 import com.example.datnsd56.entity.*;
+import com.example.datnsd56.repository.ProductsRepository;
 import com.example.datnsd56.service.BrandService;
 import com.example.datnsd56.service.CategoryService;
 import com.example.datnsd56.service.ColorService;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/admin/san-pham-test")
@@ -58,7 +60,8 @@ public class ProductsController {
     private SizeService sizeService;
     @Autowired
     private ImageService imageService;
-
+    @Autowired
+    private ProductsRepository productsRepository;
     @GetMapping("/create")
 //    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
     public String createProduct(Model model) {
@@ -103,8 +106,6 @@ public class ProductsController {
 
     @PostMapping("/add-product")
     @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
-
-
     public String addProduct(@Valid @ModelAttribute("sanPham") Products products, BindingResult result, Model model,@RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files) throws SQLException, IOException {
         if (result.hasErrors()) {
             model.addAttribute("product", new Products());
@@ -128,14 +129,16 @@ public class ProductsController {
 //            return "dashboard/san-pham/add-san-pham";
         }
 
-
-        products.setStatus(1);
+        String code = "SP0" + new Random().nextInt(100000);
+        products.setCode(code);
+        products.setStatus(0);
         productService.addProduct(products, colorList, kichThuocList, files);
         return "redirect:/admin/san-pham-test/create";
     }
 
     @PostMapping("/update-pending")
     public String addProductDetail(@RequestParam("ids") List<Integer> id, @RequestParam("soLuongs") List<Integer> soLuong, @RequestParam("donGias") List<BigDecimal> donGia) {
+
         productService.addProductDetail(id, soLuong, donGia);
         return "redirect:/admin/chi-tiet-san-pham/hien-thi";
     }
@@ -203,7 +206,7 @@ public class ProductsController {
             model.addAttribute("listSize", sizeService.getAllSZ());
         }
 
-            productService.updateProduct(products, files);
+        productService.updateProduct(products, files);
 
 //        productService.updateProduct(products, files);
         return "redirect:/admin/chi-tiet-san-pham/hien-thi";
@@ -220,12 +223,17 @@ public class ProductsController {
 //    @GetMapping("/search")images
 ////    @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
 
-//    public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
+    //    public String search(@RequestParam("name") String name,@RequestParam(value = "page", defaultValue = "0") Integer pageNo, Model model) {
 //        model.addAttribute("product", new Products());
 //        Page<Products> page1 = productService.findByName(name);
 ////        model.addAttribute("totalPages", page1.getTotalPages());
 ////        model.addAttribute("list", page1);
 //        return "/dashboard/roles/roles";
 //    }
-
+    @GetMapping("delete-chi-tiet-san-pham/{id}")
+//    @PreAuthorize("hasAuthority('admin')")
+    public String delete(@PathVariable("id") Integer id){
+        productDetailsService.deletess(id);
+        return "redirect:/admin/san-pham-test/create";
+    }
 }

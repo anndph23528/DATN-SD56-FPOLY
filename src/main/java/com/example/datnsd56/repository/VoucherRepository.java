@@ -23,6 +23,21 @@ public interface VoucherRepository extends JpaRepository<Voucher,Integer> {
     Optional<Voucher> findByCode(String code);
 @Query(value = "SELECT * FROM Voucher  WHERE Active = 1 AND quantity > 0 AND expiryDate > CURRENT_TIMESTAMP",nativeQuery = true)
     List<Voucher> getAllls();
-
+    @Query("SELECT v FROM Voucher v " +
+        "WHERE (:searchText IS NULL OR LOWER(v.code) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(v.description) LIKE LOWER(CONCAT('%', :searchText, '%'))) " +
+        "AND (:status IS NULL OR (:status = 'true' AND v.active = true) OR (:status = 'false' AND v.active = false))")
+    Page<Voucher> searchVouchers(@Param("searchText") String searchText, @Param("status") String status,Pageable pageable);
 //    Page<Voucher> findAll(Pageable pageable, Sort createDate);
+
+@Query(value = "SELECT TOP 1 v.id, v.code, COUNT(vu.id) AS usageCount\n" +
+    "FROM Voucher v\n" +
+    "JOIN VoucherUsage vu ON v.id = vu.voucher_id\n" +
+    "WHERE vu.is_used = 1\n" +
+    "GROUP BY v.id,v.code\n" +
+    "ORDER BY usageCount DESC   ",nativeQuery = true)
+List<Object[]> findMostUsedVoucher();
+@Query(value = "select *from Voucher where  Code=?1",nativeQuery = true)
+List<Voucher> findByCode1(String code);
+    boolean existsByCode(String code);
+
 }

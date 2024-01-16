@@ -326,8 +326,8 @@
             <!--                                        <div class="input-group-append">-->
             <!--                                            <button class="btn btn-primary" type="button" onclick="popupSize()">-->
             <!--                                                +-->
-            <!--                                            </button>-->
             <!--                                        </div>-->
+            <!--                                            </button>-->
             <!--                                    </div>-->
             <!--                                </div>-->
 
@@ -490,19 +490,59 @@
                             <h4>Chi tiết sản phẩm</h4>
 
                             <div class="card-header-form">
-
-                                <form action="/admin/chi-tiet-san-pham/search " method="get">
+                                <form action="/admin/chi-tiet-san-pham/search" method="get">
                                     <div class="input-group">
-                                        <input name="sellPrice" type="text" class="form-control" placeholder="Search">
-                                        <div lass="input-group-btn">
-                                            <a href="/admin/chi-tiet-san-pham/search/{sellPrice}">
-                                                <button type="submit" class="btn btn-primary"><i
-                                                    class="fas fa-search"></i></button>
+                                        <!-- Minimum Price -->
+<!--                                        <input name="minPrice" type="text" class="form-control" placeholder="Min Price">-->
+
+                                        <!-- Maximum Price -->
+<!--                                        <input name="maxPrice" type="text" class="form-control" placeholder="Max Price">-->
+                                        <!-- Filter by Price Range Button -->
+<!--                                        <button type="button" class="btn btn-warning" id="filterByPriceRange">Filter by Price Range</button>-->
+
+                                        <!-- Search Input -->
+                                        <input name="productName" type="text" class="form-control" placeholder="Search">
+
+                                        <div class="input-group-btn">
+                                            <!-- Search Button -->
+                                            <button type="submit" class="btn btn-warning" id="filterByPriceRange">search</button>
+
+<!--                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>-->
+                                        </div>
+                                    </div>
+                                </form>
+                                <form action="/admin/chi-tiet-san-pham/search" method="get">
+                                    <div class="input-group">
+                                        <!-- Minimum Price -->
+                                        <input name="minPrice" type="text" class="form-control" placeholder="Min Price">
+
+                                        <!-- Maximum Price -->
+                                        <input name="maxPrice" type="text" class="form-control" placeholder="Max Price">
+                                        <!-- Filter by Price Range Button -->
+                                        <!--                                        <button type="button" class="btn btn-warning" id="filterByPriceRange">Filter by Price Range</button>-->
+
+                                        <!-- Search Input -->
+<!--                                        <input name="productName" type="text" class="form-control" placeholder="Search">-->
+
+                                        <div class="input-group-btn">
+                                            <!-- Search Button -->
+                                            <button type="submit" class="btn btn-warning" id="filterByPriceRange">Filter</button>
+
+                                            <!--                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>-->
+                                        </div>
+                                        <div class="input-group-btn">
+                                            <!-- Search Button -->
+                                            <a th:href="@{'/admin/chi-tiet-san-pham/hien-thi'}">
+
+                                            <button type="submit" class="btn btn-warning" id="filterByPriceRange">Tất cả sản phẩm</button>
                                             </a>
+
+                                            <!--                                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>-->
                                         </div>
                                     </div>
                                 </form>
                             </div>
+
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -510,6 +550,7 @@
                                     <tr>
                                         <th>Sản phẩm</th>
                                         <th>Màu sắc</th>
+                                        <th>THương hiệu</th>
                                         <th>Size</th>
                                         <th>Số lượng</th>
                                         <th>Đơn giá</th>
@@ -520,6 +561,7 @@
                                     <tr th:each="list:${list.content}">
                                         <td th:text="${list.productId.name}"></td>
                                         <td th:text="${list != null ? (list.colorId != null ? list.colorId.name : '') : ''}"></td>
+                                        <td th:text="${list != null ? (list.productId != null ? list.productId.brandId.name : '') : ''}"></td>
                                         <td th:text="${list != null ? (list.sizeId != null ? list.sizeId.name : '') : ''}"></td>
                                         <td th:text="*{list.quantity}"></td>
                                         <td th:text="${#numbers.formatDecimal(list.sellPrice, 0, 'COMMA', 0, 'POINT')} +'VND'"></td>

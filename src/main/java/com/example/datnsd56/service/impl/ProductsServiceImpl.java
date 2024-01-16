@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.persistence.criteria.Predicate; // Đảm bảo import từ jakarta.persistence.criteria
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -50,11 +53,37 @@ public class ProductsServiceImpl implements ProductsService {
 
     }
 
+    public List<Products> searchProducts(Double minPrice, Double maxPrice, Integer categoryId, Integer brandId) {
+        Specification<Products> spec = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (minPrice != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("productDetails").get("sellPrice"), minPrice));
+            }
+
+            if (maxPrice != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("productDetails").get("sellPrice"), maxPrice));
+            }
+
+            if (categoryId != null) {
+                predicates.add(builder.equal(root.get("categoryId").get("id"), categoryId));
+            }
+
+            if (brandId != null) {
+                predicates.add(builder.equal(root.get("brandId").get("id"), brandId));
+            }
+
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return productRepository.findAll(spec);
+    }
+    @Transactional
     @Override
     public List<Products> getAllPro() {
         return productRepository.findAll();
     }
-@Transactional
+    @Transactional
     @Override
     public List<Products> getAllPros() {
         return productRepository.getAllPros();
@@ -115,6 +144,7 @@ public class ProductsServiceImpl implements ProductsService {
                 if (productDetails.isPresent()) {
                     ProductDetails details = productDetails.get();
                     details.setStatus(true);
+                    details.getProductId().setStatus(1);
                     details.setQuantity(soLuongs);
                     details.setSellPrice(donGias);
                     details.setUpdateDate(LocalDate.now());
@@ -202,8 +232,12 @@ public class ProductsServiceImpl implements ProductsService {
 
         // Cập nhật thông tin sản phẩm
         currentProduct.setName(products.getName());
+        currentProduct.setBrandId(products.getBrandId());
+        currentProduct.setCategoryId(products.getCategoryId());
         currentProduct.setStatus(products.getStatus());
         currentProduct.setUpdateDate(LocalDate.now());
+        currentProduct.setMaterialId(products.getMaterialId());
+        currentProduct.setShoeSoleId(products.getShoeSoleId());
 
         // Nếu có ảnh mới được cung cấp
         // Trong hàm updateProduct

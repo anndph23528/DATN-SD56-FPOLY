@@ -9,6 +9,7 @@ import com.example.datnsd56.service.*;
 
 import com.example.datnsd56.service.impl.OrderServiceImplV2;
 import com.example.datnsd56.service.impl.PaymentServiceImpl;
+import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
 import com.example.datnsd56.service.impl.VoucherSeviceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -71,11 +72,17 @@ UserBillController {
     private OrderServiceImplV2 odserv2;
     @Autowired
     private OrdersRepository ordersRepository;
+    @Autowired
+    private ProductDetailsService productDetailsService;
+    @Autowired
+    private ProductDetailsServiceImpl productDetailsServices;
     //    @Autowired
 //    private VnpayUtils vnpayUtils;
 
     @GetMapping("/checkout")
-    public String checkout(Principal principal, Model model) {
+    public String checkout(Principal principal,
+
+                           Model model) {
         if (principal == null) {
             return "redirect:/login";
         }
@@ -85,9 +92,43 @@ UserBillController {
             Account account = accountOptional.get();
             Cart cart = account.getCart();
 
-            // Tìm địa chỉ mặc định
-            List<Address> addressList = addressService.findAccountAddresses(account.getId());
-            // Lấy danh sách tất cả voucher
+            // Kiểm tra xem giỏ hàng có sản phẩm hay không
+            if (cart.getCartItems().isEmpty()) {
+                // Nếu giỏ hàng trống, trả về trang giỏ hàng với thông báo
+                model.addAttribute("outOfStockMessage", "Giỏ hàng của bạn đang trống.");
+                model.addAttribute("cart", cart);
+                return "website/index/giohang";
+            }
+
+            // Kiểm tra số lượng của sản phẩm trong giỏ hàng
+            for (CartItem cartItem : cart.getCartItems()) {
+                int productQuantity = cartItem.getProductDetails().getQuantity();
+                int productQuantity1 = cartItem.getQuantity();
+
+                // Kiểm tra số lượng sản phẩm
+                if (productQuantity == 0) {
+                    // Nếu số lượng là 0, trả về trang giỏ hàng với thông báo
+
+                    model.addAttribute("outOfStockMessage", "Sản phẩm " + cartItem.getProductDetails().getProductId().getName() + " đã hết hàng.");
+                    model.addAttribute("cart", cart);
+                    model.addAttribute("grandTotal", cart.getTotalPrice());
+                    return "website/index/giohang";
+                }
+//                int remainingQuantity = productDetailsServices.checkQuantity(
+//                    cartItem.getProductDetails().getProductId().getId(),
+//                    cartItem.getProductDetails().getColorId().getId(),
+//                    cartItem.getProductDetails().getSizeId().getId(),
+//                    productQuantity);
+
+                if (productQuantity1 > productQuantity) {
+                    // Trả về trang giỏ hàng và báo số lượng còn lại
+                    model.addAttribute("outOfStockMessage", "Sản phẩm " + cartItem.getProductDetails().getProductId().getName() + " chỉ còn " + productQuantity + " sản phẩm.");
+                    model.addAttribute("cart", cart);
+                    model.addAttribute("grandTotal", cart.getTotalPrice());
+
+                    return "website/index/giohang";
+                }
+            }
             List<Voucher> allVouchers = voucherService.getAllls();
 
             // Lấy danh sách voucher đã lưu cho tài khoản
@@ -98,6 +139,8 @@ UserBillController {
 
 //        model.addAttribute("allVouchers", allVouchers);
             model.addAttribute("voucherUsages", voucherUsages);
+            // Nếu có sản phẩm trong giỏ hàng và số lượng lớn hơn 0, chuyển hướng đến trang giohang1 hoặc checkout tùy thuộc vào logic của bạn
+            List<Address> addressList = addressService.findAccountAddresses(account.getId());
             if (addressList.isEmpty()) {
                 // Nếu không có địa chỉ, hiển thị trang giỏ hàng
                 model.addAttribute("cart", cart);
@@ -106,6 +149,7 @@ UserBillController {
                 model.addAttribute("defaultAddress", null); // Không có địa chỉ mặc định
                 return "website/index/giohang1";
             } else {
+                // Nếu có địa chỉ mặc định, chuyển hướng đến trang giohang1 hoặc checkout tùy thuộc vào logic của bạn
                 Address defaultAddress = addressList.stream()
                     .filter(address -> Boolean.TRUE.equals(address.getDefaultAddress()))
                     .findFirst()
@@ -115,12 +159,14 @@ UserBillController {
                 model.addAttribute("addressList", addressList);
                 model.addAttribute("newAddress", new Address()); // Thêm đối tượng mới cho modal
                 model.addAttribute("defaultAddress", defaultAddress); // Địa chỉ mặc định
+
+                // Chuyển hướng đến trang giohang1 hoặc checkout tùy thuộc vào logic của bạn
                 return "website/index/giohang1";
             }
-
         }
         return "redirect:/login";
     }
+
 
     @PostMapping("/add-order")
     public String placeOrder(@RequestParam(name = "selectedAddressRadio", required = false) Integer selectedAddressId,
@@ -141,7 +187,23 @@ UserBillController {
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
             Cart cart = account.getCart();
+            for (CartItem cartItem : cart.getCartItems()) {
+                int productQuantity = cartItem.getProductDetails().getQuantity();
+                int productQuantity1 = cartItem.getQuantity();
 
+                // Kiểm tra số lượng sản phẩm
+                if (productQuantity == 0 || productQuantity1 > productQuantity) {
+                    return "redirect:/user/cart";
+                }
+//                if () {
+//                    // Trả về trang giỏ hàng và báo số lượng còn lại
+//                    model.addAttribute("outOfStockMessage", "Sản phẩm " + cartItem.getProductDetails().getProductId().getName() + " chỉ còn " + productQuantity + " sản phẩm.");
+//                    model.addAttribute("cart", cart);
+//                    model.addAttribute("grandTotal", cart.getTotalPrice());
+//
+//                    return "website/index/giohang";
+//                }
+            }
             // Kiểm tra xem người dùng đã chọn địa chỉ từ danh sách hay không
             Address address;
             if (selectedAddressId != null) {
@@ -175,6 +237,7 @@ UserBillController {
                         transaction.setCustomerId(order.getCustomerId());
                         transaction.setOrderId(order);
                         transaction.setAccountId(account.getCart().getAccountId());
+                        session.removeAttribute("appliedVoucherTotal");
 
                         // Lưu giao dịch tạm thời vào cơ sở dữ liệu và giữ ID
                         Transactions savedTransaction = transactionService.saveTransaction(transaction);
@@ -241,6 +304,7 @@ UserBillController {
 
         return "redirect:/user/checkout";
     }
+
     @GetMapping("/vnpay-ipn")
     public String vnpayIPN(@RequestParam("vnp_ResponseCode") String responseCode,
                            HttpServletRequest request,
@@ -265,10 +329,10 @@ UserBillController {
                 if (transactionOptional.isPresent()) {
                     Transactions pendingTransaction = transactionOptional.get();
 
-                        // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
+                    // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
 //                        orderItemRepository.save(orderDetails);
 
-                        // Giảm số lượng sản phẩm trong kho
+                    // Giảm số lượng sản phẩm trong kho
 //                        reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 //                    orderServiceImplV21.reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 
@@ -289,6 +353,7 @@ UserBillController {
                             orderServiceImplV21.reduceProductStock(cartItem.getProductDetails().getId(), cartItem.getQuantity());
 
                         }
+//                        orderServiceImplV21.saveVoucherUsageHistorys(transactionOptional.get().getAccountId(),transactionOptional.get().getOrderId().getVoucher());
                         cartServicel.deleteCartById(cart.getId());
                         model.addAttribute("tr", pendingTransaction);
                         // ... (Thêm các thuộc tính khác cần thiết)
@@ -299,17 +364,18 @@ UserBillController {
 //                        pendingTransaction.setOrderInfo(vnp_TxnRef);
                         pendingTransaction.setStatus("fail");
                         Optional<Orders> orderOptional = ordersRepository.findById(transactionOptional.get().getOrderId().getId());
+                        session.removeAttribute("appliedVoucherTotal");
 
                         if (orderOptional.isPresent()) {
                             Orders orderToUpdate = orderOptional.get();
 
                             // Cập nhật trạng thái của hóa đơn thành 0
                             orderToUpdate.setOrderStatus(0);
-
+                             orderToUpdate.setTotal(orderToUpdate.getAccountId().getCart().getTotalPrice());
                             // Lưu lại đối tượng Orders đã cập nhật vào cơ sở dữ liệu
+                            orderServiceImplV21.cancalevoucher(orderToUpdate, orderToUpdate.getVoucher());
                             ordersRepository.save(orderToUpdate);
                             transactionService.saveTransaction(pendingTransaction);
-
                             return "redirect:/user/checkout";
 
                             // ... (Thêm các thuộc tính khác cần thiết)
@@ -334,6 +400,7 @@ UserBillController {
         }
         return null;
     }
+
     @PostMapping("/apply-voucher")
     public ResponseEntity<Map<String, Object>> applyVoucher(
         @RequestParam(name = "selectedVoucherCode", required = false) String selectedVoucherCode,
@@ -558,8 +625,6 @@ UserBillController {
     }
 
 
-
-
     @GetMapping("/cancel-order/{id}")
     public String cancelOrder(@PathVariable Integer id, RedirectAttributes attributes, Principal principal) {
 //        if (principal == null) {
@@ -572,8 +637,11 @@ UserBillController {
         Orders bill = ordersService.getOneBill(id);
         String name = principal.getName();
         Optional<Account> account = accountService.finByName(name);
-        if (bill != null){
+        if (bill != null) {
             ordersService.cancelOrder(id, account.get());
+            if(bill.getVoucher() != null) {
+                orderServiceImplV21.cancalevoucher(bill, bill.getVoucher());
+            }
             attributes.addFlashAttribute("success", "Huỷ đơn hàng thành công!");
         }
         return "redirect:/user/orders";
@@ -586,5 +654,3 @@ UserBillController {
 //
 //        return "website/index/danhsachdonhang";
 //    }
-
-

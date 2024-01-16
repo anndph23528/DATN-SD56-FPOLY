@@ -19,6 +19,7 @@ public interface AccountService {
     Optional<Account> finByName(String username);
     List<Account> findByEmail1(String email);
     Account findByEmail(String Email);
+    Account findByName1(String username);
 
 
 }
