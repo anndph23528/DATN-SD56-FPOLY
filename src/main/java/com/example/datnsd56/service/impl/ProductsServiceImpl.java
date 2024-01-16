@@ -52,7 +52,7 @@ public class ProductsServiceImpl implements ProductsService {
         return page1;
 
     }
-
+@Transactional
     public List<Products> searchProducts(Double minPrice, Double maxPrice, Integer categoryId, Integer brandId) {
         Specification<Products> spec = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -76,7 +76,7 @@ public class ProductsServiceImpl implements ProductsService {
             return builder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return productRepository.findAll(spec);
+        return productRepository.getAllPros1(spec);
     }
     @Transactional
     @Override

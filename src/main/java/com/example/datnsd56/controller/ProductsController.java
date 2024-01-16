@@ -11,6 +11,7 @@ import com.example.datnsd56.service.ProductDetailsService;
 import com.example.datnsd56.service.ProductsService;
 import com.example.datnsd56.service.ShoeSoleService;
 import com.example.datnsd56.service.SizeService;
+import com.example.datnsd56.service.impl.ProductDetailsServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,12 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -54,6 +50,8 @@ public class ProductsController {
     private ShoeSoleService shoeSole;
     @Autowired
     private ProductDetailsService productDetailsService;
+    @Autowired
+    private ProductDetailsServiceImpl productDetailsService1;
     @Autowired
     private ColorService colorService;
     @Autowired
@@ -103,7 +101,12 @@ public class ProductsController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @PostMapping("/delete-all-products")
+    @ResponseBody
+    public ResponseEntity<String> deleteAllProducts() {
+        productDetailsService1.deleteAllProductDetails();
+        return ResponseEntity.ok("Xóa tất cả sản phẩm thành công!");
+    }
     @PostMapping("/add-product")
     @PreAuthorize("hasAuthority('admin') || hasAuthority('staff')")
     public String addProduct(@Valid @ModelAttribute("product") Products products, BindingResult result, Model model,@RequestParam("kichThuocs") List<Size> kichThuocList, @RequestParam("colors") List<Color> colorList, @RequestParam("image") MultipartFile[] files) throws SQLException, IOException {

@@ -728,7 +728,10 @@
                         <div class="card-header">
                             <h4>Chi tiết sản phẩm</h4>
                         </div>
+
                         <div class="card-body p-0">
+
+
                             <div class="table-responsive">
                                 <form action="/admin/san-pham-test/update-pending" method="post" id="updateForm"
                                       onsubmit="return confirm('Bạn có thêm không?')">
@@ -895,6 +898,35 @@
 <script th:src="@{/dashboard/js/scripts.js}"></script>
 <!-- Custom JS File -->
 <script th:src="@{/dashboard/js/custom.js}"></script>
+
+<!-- Thêm nút xóa tất cả vào trang HTML -->
+<!--<button class="btn btn-danger" id="deleteAllBtn">Xóa Tất Cả</button>-->
+
+<!-- Thêm mã JavaScript -->
+<!--<script>-->
+<!--    $(document).ready(function () {-->
+<!--        $('#deleteAllBtn').on('click', function () {-->
+<!--            if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm không?')) {-->
+<!--                /* Sử dụng Thymeleaf để tạo URL động */-->
+<!--                var url = /*[[@{/admin/san-pham-test/delete-all-products}]]*/ '';-->
+
+<!--                $.ajax({-->
+<!--                    type: 'POST',-->
+<!--                    url: '/admin/san-pham-test/delete-all-products',-->
+<!--                    success: function (data) {-->
+<!--                        // Xử lý kết quả từ server (nếu cần)-->
+<!--                        // Có thể hiển thị thông báo hoặc thực hiện các hành động khác-->
+<!--                        alert(data);-->
+<!--                    },-->
+<!--                    error: function (error) {-->
+<!--                        console.error('Lỗi khi xóa tất cả sản phẩm:', error);-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
 
 <script>
     function validateForm() {
